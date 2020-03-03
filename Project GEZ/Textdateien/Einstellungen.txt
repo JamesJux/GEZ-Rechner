@@ -1,0 +1,2 @@
+Bereits_Initialisiert=true
+Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.
