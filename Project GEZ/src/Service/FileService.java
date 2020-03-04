@@ -13,7 +13,7 @@ import Material.Profil;
 
 /**
  * 
- *  Der Service zum verarbeiten der Bewohner und anderer Dateien.
+ *  Der Service zum Verarbeiten der Bewohner und anderer Dateien.
  *  
  * @author Dominick
  * @version 19.10.2019
@@ -25,8 +25,11 @@ public class FileService
     private static final File OUTPUT = new File(PATH + "/Output Bewohner.txt");
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
 
-    public static boolean bereitsInitialisiert()
+    static ProfilManagerService PMS;
+
+    public static boolean bereitsInitialisiert(ProfilManagerService _profilManager)
     {
+        PMS = _profilManager;
         new File(PATH).mkdir();
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
@@ -42,7 +45,7 @@ public class FileService
         }
         catch (FileNotFoundException e)
         {
-            Initialisiere();
+            erstInitialisierung();
         }
         catch (IOException e)
         {
@@ -54,7 +57,7 @@ public class FileService
      * Hilfsmethode zum initialisieren.
      * 
      */
-    private static void Initialisiere()
+    private static void erstInitialisierung()
     {
         PrintStream printer;
         try
@@ -85,9 +88,9 @@ public class FileService
     * 
     * Zimmernummer(Haus/Flur+Zimmernr); Vorname; Nachname; EMail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
     * 
-    * @param profilManager Der Profil Manager der die Bewohner erstellt.
+    * @param profilManager Der Profil Manager, der die Bewohner erstellt.
     */
-    public static void leseBewohnerEin(ProfilManagerService profilManager)
+    public static void leseBewohnerEin()
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(BEWOHNER_DATEI)))
         {
@@ -107,12 +110,7 @@ public class FileService
                 int AusMonat = Integer.valueOf(tokenizer.nextToken());
                 int AusJahr = Integer.valueOf(tokenizer.nextToken());
 
-                if (AusMonat == 12 && AusJahr == 2099)
-                {
-                    AusMonat = 0;
-                    AusJahr = 0;
-                }
-                profilManager.createProfil(ZimmerID, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr);
+                PMS.createProfil(ZimmerID, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr, false);
             }
         }
         catch (FileNotFoundException e)
@@ -125,13 +123,13 @@ public class FileService
         }
     }
 
-    public static void schreibeInDatei(ProfilManagerService profilManager)
+    public static void speichereInDatei()
     {
         PrintStream printer;
         try
         {
             printer = new PrintStream(OUTPUT);
-            for (Profil p : profilManager.getProfile())
+            for (Profil p : PMS.getProfile())
             {
                 String aa = p.getZimmer().toFormattedString();
                 String ab = p.getName().getVorname();
@@ -155,6 +153,25 @@ public class FileService
 
     public static void leseEinstellungenEin()
     {
-        // TODO Auto-generated method stub
+        try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
+        {
+            String line = null;
+            // liest Datei Zeile für Zeile
+            while ((line = reader.readLine()) != null)
+            {
+                StringTokenizer tokenizer = new StringTokenizer(line, "=");
+                String eingelesenerString = tokenizer.nextToken();
+                if (eingelesenerString.equals("Bezahlt"))
+                {
+                    String Bezahler = tokenizer.nextToken();
+                    PMS.registriereBezahler(Bezahler);
+                }
+
+            }
+        }
+        catch (IOException e)
+        {
+            ErrorOutputService.ErrorOutputConsole(Errors.fileNotReadError);
+        }
     }
 }

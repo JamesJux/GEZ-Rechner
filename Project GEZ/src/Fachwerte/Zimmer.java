@@ -11,29 +11,46 @@ import Service.ErrorOutputService;
 public class Zimmer
 {
 
-    private final int HAUS, STOCKWERK;
-    private final String ZIMMERNUMMER, ZIMMERID;
+    private final int _haus;
+    private final int _stockwerk;
+    private final String _zimmernummer;
+    private final String ZIMMERID;
 
     public Zimmer(String zimmer)
     {
-        HAUS = Integer.valueOf(zimmer.substring(0, 1));
-        STOCKWERK = Integer.valueOf(zimmer.substring(2, 3));
+        _haus = Integer.valueOf(zimmer.substring(0, 1));
+        _stockwerk = Integer.valueOf(zimmer.substring(2, 3));
         int zimmernummer = Integer.valueOf(zimmer.substring(3, 5));
         if (zimmernummer < 10)
         {
-            ZIMMERNUMMER = "0" + zimmernummer;
+            _zimmernummer = "0" + zimmernummer;
         }
         else if (zimmernummer < 0)
         {
-            ZIMMERNUMMER = "ERROR";
+            _zimmernummer = "ERROR";
             ErrorOutputService.ErrorOutputConsole(Errors.inputError);
         }
         else
         {
-            ZIMMERNUMMER = "" + zimmernummer;
+            _zimmernummer = "" + zimmernummer;
         }
 
-        ZIMMERID = HAUS + "/" + STOCKWERK + ZIMMERNUMMER;
+        ZIMMERID = _haus + "/" + _stockwerk + _zimmernummer;
+    }
+
+    public int getHaus()
+    {
+        return _haus;
+    }
+
+    public int getStockwerk()
+    {
+        return _stockwerk;
+    }
+
+    public String getZimmernummer()
+    {
+        return _zimmernummer;
     }
 
     /**

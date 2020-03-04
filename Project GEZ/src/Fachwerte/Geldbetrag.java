@@ -12,6 +12,7 @@ public final class Geldbetrag
     private final int _euroAnteil;
     private final int _centAnteil;
     private final int _eurocent;
+    private boolean _negativ;
 
     /**
      * Wählt einen Geldbetrag aus.
@@ -20,12 +21,13 @@ public final class Geldbetrag
      * 
      * @require eurocent >= 0;
      */
-    public Geldbetrag(int eurocent)
+    public Geldbetrag(int eurocent, boolean minus)
     {
         assert eurocent >= 0 : "Vorbedingung verletzt: eurocent >= 0";
         _euroAnteil = eurocent / 100;
         _centAnteil = eurocent % 100;
         _eurocent = eurocent;
+        _negativ = minus;
     }
 
     /**
@@ -62,7 +64,22 @@ public final class Geldbetrag
      */
     public String toFormattedString()
     {
-        return _euroAnteil + "," + getFormatiertenCentAnteil() + " €";
+        return getFormatiertenNegativAnteil() + _euroAnteil + "," + getFormatiertenCentAnteil() + " €";
+    }
+
+    /**
+     * Liefert das Minus bei negativen Beträgen zurück.
+     * 
+     * @return eine String-Repräsentation des Minus.
+     */
+    private String getFormatiertenNegativAnteil()
+    {
+        String result = "";
+        if (_negativ)
+        {
+            result = "-";
+        }
+        return result;
     }
 
     /**
@@ -99,7 +116,7 @@ public final class Geldbetrag
         {
             Geldbetrag other = (Geldbetrag) obj;
             result = (_centAnteil == other._centAnteil)
-                    && (_euroAnteil == other._euroAnteil);
+                    && (_euroAnteil == other._euroAnteil) && (_negativ = other._negativ);
         }
         return result;
     }

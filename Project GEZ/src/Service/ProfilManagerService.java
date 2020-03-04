@@ -1,35 +1,44 @@
 package Service;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
 import Enums.Errors;
 import Fachwerte.Datum;
-import Fachwerte.Geldbetrag;
 import Material.Profil;
+import Startup.BewohnerEditorUI;
 
 public class ProfilManagerService
 {
     //TODO hier sollte das eigentliche Programm stehen
 
     private HashSet<Profil> profile;
+    BewohnerEditorUI _ui;
 
-    /*
-     *TODO Speicherfunktion des ProfilManagers 
-     * 
-     * Der Konstruktor soll später ermitteln ob es eine Speicherdatei gibt und dann
-     * entweder den Gespeicherten Profilmanager laden, oder einen neuen erstellen
-     */
     public ProfilManagerService()
     {
         profile = new HashSet<Profil>();
     }
 
-    public void createProfil(String zimmer, String vorname, String name, int guthaben, int EinMonat, int EinJahr, String email,
-            String handynummer, int AusMonat, int AusJahr)
+    public void erzeugeProfilManagerUI()
     {
-        Profil newProfile = new Profil(zimmer, vorname, name, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr);
+        _ui = new BewohnerEditorUI();
+        registriereUIAktionen();
+    }
+
+    public void erzeugeProfilManagerUI(Profil profil)
+    {
+        _ui = new BewohnerEditorUI(profil);
+        registriereUIAktionen();
+    }
+
+    public void createProfil(String zimmer, String vorname, String name, int guthaben, int EinMonat, int EinJahr, String email,
+            String handynummer, int AusMonat, int AusJahr, boolean bezahler)
+    {
+        Profil newProfile = new Profil(zimmer, vorname, name, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr, bezahler);
 
         profile.add(newProfile);
     }
@@ -46,118 +55,37 @@ public class ProfilManagerService
         }
     }
 
-    public void NormalBetrieb()
+    public void neuenBenutzerSpeichern()
     {
-        String RechnendeMonate = JOptionPane.showInputDialog(null, "Für welchen Monat sollen das Guthaben ausgerechnet werden?", "GEZ-Rechner 2020", JOptionPane.PLAIN_MESSAGE);
-        if (!(RechnendeMonate.matches("/d")))
+        String zimmer = _ui.get_choiceHaus().getSelectedItem() + "/" + _ui.get_choiceEtage().getSelectedItem()
+                + _ui.get_choiceZimmer().getSelectedItem();
+        String vorname = _ui.get_textFieldVorname().getText();
+        String name = _ui.get_textFieldNachname().getText();
+        if (vorname.equals("") || name.equals(""))
         {
-
-            int AnzahlMonate = Integer.valueOf(RechnendeMonate);
-            int jetztJahr = 2020;
-            while (AnzahlMonate > 12)
-            {
-                AnzahlMonate -= 12;
-                jetztJahr++;
-            }
-            System.out.println("Bis einschließlich " + findeMonat(AnzahlMonate - 1) + " " + jetztJahr + " sind die Guthaben:");
-
-            for (Profil profil : profile)
-            {
-                int betragCent = 0;
-
-                int jahr = 2018;
-                int monat = 10;
-
-                if (!(profil.getName().toFormattedString().equals("Dominick Labatz")))
-                {
-                    for (int i = 0; i < (14 + AnzahlMonate); i++)
-                    {
-                        monat++;
-
-                        if (wohntImHaus(profil, new Datum(15, monat, jahr)))
-                        {
-                            int diesenMonat = runden(17500 / AnzahlZahlendeBewohner(new Datum(15, monat, jahr)));
-                            betragCent -= diesenMonat;
-                        }
-                        if (monat == 12)
-                        {
-                            monat = 0;
-                            jahr++;
-                        }
-                    }
-
-                    int DiffBetragCent = betragCent + profil.getGuthaben().getBetragInCent();
-                    if (DiffBetragCent >= 0)
-                    {
-                        // Noch Guthaben vorhanden
-                        Geldbetrag RestBetrag = new Geldbetrag(DiffBetragCent);
-                        if (DiffBetragCent != 0)
-                        {
-                            System.out.println(profil.getName().toFormattedString() + ": " + RestBetrag.toFormattedString());
-                        }
-
-                    }
-                    else
-                    {
-                        // Kein Guthaben mehr vorhanden
-                        Geldbetrag RestBetrag = new Geldbetrag(-DiffBetragCent);
-                        System.out.println(profil.getName().toFormattedString() + ": -" + RestBetrag.toFormattedString());
-                    }
-                }
-            }
+            ErrorOutputService.ErrorOutputConsole(Errors.inputError);
         }
-        else
+        int Guthaben = 12345;
+        int EinMonat = Integer.parseInt(_ui.get_choiceMonat().getSelectedItem());
+        int EinJahr = Integer.parseInt(_ui.get_choiceJahr().getSelectedItem());
+        String Email = _ui.get_textFieldEmail().getText();
+        if (Email.equals(""))
         {
-            JOptionPane.showMessageDialog(null, "Bitte versuchen sie es erneut mit einer Gültigen Eingabe", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
+            Email = " ";
         }
+        String Handynummer = _ui.get_textFieldTelefon().getText();
+        if (Handynummer.equals(""))
+        {
+            Handynummer = " ";
+        }
+        int AusMonat = Integer.parseInt(_ui.get_choiceMonatAus().getSelectedItem());
+        int AusJahr = Integer.parseInt(_ui.get_choiceJahrAus().getSelectedItem());
+        //        System.out.println(zimmer + ";" + vorname + ";" + name + ";" + Email + ";" + Handynummer + ";" + Guthaben + ";" + EinMonat + ";"
+        //                + EinJahr + ";" + AusMonat + ";" + AusJahr);
+        createProfil(zimmer, vorname, name, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr, false);
     }
 
-    private static String findeMonat(int rechnendeMonate)
-    {
-        String monat = "";
-        switch (rechnendeMonate)
-        {
-        case 11:
-            monat = "Dezember";
-            break;
-        case 10:
-            monat = "November";
-            break;
-        case 9:
-            monat = "Oktober";
-            break;
-        case 8:
-            monat = "September";
-            break;
-        case 7:
-            monat = "August";
-            break;
-        case 6:
-            monat = "Juli";
-            break;
-        case 5:
-            monat = "Juni";
-            break;
-        case 4:
-            monat = "Mai";
-            break;
-        case 3:
-            monat = "April";
-            break;
-        case 2:
-            monat = "März";
-            break;
-        case 1:
-            monat = "Februar";
-            break;
-        case 0:
-            monat = "Januar";
-            break;
-        }
-        return monat;
-    }
-
-    public int AnzahlZahlendeBewohner(Datum datum)
+    public int getAnzahlZahlendeBewohner(Datum datum)
     {
         int temp = 0;
         for (Profil profil : profile)
@@ -171,7 +99,7 @@ public class ProfilManagerService
 
     }
 
-    private boolean wohntImHaus(Profil profil, Datum datum)
+    boolean wohntImHaus(Profil profil, Datum datum)
     {
         if ((profil.getEinzugsdatum()).getTagZahl() < datum.getTagZahl() && datum.getTagZahl() < (profil.getAuszugsdatum()).getTagZahl())
         {
@@ -180,21 +108,46 @@ public class ProfilManagerService
         return false;
     }
 
-    private int runden(int zahl)
-    {
-
-        if (zahl % 10 < 5)
-        {
-            return zahl / 10;
-        }
-        else
-        {
-            return (zahl + 5) / 10;
-        }
-    }
-
     public HashSet<Profil> getProfile()
     {
         return profile;
+    }
+
+    public void registriereBezahler(String Bezahler)
+    {
+        for (Profil profil : profile)
+        {
+            if (Bezahler.equals(profil.getName().toFormattedString()))
+            {
+                profil.setBezahler();
+            }
+        }
+    }
+
+    public final void registriereUIAktionen()
+    {
+        _ui.getAbbrechenButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                _ui.schliesseFenster();
+            }
+        });
+
+        _ui.get_InfoButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                JOptionPane.showMessageDialog(null, "Falls der Bewohner noch nicht ausgezogen ist, wählen sie als Auszugsdatum 12 2099", "Auszugs Info ", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        _ui.get_speichernButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                neuenBenutzerSpeichern();
+            }
+        });
     }
 }

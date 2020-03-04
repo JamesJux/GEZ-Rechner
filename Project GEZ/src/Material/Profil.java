@@ -7,14 +7,16 @@ import Fachwerte.Zimmer;
 
 public class Profil
 {
-    private final Name NAME;
-    private final Zimmer ZIMMER;
-    private final Datum EINZUGSDATUM;
-    private final Datum AUSZUGSDATUM;
+    private Name _name;
+    private Zimmer _zimmer;
+    private Datum _einzugsdatum;
+    private Datum _auszugsdatum;
 
     private Geldbetrag _guthaben;
     private String _email;
     private String _handynummer;
+    private boolean _bezahler;
+    private Geldbetrag _momentanesGuthaben;
 
     /**
      * Erstellung eines Profils für eine neue Person
@@ -31,29 +33,23 @@ public class Profil
      */
 
     public Profil(String zimmer, String vorname, String name, int guthaben, String email, String handynummer,
-            int EinMonat, int EinJahr, int AusMonat, int AusJahr)
+            int EinMonat, int EinJahr, int AusMonat, int AusJahr, boolean bezahler)
     {
-        ZIMMER = new Zimmer(zimmer);
-        NAME = new Name(vorname, name);
-        EINZUGSDATUM = new Datum(1, EinMonat, EinJahr);
-        if (AusMonat == 0 && AusJahr == 0)
-        {
-            AUSZUGSDATUM = new Datum(30, 12, 2099);
-        }
-        else
-        {
-            AUSZUGSDATUM = new Datum(30, AusMonat, AusJahr);
-        }
-
-        _guthaben = new Geldbetrag(guthaben);
+        _zimmer = new Zimmer(zimmer);
+        _name = new Name(vorname, name);
+        _einzugsdatum = new Datum(1, EinMonat, EinJahr);
+        _auszugsdatum = new Datum(30, AusMonat, AusJahr);
+        _guthaben = new Geldbetrag(guthaben, false);
         _email = email;
         _handynummer = handynummer;
+        _bezahler = bezahler;
+        _momentanesGuthaben = new Geldbetrag(guthaben, false);
     }
 
     @Override
     public int hashCode()
     {
-        String hashString = NAME.toFormattedString() + ZIMMER.toFormattedString() + EINZUGSDATUM.toFormattedString();
+        String hashString = _name.toFormattedString() + _zimmer.toFormattedString() + _einzugsdatum.toFormattedString();
 
         char hashArray[] = hashString.toCharArray();
 
@@ -80,22 +76,22 @@ public class Profil
 
     public Name getName()
     {
-        return NAME;
+        return _name;
     }
 
     public Zimmer getZimmer()
     {
-        return ZIMMER;
+        return _zimmer;
     }
 
     public Datum getEinzugsdatum()
     {
-        return EINZUGSDATUM;
+        return _einzugsdatum;
     }
 
     public Datum getAuszugsdatum()
     {
-        return AUSZUGSDATUM;
+        return _auszugsdatum;
     }
 
     public String getEmail()
@@ -103,9 +99,19 @@ public class Profil
         return _email;
     }
 
+    public void setEmail(String email)
+    {
+        this._email = email;
+    }
+
     public String getHandynummer()
     {
         return _handynummer;
+    }
+
+    public void setHandynummer(String handynummer)
+    {
+        _handynummer = handynummer;
     }
 
     public Geldbetrag getGuthaben()
@@ -113,13 +119,41 @@ public class Profil
         return _guthaben;
     }
 
-    public void setEmail(String email)
+    public void setEinzahlGuthaben(int betrag)
     {
-        this._email = email;
+        _guthaben = new Geldbetrag(_guthaben.getBetragInCent() + betrag, false);
     }
 
-    public void setHandynummer(String handynummer)
+    public boolean istAuszahlenMoeglich(int betrag)
     {
-        this._handynummer = handynummer;
+        System.out.println("Prüfung Auszahlen möglich");
+        return (_guthaben.getBetragInCent() >= betrag);
+    }
+
+    public void setAuszahlGuthaben(int betrag)
+    {
+        System.out.println("auszahlen..." + _guthaben.getBetragInCent());
+        _guthaben = new Geldbetrag(_guthaben.getBetragInCent() - betrag, false);
+        System.out.println("nach abziehen: " + _guthaben.getBetragInCent());
+    }
+
+    public Geldbetrag getMomentanesGuthaben()
+    {
+        return _momentanesGuthaben;
+    }
+
+    public void setMomentanesGuthaben(Geldbetrag restBetrag)
+    {
+        _momentanesGuthaben = restBetrag;
+    }
+
+    public boolean getBezahler()
+    {
+        return _bezahler;
+    }
+
+    public void setBezahler()
+    {
+        _bezahler = true;
     }
 }
