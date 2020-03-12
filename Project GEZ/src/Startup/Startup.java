@@ -1,43 +1,74 @@
 package Startup;
 
-import Service.FileService;
-import Service.GuthabenService;
-import Service.ProfilManagerService;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+import Werkzeuge.DeteiWerkzeug;
+import Werkzeuge.Guthaben.GuthabenWerkzeug;
+import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 public class Startup
 {
-    private static ProfilManagerService _profilManager;
-    private static GuthabenService _guthabenService;
+    private static ProfilWerkzeug _profilWerkzeug;
+    private static GuthabenWerkzeug _guthabenWerkzeug;
 
+    private JFrame frame;
+
+    /**
+     * Launch the application.
+     */
     public static void main(String[] args)
     {
-        erstelleServices();
-        if (FileService.bereitsInitialisiert(_profilManager))
+        EventQueue.invokeLater(new Runnable()
         {
-            FileService.leseBewohnerEin();
-            FileService.leseEinstellungenEin();
-            _guthabenService.berechneGuthaben();
-            _guthabenService.erzeugeGuthabenServiceUI();
-            FileService.speichereInDatei();
-        }
+            public void run()
+            {
+                try
+                {
+                    Startup window = new Startup();
+                    window.frame.setVisible(true);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
      * Erstellt die Services und lädt die Daten.
      */
-    private static void erstelleServices()
+    public Startup()
     {
-        _profilManager = new ProfilManagerService();
-        //        _profilManager.erzeugeProfilManagerUI(new Profil("1/515", "Dominick", "Test", 1245, "Email", "handy", 10, 2018, 12, 2099, false));
-        _guthabenService = new GuthabenService(_profilManager);
-
+        erstelleServices();
+        if (DeteiWerkzeug.bereitsInitialisiert(_profilWerkzeug))
+        {
+            DeteiWerkzeug.leseBewohnerEin();
+            DeteiWerkzeug.leseEinstellungenEin();
+            _guthabenWerkzeug.berechneGuthaben();
+            _guthabenWerkzeug.erzeugeGuthabenServiceUI();
+            DeteiWerkzeug.speichereInDatei();
+        }
     }
 
-    /*
-     * Bereich für ToDo Liste:
-     * TODO Datenbank implementierung
-     * TODO Maybe Übertragung auf eine Webanwendung (Javascript)
-     * TODO Verschlüsselung
-     * 
-     */
+    private void erstelleServices()
+    {
+        frame = new JFrame();
+        frame.setBounds(100, 100, 450, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        _profilWerkzeug = new ProfilWerkzeug();
+        //        _profilManager.erzeugeProfilManagerUI(new Profil("1/515", "Dominick", "Test", 1245, "Email", "handy", 10, 2018, 12, 2099, false));
+        _guthabenWerkzeug = new GuthabenWerkzeug(_profilWerkzeug);
+    }
+
 }
+
+/*
+ * Bereich für ToDo Liste:
+ * TODO Datenbank implementierung
+ * TODO Maybe Übertragung auf eine Webanwendung (Javascript)
+ * TODO Verschlüsselung
+ * 
+ */

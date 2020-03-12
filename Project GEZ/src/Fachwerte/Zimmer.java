@@ -1,7 +1,6 @@
 package Fachwerte;
 
-import Enums.Errors;
-import Service.ErrorOutputService;
+import Werkzeuge.ErrorOutputWerkzeug;
 
 /*
  * Generierung von Zimmern
@@ -28,7 +27,7 @@ public class Zimmer
         else if (zimmernummer < 0)
         {
             _zimmernummer = "ERROR";
-            ErrorOutputService.ErrorOutputConsole(Errors.inputError);
+            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.inputError);
         }
         else
         {

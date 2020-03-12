@@ -1,4 +1,4 @@
-package Startup;
+package Werkzeuge.ProfilManager;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
@@ -6,22 +6,22 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import Material.Profil;
+import Materialien.Profil;
 
-public class BewohnerEditorUI extends JDialog
+public class BewohnerEditorWerkzeugUI extends JInternalFrame
 {
-    public BewohnerEditorUI()
+    public BewohnerEditorWerkzeugUI()
     {
         intitialisieren();
     }
 
-    public BewohnerEditorUI(Profil profil)
+    public BewohnerEditorWerkzeugUI(Profil profil)
     {
         intitialisieren();
         _textFieldVorname.setText(profil.getName().getVorname());

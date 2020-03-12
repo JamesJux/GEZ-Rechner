@@ -1,4 +1,4 @@
-package Startup;
+package Werkzeuge.Guthaben;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -6,15 +6,16 @@ import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Material.Profil;
+import Materialien.Profil;
 
-public class GuthabenServiceUI extends JFrame
+public class GuthabenWerkzeugUI extends JInternalFrame
 {
-    public GuthabenServiceUI(Profil profil)
+    public GuthabenWerkzeugUI(Profil profil)
     {
         intitialisieren(profil);
     }

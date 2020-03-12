@@ -1,4 +1,4 @@
-package Service;
+package Werkzeuge.Guthaben;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,18 +8,18 @@ import javax.swing.JOptionPane;
 
 import Fachwerte.Datum;
 import Fachwerte.Geldbetrag;
-import Material.Profil;
-import Startup.GuthabenServiceUI;
+import Materialien.Profil;
+import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
-public class GuthabenService
+public class GuthabenWerkzeug
 {
-    ProfilManagerService PMS;
-    GuthabenServiceUI _ui;
+    ProfilWerkzeug PMS;
+    GuthabenWerkzeugUI _ui;
     Profil profil;
 
-    public GuthabenService(ProfilManagerService ProfilManager)
+    public GuthabenWerkzeug(ProfilWerkzeug profilWerkzeug)
     {
-        PMS = ProfilManager;
+        PMS = profilWerkzeug;
         berechneGuthaben();
     }
 
@@ -32,7 +32,7 @@ public class GuthabenService
                 profil = profil2;
             }
         }
-        _ui = new GuthabenServiceUI(profil);
+        _ui = new GuthabenWerkzeugUI(profil);
         registriereUIAktionen();
     }
 

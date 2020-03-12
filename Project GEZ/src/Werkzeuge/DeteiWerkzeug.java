@@ -1,4 +1,4 @@
-package Service;
+package Werkzeuge;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,8 +8,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.StringTokenizer;
 
-import Enums.Errors;
-import Material.Profil;
+import Fachwerte.Errors;
+import Materialien.Profil;
+import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 /**
  * 
@@ -18,18 +19,18 @@ import Material.Profil;
  * @author Dominick
  * @version 19.10.2019
  */
-public class FileService
+public class DeteiWerkzeug
 {
     private static final String PATH = "./Textdateien";
     private static final File BEWOHNER_DATEI = new File(PATH + "/Bewohner.txt");
     private static final File OUTPUT = new File(PATH + "/Output Bewohner.txt");
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
 
-    static ProfilManagerService PMS;
+    static ProfilWerkzeug PMS;
 
-    public static boolean bereitsInitialisiert(ProfilManagerService _profilManager)
+    public static boolean bereitsInitialisiert(ProfilWerkzeug _profilWerkzeug)
     {
-        PMS = _profilManager;
+        PMS = _profilWerkzeug;
         new File(PATH).mkdir();
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
@@ -115,11 +116,11 @@ public class FileService
         }
         catch (FileNotFoundException e)
         {
-            ErrorOutputService.ErrorOutputConsole(Errors.fileNotFoundError);
+            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.fileNotFoundError);
         }
         catch (IOException e)
         {
-            ErrorOutputService.ErrorOutputConsole(Errors.fileNotReadError);
+            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.fileNotReadError);
         }
     }
 
@@ -171,7 +172,7 @@ public class FileService
         }
         catch (IOException e)
         {
-            ErrorOutputService.ErrorOutputConsole(Errors.fileNotReadError);
+            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.fileNotReadError);
         }
     }
 }

@@ -1,4 +1,4 @@
-package Material;
+package Materialien;
 
 import Fachwerte.Datum;
 import Fachwerte.Geldbetrag;

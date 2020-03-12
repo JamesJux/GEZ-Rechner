@@ -1,4 +1,4 @@
-package Service;
+package Werkzeuge.ProfilManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,32 +6,32 @@ import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
-import Enums.Errors;
 import Fachwerte.Datum;
-import Material.Profil;
-import Startup.BewohnerEditorUI;
+import Fachwerte.Errors;
+import Materialien.Profil;
+import Werkzeuge.ErrorOutputWerkzeug;
 
-public class ProfilManagerService
+public class ProfilWerkzeug
 {
     //TODO hier sollte das eigentliche Programm stehen
 
     private HashSet<Profil> profile;
-    BewohnerEditorUI _ui;
+    BewohnerEditorWerkzeugUI _ui;
 
-    public ProfilManagerService()
+    public ProfilWerkzeug()
     {
         profile = new HashSet<Profil>();
     }
 
     public void erzeugeProfilManagerUI()
     {
-        _ui = new BewohnerEditorUI();
+        _ui = new BewohnerEditorWerkzeugUI();
         registriereUIAktionen();
     }
 
-    public void erzeugeProfilManagerUI(Profil profil)
+    public void erzeugeProfilWerkzeugUI(Profil profil)
     {
-        _ui = new BewohnerEditorUI(profil);
+        _ui = new BewohnerEditorWerkzeugUI(profil);
         registriereUIAktionen();
     }
 
@@ -51,7 +51,7 @@ public class ProfilManagerService
         }
         else
         {
-            ErrorOutputService.ErrorOutputConsole(Errors.profileRemoveError);
+            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.profileRemoveError);
         }
     }
 
@@ -63,7 +63,7 @@ public class ProfilManagerService
         String name = _ui.get_textFieldNachname().getText();
         if (vorname.equals("") || name.equals(""))
         {
-            ErrorOutputService.ErrorOutputConsole(Errors.inputError);
+            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.inputError);
         }
         int Guthaben = 12345;
         int EinMonat = Integer.parseInt(_ui.get_choiceMonat().getSelectedItem());
@@ -99,7 +99,7 @@ public class ProfilManagerService
 
     }
 
-    boolean wohntImHaus(Profil profil, Datum datum)
+    public boolean wohntImHaus(Profil profil, Datum datum)
     {
         if ((profil.getEinzugsdatum()).getTagZahl() < datum.getTagZahl() && datum.getTagZahl() < (profil.getAuszugsdatum()).getTagZahl())
         {

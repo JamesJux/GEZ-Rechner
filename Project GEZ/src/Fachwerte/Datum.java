@@ -2,8 +2,6 @@ package Fachwerte;
 
 import java.util.Calendar;
 
-import Enums.Daten;
-
 public class Datum
 {
     private final int TAG;
