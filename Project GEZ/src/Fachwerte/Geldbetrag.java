@@ -18,12 +18,9 @@ public final class Geldbetrag
      * Wählt einen Geldbetrag aus.
      * 
      * @param eurocent Der Betrag in ganzen Euro-Cent
-     * 
-     * @require eurocent >= 0;
      */
     public Geldbetrag(int eurocent, boolean minus)
     {
-        assert eurocent >= 0 : "Vorbedingung verletzt: eurocent >= 0";
         _euroAnteil = eurocent / 100;
         _centAnteil = eurocent % 100;
         _eurocent = eurocent;
@@ -54,6 +51,26 @@ public final class Geldbetrag
     public int getBetragInCent()
     {
         return _eurocent;
+    }
+
+    /**
+     * Gibt zurück ob der Betrag negativ ist.
+     * 
+     * @return Boolean ob der Betrag negativ ist.
+     */
+    public boolean istBetragNegativ()
+    {
+        return _negativ;
+    }
+
+    /**
+     * Gibt zurück ob der Betrag null ist.
+     * 
+     * @return Boolean ob der Betrag 0,00€ ist.
+     */
+    public boolean istBetragNull()
+    {
+        return _eurocent == 0;
     }
 
     /**

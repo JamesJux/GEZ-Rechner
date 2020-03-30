@@ -37,7 +37,7 @@ public class ErrorOutputWerkzeug
             output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gelesen werden konnte.";
             break;
         default:
-            output = "ErrorOutputService Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System Hinzugefügt.";
+            output = "ErrorOutputService Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
         }
         ErrorOutputTextfile(output);
     }

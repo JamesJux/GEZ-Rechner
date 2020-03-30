@@ -6,40 +6,36 @@ import java.util.GregorianCalendar;
 
 import javax.swing.JOptionPane;
 
-import Fachwerte.Datum;
 import Fachwerte.Geldbetrag;
 import Materialien.Profil;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 public class GuthabenWerkzeug
 {
-    ProfilWerkzeug PMS;
+    ProfilWerkzeug PW;
     GuthabenWerkzeugUI _ui;
     Profil profil;
+    private int EinAusBetrag;
 
     public GuthabenWerkzeug(ProfilWerkzeug profilWerkzeug)
     {
-        PMS = profilWerkzeug;
+        PW = profilWerkzeug;
         berechneGuthaben();
     }
 
-    public void erzeugeGuthabenServiceUI()
+    public void erzeugeGuthabenWerkzeugUI(Profil aktProfil)
     {
-        for (Profil profil2 : PMS.getProfile())
-        {
-            if (profil2.getName().toFormattedString().equals("Dominick Labatz"))
-            {
-                profil = profil2;
-            }
-        }
+        profil = aktProfil;
         _ui = new GuthabenWerkzeugUI(profil);
+        EinAusBetrag = 0;
+        _ui.get_AuszahlenButton().setEnabled(!profil.getMomentanesGuthaben().istBetragNegativ());
         registriereUIAktionen();
     }
 
     public void berechneGuthaben()
     {
         new GregorianCalendar();
-        for (Profil profil : PMS.getProfile())
+        for (Profil profil : PW.getProfile())
         {
             int betragCent = 0;
 
@@ -52,9 +48,9 @@ public class GuthabenWerkzeug
                 {
                     monat++;
 
-                    if (PMS.wohntImHaus(profil, new Datum(15, monat, jahr)))
+                    if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
                     {
-                        int diesenMonat = runden(17500 / PMS.getAnzahlZahlendeBewohner(new Datum(15, monat, jahr)));
+                        int diesenMonat = runden(17500 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
                         betragCent -= diesenMonat;
                     }
                     if (monat == 12)
@@ -78,6 +74,50 @@ public class GuthabenWerkzeug
         return Monate + 1;
     }
 
+    private void Auszahlen()
+    {
+        String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie auszahlen möchten", "Auszahlung", JOptionPane.PLAIN_MESSAGE);
+        if (eingabe != null)
+        {
+            if (!eingabe.matches("[0-9]{1,}"))
+            {
+                JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Betrag ein", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
+                Auszahlen();
+            }
+            else
+            {
+                if (PW.istAuszahlenMoeglich(profil, Integer.valueOf(eingabe)))
+                {
+                    PW.MomentanesGuthabenAuszahlen(profil, Integer.valueOf(eingabe));
+                    EinAusBetrag -= Integer.valueOf(eingabe);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Betrag ein, der dem Restguthaben oder weniger entspricht", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
+                    Auszahlen();
+                }
+            }
+        }
+    }
+
+    private void Einzahlen()
+    {
+        String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie einzahlen möchten", "Einzahlung", JOptionPane.PLAIN_MESSAGE);
+        if (eingabe != null)
+        {
+            if (!eingabe.matches("[0-9]{1,}"))
+            {
+                JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Betrag ein", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
+                Einzahlen();
+            }
+            else
+            {
+                PW.MomentanesGuthabenEinzahlen(profil, Integer.valueOf(eingabe));
+                EinAusBetrag += Integer.valueOf(eingabe);
+            }
+        }
+    }
+
     private void registriereUIAktionen()
     {
         _ui.get_EinzahlenButton().addActionListener(new ActionListener()
@@ -85,8 +125,6 @@ public class GuthabenWerkzeug
             public void actionPerformed(ActionEvent e)
             {
                 Einzahlen();
-                berechneGuthaben();
-
                 _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
             }
         });
@@ -96,7 +134,6 @@ public class GuthabenWerkzeug
             public void actionPerformed(ActionEvent e)
             {
                 Auszahlen();
-                berechneGuthaben();
                 _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
             }
         });
@@ -105,46 +142,11 @@ public class GuthabenWerkzeug
         {
             public void actionPerformed(ActionEvent e)
             {
-                System.out.println("ok");
+                PW.speichereGuthaben(profil, EinAusBetrag);
+                berechneGuthaben();
+                GuthabenWerkzeugUI.schliessen();
             }
         });
-    }
-
-    private void Auszahlen()
-    {
-        String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie auszahlen möchten", "Auszahlung", JOptionPane.PLAIN_MESSAGE);
-        if (!eingabe.matches("[0-9]{1,}"))
-        {
-            JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Betrag ein", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
-            Auszahlen();
-        }
-        else
-        {
-            int betrag = Integer.valueOf(eingabe);
-            if (profil.istAuszahlenMoeglich(betrag))
-            {
-                profil.setAuszahlGuthaben(betrag);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Betrag ein, der dem Restguthaben oder weniger entspricht", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
-
-    private void Einzahlen()
-    {
-        String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie einzahlen möchten", "Einzahlung", JOptionPane.PLAIN_MESSAGE);
-        if (!eingabe.matches("[0-9]{1,}"))
-        {
-            JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Betrag ein", "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
-            Einzahlen();
-        }
-        else
-        {
-            int betrag = Integer.valueOf(eingabe);
-            profil.setEinzahlGuthaben(betrag);
-        }
     }
 
     static int runden(int zahl)

@@ -14,10 +14,10 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 /**
  * 
- *  Der Service zum Verarbeiten der Bewohner und anderer Dateien.
+ *  Das Werkzeug zum Verarbeiten der Bewohner und anderer Dateien.
  *  
  * @author Dominick
- * @version 19.10.2019
+ * @version 28.03.2020
  */
 public class DeteiWerkzeug
 {
@@ -26,11 +26,11 @@ public class DeteiWerkzeug
     private static final File OUTPUT = new File(PATH + "/Output Bewohner.txt");
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
 
-    static ProfilWerkzeug PMS;
+    static ProfilWerkzeug PW;
 
     public static boolean bereitsInitialisiert(ProfilWerkzeug _profilWerkzeug)
     {
-        PMS = _profilWerkzeug;
+        PW = _profilWerkzeug;
         new File(PATH).mkdir();
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
@@ -111,7 +111,7 @@ public class DeteiWerkzeug
                 int AusMonat = Integer.valueOf(tokenizer.nextToken());
                 int AusJahr = Integer.valueOf(tokenizer.nextToken());
 
-                PMS.createProfil(ZimmerID, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr, false);
+                PW.erstelleProfil(ZimmerID, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr);
             }
         }
         catch (FileNotFoundException e)
@@ -126,11 +126,9 @@ public class DeteiWerkzeug
 
     public static void speichereInDatei()
     {
-        PrintStream printer;
-        try
+        try (PrintStream printer = new PrintStream(OUTPUT))
         {
-            printer = new PrintStream(OUTPUT);
-            for (Profil p : PMS.getProfile())
+            for (Profil p : PW.getProfile())
             {
                 String aa = p.getZimmer().toFormattedString();
                 String ab = p.getName().getVorname();
@@ -138,10 +136,10 @@ public class DeteiWerkzeug
                 String ad = p.getEmail();
                 String ae = p.getHandynummer();
                 int af = p.getGuthaben().getBetragInCent();
-                int ag = p.getEinzugsdatum().getMonat();
-                int ah = p.getEinzugsdatum().getJahr();
-                int ai = p.getAuszugsdatum().getMonat();
-                int aj = p.getAuszugsdatum().getJahr();
+                String ag = p.getEinzugsdatum().toInstant().toString().substring(5, 7);
+                String ah = p.getEinzugsdatum().toInstant().toString().substring(0, 4);
+                String ai = p.getAuszugsdatum().toInstant().toString().substring(5, 7);
+                String aj = p.getAuszugsdatum().toInstant().toString().substring(0, 4);
 
                 printer.println(aa + ";" + ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai + ";" + aj);
             }
@@ -157,7 +155,6 @@ public class DeteiWerkzeug
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
             String line = null;
-            // liest Datei Zeile für Zeile
             while ((line = reader.readLine()) != null)
             {
                 StringTokenizer tokenizer = new StringTokenizer(line, "=");
@@ -165,9 +162,8 @@ public class DeteiWerkzeug
                 if (eingelesenerString.equals("Bezahlt"))
                 {
                     String Bezahler = tokenizer.nextToken();
-                    PMS.registriereBezahler(Bezahler);
+                    PW.registriereBezahler(Bezahler);
                 }
-
             }
         }
         catch (IOException e)

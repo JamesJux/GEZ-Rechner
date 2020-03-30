@@ -4,43 +4,25 @@ import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Materialien.Profil;
+import Werkzeuge.Startseite;
 
-public class BewohnerEditorWerkzeugUI extends JInternalFrame
+public class ProfilWerkzeugUI extends JInternalFrame
 {
-    public BewohnerEditorWerkzeugUI()
-    {
-        intitialisieren();
-    }
-
-    public BewohnerEditorWerkzeugUI(Profil profil)
-    {
-        intitialisieren();
-        _textFieldVorname.setText(profil.getName().getVorname());
-        _textFieldNachname.setText(profil.getName().getNachname());
-        _textFieldTelefon.setText(profil.getHandynummer());
-        _textFieldEmail.setText(profil.getEmail());
-        _choiceMonat.select("" + profil.getEinzugsdatum().getMonat());
-        _choiceJahr.select("" + profil.getEinzugsdatum().getJahr());
-        _choiceHaus.select("" + profil.getZimmer().getHaus());
-        _choiceEtage.select("" + profil.getZimmer().getStockwerk());
-        _choiceZimmer.select("" + profil.getZimmer().getZimmernummer());
-        _choiceMonatAus.select("" + profil.getAuszugsdatum().getMonat());
-        _choiceJahrAus.select("" + profil.getAuszugsdatum().getJahr());
-
-    }
-
     private static final String TITEL = "Bewohner - Editor";
-
-    private static final JFrame _frame = new JFrame(TITEL);
+    private static JFrame _frame = new JFrame(TITEL);
+    private JButton _infoButton;
     JTextField _textFieldVorname;
     JTextField _textFieldNachname;
     JTextField _textFieldTelefon;
@@ -53,52 +35,77 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
     Choice _choiceJahrAus;
     Choice _choiceMonatAus;
     JButton _speichernButton;
-    JButton AbbrechenButton;
-    private JButton _InfoButton;
+    JButton _abbrechenButton;
+    JButton _bewohnerLöschenButton;
+
+    public ProfilWerkzeugUI()
+    {
+        intitialisieren();
+    }
+
+    public ProfilWerkzeugUI(Profil profil)
+    {
+        intitialisieren();
+        _textFieldVorname.setText(profil.getName().getVorname());
+        _textFieldNachname.setText(profil.getName().getNachname());
+        _textFieldTelefon.setText(profil.getHandynummer());
+        _textFieldEmail.setText(profil.getEmail());
+        _choiceMonat.select("" + profil.getEinzugsdatum().toInstant().toString().substring(5, 7));
+        _choiceJahr.select("" + profil.getEinzugsdatum().toInstant().toString().substring(0, 4));
+        _choiceHaus.select("" + profil.getZimmer().getHaus());
+        _choiceEtage.select("" + profil.getZimmer().getStockwerk());
+        _choiceZimmer.select("" + profil.getZimmer().getZimmernummer());
+        _choiceMonatAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(5, 7));
+        _choiceJahrAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(0, 4));
+    }
 
     public void intitialisieren()
     {
-
-        _frame.setBounds(100, 100, 450, 320);
+        _frame.setBounds(600, 400, 450, 320);
         _frame.setVisible(true);
-        _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        _frame.setResizable(false);
+        _frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         _frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-        JPanel _hauptPanel = new JPanel();
-        _frame.getContentPane().add(_hauptPanel, BorderLayout.CENTER);
+        _frame.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                if (AbfrageSchliessenButton())
+                {
+                    schliessen();
+                }
+            }
+        });
 
-        _hauptPanel.setLayout(new GridLayout(0, 1));
+        JPanel HauptPanel = new JPanel();
+        _frame.getContentPane().add(HauptPanel, BorderLayout.CENTER);
 
-        JPanel _NamePanel = new JPanel();
-        _hauptPanel.add(_NamePanel);
-        _NamePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        HauptPanel.setLayout(new GridLayout(0, 1));
 
-        JLabel _nameLabel = new JLabel("  Vor- Nachname :");
-        _NamePanel.add(_nameLabel);
-
+        JPanel NamePanel = new JPanel();
+        HauptPanel.add(NamePanel);
+        NamePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel NameLabel = new JLabel("  Vor- Nachname :");
+        NamePanel.add(NameLabel);
         _textFieldVorname = new JTextField();
-        _NamePanel.add(_textFieldVorname);
+        NamePanel.add(_textFieldVorname);
         _textFieldVorname.setColumns(15);
-
         _textFieldNachname = new JTextField();
-        _NamePanel.add(_textFieldNachname);
+        NamePanel.add(_textFieldNachname);
         _textFieldNachname.setColumns(15);
 
-        JPanel _HausUndZimmer = new JPanel();
-        _hauptPanel.add(_HausUndZimmer);
-        _HausUndZimmer.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-        JLabel _hausLabel = new JLabel("  Haus :");
-        _HausUndZimmer.add(_hausLabel);
-
+        JPanel HausUndZimmer = new JPanel();
+        HauptPanel.add(HausUndZimmer);
+        HausUndZimmer.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel HausLabel = new JLabel("  Haus :");
+        HausUndZimmer.add(HausLabel);
         _choiceHaus = new Choice();
         _choiceHaus.add("1");
         _choiceHaus.add("2");
-        _HausUndZimmer.add(_choiceHaus);
-
-        JLabel _etageLabel = new JLabel("  Etage :");
-        _HausUndZimmer.add(_etageLabel);
-
+        HausUndZimmer.add(_choiceHaus);
+        JLabel EtageLabel = new JLabel("  Etage :");
+        HausUndZimmer.add(EtageLabel);
         _choiceEtage = new Choice();
         _choiceEtage.add("0");
         _choiceEtage.add("1");
@@ -106,11 +113,9 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
         _choiceEtage.add("3");
         _choiceEtage.add("4");
         _choiceEtage.add("5");
-        _HausUndZimmer.add(_choiceEtage);
-
-        JLabel _zimmerLabel = new JLabel("  Zimmer :");
-        _HausUndZimmer.add(_zimmerLabel);
-
+        HausUndZimmer.add(_choiceEtage);
+        JLabel ZimmerLabel = new JLabel("  Zimmer :");
+        HausUndZimmer.add(ZimmerLabel);
         _choiceZimmer = new Choice();
         _choiceZimmer.add("00");
         _choiceZimmer.add("01");
@@ -133,15 +138,13 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
         _choiceZimmer.add("18");
         _choiceZimmer.add("19");
         _choiceZimmer.add("20");
-        _HausUndZimmer.add(_choiceZimmer);
+        HausUndZimmer.add(_choiceZimmer);
 
-        JPanel _EinzugdatumPanel = new JPanel();
-        _hauptPanel.add(_EinzugdatumPanel);
-        _EinzugdatumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-        JLabel _einzugsLabel = new JLabel("  Einzugsmonat :");
-        _EinzugdatumPanel.add(_einzugsLabel);
-
+        JPanel EinzugdatumPanel = new JPanel();
+        HauptPanel.add(EinzugdatumPanel);
+        EinzugdatumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel EinzugsLabel = new JLabel("  Einzugsmonat :");
+        EinzugdatumPanel.add(EinzugsLabel);
         _choiceMonat = new Choice();
         _choiceMonat.add("1");
         _choiceMonat.add("2");
@@ -155,45 +158,38 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
         _choiceMonat.add("10");
         _choiceMonat.add("11");
         _choiceMonat.add("12");
-        _EinzugdatumPanel.add(_choiceMonat);
-
+        EinzugdatumPanel.add(_choiceMonat);
         _choiceJahr = new Choice();
         _choiceJahr.add("2018");
         _choiceJahr.add("2019");
         _choiceJahr.add("2020");
         _choiceJahr.add("2021");
         _choiceJahr.add("2022");
-        _EinzugdatumPanel.add(_choiceJahr);
+        EinzugdatumPanel.add(_choiceJahr);
 
-        JPanel _TelefonPanel = new JPanel();
-        _hauptPanel.add(_TelefonPanel);
-        _TelefonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-        JLabel _telefonLabel = new JLabel("  Telefon :");
-        _TelefonPanel.add(_telefonLabel);
-
+        JPanel TelefonPanel = new JPanel();
+        HauptPanel.add(TelefonPanel);
+        TelefonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel TelefonLabel = new JLabel("  Telefon :");
+        TelefonPanel.add(TelefonLabel);
         _textFieldTelefon = new JTextField();
-        _TelefonPanel.add(_textFieldTelefon);
+        TelefonPanel.add(_textFieldTelefon);
         _textFieldTelefon.setColumns(30);
 
-        JPanel _EmailPanel = new JPanel();
-        _hauptPanel.add(_EmailPanel);
-        _EmailPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-        JLabel _emailLabel = new JLabel("  E-Mail :   ");
-        _EmailPanel.add(_emailLabel);
-
+        JPanel EmailPanel = new JPanel();
+        HauptPanel.add(EmailPanel);
+        EmailPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel EmailLabel = new JLabel("  E-Mail :   ");
+        EmailPanel.add(EmailLabel);
         _textFieldEmail = new JTextField();
-        _EmailPanel.add(_textFieldEmail);
+        EmailPanel.add(_textFieldEmail);
         _textFieldEmail.setColumns(30);
 
-        JPanel _AuszugsdatumPanel = new JPanel();
-        _hauptPanel.add(_AuszugsdatumPanel);
-        _AuszugsdatumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
+        JPanel AuszugsdatumPanel = new JPanel();
+        HauptPanel.add(AuszugsdatumPanel);
+        AuszugsdatumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         JLabel _auszugsLabel = new JLabel("  Auszugsmonat :");
-        _AuszugsdatumPanel.add(_auszugsLabel);
-
+        AuszugsdatumPanel.add(_auszugsLabel);
         _choiceMonatAus = new Choice();
         _choiceMonatAus.add("1");
         _choiceMonatAus.add("2");
@@ -207,8 +203,7 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
         _choiceMonatAus.add("10");
         _choiceMonatAus.add("11");
         _choiceMonatAus.add("12");
-        _AuszugsdatumPanel.add(_choiceMonatAus);
-
+        AuszugsdatumPanel.add(_choiceMonatAus);
         _choiceJahrAus = new Choice();
         _choiceJahrAus.add("2018");
         _choiceJahrAus.add("2019");
@@ -216,20 +211,18 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
         _choiceJahrAus.add("2021");
         _choiceJahrAus.add("2022");
         _choiceJahrAus.add("2099");
-        _AuszugsdatumPanel.add(_choiceJahrAus);
-
-        _InfoButton = new JButton("Info");
-        _AuszugsdatumPanel.add(_InfoButton);
+        AuszugsdatumPanel.add(_choiceJahrAus);
+        _infoButton = new JButton("Info");
+        AuszugsdatumPanel.add(_infoButton);
 
         JPanel ButtonPanel = new JPanel();
         _frame.getContentPane().add(ButtonPanel, BorderLayout.SOUTH);
-
-        ButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        _bewohnerLöschenButton = new JButton("Bewohner Löschen");
+        ButtonPanel.add(_bewohnerLöschenButton);
         _speichernButton = new JButton("Speichern");
         ButtonPanel.add(_speichernButton);
-
-        AbbrechenButton = new JButton("Abbrechen");
-        ButtonPanel.add(AbbrechenButton);
+        _abbrechenButton = new JButton("Abbrechen");
+        ButtonPanel.add(_abbrechenButton);
 
         _frame.revalidate();
     }
@@ -294,19 +287,30 @@ public class BewohnerEditorWerkzeugUI extends JInternalFrame
         return _speichernButton;
     }
 
+    public JButton get_bewohnerLöschenButton()
+    {
+        return _bewohnerLöschenButton;
+    }
+
     public JButton getAbbrechenButton()
     {
-        return AbbrechenButton;
+        return _abbrechenButton;
     }
 
     public JButton get_InfoButton()
     {
-        return _InfoButton;
+        return _infoButton;
     }
 
-    public void schliesseFenster()
+    private static boolean AbfrageSchliessenButton()
     {
+        return (JOptionPane.showConfirmDialog(_frame, "Nicht gespeicherte Änderungen gehen verloren.", "Beenden?", JOptionPane.OK_CANCEL_OPTION) == 0);
+    }
+
+    static void schliessen()
+    {
+        _frame.removeAll();
         _frame.dispose();
-        System.exit(1);
+        Startseite.setzeAktiv();
     }
 }

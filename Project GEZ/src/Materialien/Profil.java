@@ -1,6 +1,7 @@
 package Materialien;
 
-import Fachwerte.Datum;
+import java.util.GregorianCalendar;
+
 import Fachwerte.Geldbetrag;
 import Fachwerte.Name;
 import Fachwerte.Zimmer;
@@ -9,8 +10,8 @@ public class Profil
 {
     private Name _name;
     private Zimmer _zimmer;
-    private Datum _einzugsdatum;
-    private Datum _auszugsdatum;
+    private GregorianCalendar _einzugsdatum;
+    private GregorianCalendar _auszugsdatum;
 
     private Geldbetrag _guthaben;
     private String _email;
@@ -33,45 +34,17 @@ public class Profil
      */
 
     public Profil(String zimmer, String vorname, String name, int guthaben, String email, String handynummer,
-            int EinMonat, int EinJahr, int AusMonat, int AusJahr, boolean bezahler)
+            int EinMonat, int EinJahr, int AusMonat, int AusJahr)
     {
         _zimmer = new Zimmer(zimmer);
         _name = new Name(vorname, name);
-        _einzugsdatum = new Datum(1, EinMonat, EinJahr);
-        _auszugsdatum = new Datum(30, AusMonat, AusJahr);
+        _einzugsdatum = new GregorianCalendar(EinJahr, EinMonat - 1, 2);
+        _auszugsdatum = new GregorianCalendar(AusJahr, AusMonat - 1, 20);
         _guthaben = new Geldbetrag(guthaben, false);
         _email = email;
         _handynummer = handynummer;
-        _bezahler = bezahler;
+        _bezahler = false;
         _momentanesGuthaben = new Geldbetrag(guthaben, false);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        String hashString = _name.toFormattedString() + _zimmer.toFormattedString() + _einzugsdatum.toFormattedString();
-
-        char hashArray[] = hashString.toCharArray();
-
-        int test[] = new int[hashArray.length];
-        for (int i = 0; i < hashArray.length - 1; i++)
-        {
-            test[i] = (int) hashArray[i];
-        }
-
-        int hashCode = 0;
-        for (int i : test)
-        {
-            hashCode += i;
-        }
-
-        return hashCode;
-    }
-
-    @Override
-    public boolean equals(Object p)
-    {
-        return this.hashCode() == p.hashCode();
     }
 
     public Name getName()
@@ -84,12 +57,12 @@ public class Profil
         return _zimmer;
     }
 
-    public Datum getEinzugsdatum()
+    public GregorianCalendar getEinzugsdatum()
     {
         return _einzugsdatum;
     }
 
-    public Datum getAuszugsdatum()
+    public GregorianCalendar getAuszugsdatum()
     {
         return _auszugsdatum;
     }
@@ -119,22 +92,14 @@ public class Profil
         return _guthaben;
     }
 
-    public void setEinzahlGuthaben(int betrag)
+    public void setGuthaben(Geldbetrag guthaben)
     {
-        _guthaben = new Geldbetrag(_guthaben.getBetragInCent() + betrag, false);
+        _guthaben = guthaben;
     }
 
     public boolean istAuszahlenMoeglich(int betrag)
     {
-        System.out.println("Prüfung Auszahlen möglich");
         return (_guthaben.getBetragInCent() >= betrag);
-    }
-
-    public void setAuszahlGuthaben(int betrag)
-    {
-        System.out.println("auszahlen..." + _guthaben.getBetragInCent());
-        _guthaben = new Geldbetrag(_guthaben.getBetragInCent() - betrag, false);
-        System.out.println("nach abziehen: " + _guthaben.getBetragInCent());
     }
 
     public Geldbetrag getMomentanesGuthaben()
@@ -142,9 +107,9 @@ public class Profil
         return _momentanesGuthaben;
     }
 
-    public void setMomentanesGuthaben(Geldbetrag restBetrag)
+    public void setMomentanesGuthaben(Geldbetrag betrag)
     {
-        _momentanesGuthaben = restBetrag;
+        _momentanesGuthaben = betrag;
     }
 
     public boolean getBezahler()

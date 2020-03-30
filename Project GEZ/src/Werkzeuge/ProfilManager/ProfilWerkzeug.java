@@ -2,57 +2,57 @@ package Werkzeuge.ProfilManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
-import Fachwerte.Datum;
 import Fachwerte.Errors;
+import Fachwerte.Geldbetrag;
 import Materialien.Profil;
 import Werkzeuge.ErrorOutputWerkzeug;
 
 public class ProfilWerkzeug
 {
-    //TODO hier sollte das eigentliche Programm stehen
-
     private HashSet<Profil> profile;
-    BewohnerEditorWerkzeugUI _ui;
+    ProfilWerkzeugUI _ui;
+    private boolean benutzerBearbeiten;
 
     public ProfilWerkzeug()
     {
         profile = new HashSet<Profil>();
     }
 
-    public void erzeugeProfilManagerUI()
+    public void erzeugeProfilWerkzeugUI()
     {
-        _ui = new BewohnerEditorWerkzeugUI();
+        _ui = new ProfilWerkzeugUI();
+        benutzerBearbeiten = false;
         registriereUIAktionen();
     }
 
     public void erzeugeProfilWerkzeugUI(Profil profil)
     {
-        _ui = new BewohnerEditorWerkzeugUI(profil);
+        _ui = new ProfilWerkzeugUI(profil);
+        _ui.get_textFieldNachname().setEditable(false);
+        _ui.get_textFieldVorname().setEditable(false);
+        _ui.get_choiceEtage().setEnabled(false);
+        _ui.get_choiceHaus().setEnabled(false);
+        _ui.get_choiceZimmer().setEnabled(false);
+        benutzerBearbeiten = true;
         registriereUIAktionen();
     }
 
-    public void createProfil(String zimmer, String vorname, String name, int guthaben, int EinMonat, int EinJahr, String email,
-            String handynummer, int AusMonat, int AusJahr, boolean bezahler)
+    public HashSet<Profil> getProfile()
     {
-        Profil newProfile = new Profil(zimmer, vorname, name, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr, bezahler);
-
-        profile.add(newProfile);
+        return profile;
     }
 
-    public void deleteProfil(Profil profil)
+    public void erstelleProfil(String zimmer, String vorname, String name, int guthaben, int EinMonat, int EinJahr, String email,
+            String handynummer, int AusMonat, int AusJahr)
     {
-        if (profile.contains(profil))
-        {
-            profile.remove(profil);
-        }
-        else
-        {
-            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.profileRemoveError);
-        }
+        Profil neuesProfil = new Profil(zimmer, vorname, name, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr);
+
+        profile.add(neuesProfil);
     }
 
     public void neuenBenutzerSpeichern()
@@ -65,7 +65,7 @@ public class ProfilWerkzeug
         {
             ErrorOutputWerkzeug.ErrorOutputConsole(Errors.inputError);
         }
-        int Guthaben = 12345;
+        int Guthaben = 0;
         int EinMonat = Integer.parseInt(_ui.get_choiceMonat().getSelectedItem());
         int EinJahr = Integer.parseInt(_ui.get_choiceJahr().getSelectedItem());
         String Email = _ui.get_textFieldEmail().getText();
@@ -80,12 +80,10 @@ public class ProfilWerkzeug
         }
         int AusMonat = Integer.parseInt(_ui.get_choiceMonatAus().getSelectedItem());
         int AusJahr = Integer.parseInt(_ui.get_choiceJahrAus().getSelectedItem());
-        //        System.out.println(zimmer + ";" + vorname + ";" + name + ";" + Email + ";" + Handynummer + ";" + Guthaben + ";" + EinMonat + ";"
-        //                + EinJahr + ";" + AusMonat + ";" + AusJahr);
-        createProfil(zimmer, vorname, name, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr, false);
+        erstelleProfil(zimmer, vorname, name, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
     }
 
-    public int getAnzahlZahlendeBewohner(Datum datum)
+    public int getAnzahlZahlendeBewohner(GregorianCalendar datum)
     {
         int temp = 0;
         for (Profil profil : profile)
@@ -99,29 +97,74 @@ public class ProfilWerkzeug
 
     }
 
-    public boolean wohntImHaus(Profil profil, Datum datum)
+    public boolean wohntImHaus(Profil profil, GregorianCalendar datum)
     {
-        if ((profil.getEinzugsdatum()).getTagZahl() < datum.getTagZahl() && datum.getTagZahl() < (profil.getAuszugsdatum()).getTagZahl())
+        if (profil.getEinzugsdatum().getTime().before(datum.getTime()) && datum.getTime().before(profil.getAuszugsdatum().getTime()))
         {
             return true;
         }
         return false;
     }
 
-    public HashSet<Profil> getProfile()
+    public Profil getProfil(String gesProfil)
     {
-        return profile;
+        for (Profil profil : profile)
+        {
+            if (gesProfil.equals(profil.getName().toFormattedString()))
+            {
+                return profil;
+            }
+        }
+        return new Profil("", "", "", 0, "", "", 1, 2018, 0, 0);
     }
 
     public void registriereBezahler(String Bezahler)
     {
-        for (Profil profil : profile)
+        getProfil(Bezahler).setBezahler();
+    }
+
+    public void loescheProfil(String loeschendesProfil)
+    {
+        profile.remove(getProfil(loeschendesProfil));
+    }
+
+    public void MomentanesGuthabenAuszahlen(Profil profil, int betrag)
+    {
+        profil.setMomentanesGuthaben(new Geldbetrag(profil.getMomentanesGuthaben().getBetragInCent() - betrag, false));
+    }
+
+    public void MomentanesGuthabenEinzahlen(Profil profil, int betrag)
+    {
+        int momentanCent = profil.getMomentanesGuthaben().getBetragInCent();
+        if (profil.getMomentanesGuthaben().istBetragNegativ())
         {
-            if (Bezahler.equals(profil.getName().toFormattedString()))
+            if (momentanCent > betrag)
             {
-                profil.setBezahler();
+                profil.setMomentanesGuthaben(new Geldbetrag(momentanCent -= betrag, true));
+            }
+            else if (momentanCent == betrag)
+            {
+                profil.setMomentanesGuthaben(new Geldbetrag(0, false));
+            }
+            else
+            {
+                profil.setMomentanesGuthaben(new Geldbetrag(momentanCent -= betrag, false));
             }
         }
+        else
+        {
+            profil.setMomentanesGuthaben(new Geldbetrag(profil.getMomentanesGuthaben().getBetragInCent() + betrag, false));
+        }
+    }
+
+    public void speichereGuthaben(Profil profil, int betrag)
+    {
+        profil.setGuthaben(new Geldbetrag(profil.getGuthaben().getBetragInCent() + betrag, false));
+    }
+
+    public boolean istAuszahlenMoeglich(Profil profil, int betrag)
+    {
+        return profil.istAuszahlenMoeglich(betrag);
     }
 
     public final void registriereUIAktionen()
@@ -130,7 +173,7 @@ public class ProfilWerkzeug
         {
             public void actionPerformed(ActionEvent e)
             {
-                _ui.schliesseFenster();
+                ProfilWerkzeugUI.schliessen();
             }
         });
 
@@ -138,7 +181,7 @@ public class ProfilWerkzeug
         {
             public void actionPerformed(ActionEvent e)
             {
-                JOptionPane.showMessageDialog(null, "Falls der Bewohner noch nicht ausgezogen ist, wählen sie als Auszugsdatum 12 2099", "Auszugs Info ", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Falls der Bewohner noch nicht ausgezogen ist, wählen sie bitte als Auszugsdatum 12, 2099", "Auszugs Info ", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -146,7 +189,28 @@ public class ProfilWerkzeug
         {
             public void actionPerformed(ActionEvent e)
             {
-                neuenBenutzerSpeichern();
+                if (benutzerBearbeiten)
+                {
+                    loescheProfil(_ui.get_textFieldVorname().getText() + " " + _ui.get_textFieldNachname().getText());
+                    neuenBenutzerSpeichern();
+                }
+                else
+                {
+                    neuenBenutzerSpeichern();
+                }
+                ProfilWerkzeugUI.schliessen();
+            }
+        });
+
+        _ui.get_bewohnerLöschenButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (JOptionPane.showConfirmDialog(_ui, "Sind Sie sich sicher dass sie den Bewohner löschen möchten?", "Bewohner löschen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                {
+                    loescheProfil(_ui.get_textFieldVorname().getText() + " " + _ui.get_textFieldNachname().getText());
+                    ProfilWerkzeugUI.schliessen();
+                }
             }
         });
     }
