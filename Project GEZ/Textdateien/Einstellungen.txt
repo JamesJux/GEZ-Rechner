@@ -2,4 +2,4 @@ Bereits_Initialisiert=true
 Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.
 Bezahlt=Dominick Labatz
 Beitragsnummer=450765655
-Geburtstag=07.03.1996		
+Geburtstag=07.03.1996

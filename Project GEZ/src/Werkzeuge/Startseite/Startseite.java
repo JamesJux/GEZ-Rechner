@@ -1,4 +1,4 @@
-package Werkzeuge;
+package Werkzeuge.Startseite;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 import Materialien.Profil;
+import Werkzeuge.DeteiWerkzeug;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
@@ -128,7 +129,7 @@ public class Startseite
             {
                 if (aktiv)
                 {
-                    aktiv = false;
+//                    aktiv = false;
                     // TODO: Übersichtsfenster gestalten. 
                     System.out.println("Übersicht button");
                 }

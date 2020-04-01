@@ -1,5 +1,8 @@
 Generelle Aufgaben:
-- Errorausgabe System (Enaum klasse existiert schon)
-- UI
-- Tests
-- Datenspeicherung !!WICHTIG!!
+- Übersicht Button: Text erstellen und implementieren.
+- Bei positiven Guthaben vorraussage wie lange es reicht.
+- Beim Bezahler Guthabenübersicht Text auf Bezahler ändern.
+- Beim ersten Start: Infotext zur Benutzung.
+
+
+- Evtl. Deutsch/Englisch !??

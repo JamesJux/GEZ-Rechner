@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Materialien.Profil;
-import Werkzeuge.Startseite;
+import Werkzeuge.Startseite.Startseite;
 
 public class GuthabenWerkzeugUI extends JInternalFrame
 {

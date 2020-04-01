@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Materialien.Profil;
-import Werkzeuge.Startseite;
+import Werkzeuge.Startseite.Startseite;
 
 public class ProfilWerkzeugUI extends JInternalFrame
 {
     private static final String TITEL = "Bewohner - Editor";
-    private static JFrame _frame = new JFrame(TITEL);
+    private static JFrame _frame;
     private JButton _infoButton;
     JTextField _textFieldVorname;
     JTextField _textFieldNachname;
@@ -61,6 +61,7 @@ public class ProfilWerkzeugUI extends JInternalFrame
 
     public void intitialisieren()
     {
+        _frame = new JFrame(TITEL);
         _frame.setBounds(600, 400, 450, 320);
         _frame.setVisible(true);
         _frame.setResizable(false);

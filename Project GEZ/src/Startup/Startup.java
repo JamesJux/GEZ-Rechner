@@ -7,9 +7,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 import Werkzeuge.DeteiWerkzeug;
-import Werkzeuge.Startseite;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
+import Werkzeuge.Startseite.Startseite;
 
 public class Startup
 {
