@@ -3,6 +3,7 @@ package Werkzeuge.Guthaben;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.JOptionPane;
@@ -13,6 +14,8 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 public class GuthabenWerkzeug
 {
+    private static Integer _beginnBerechnungMonat;
+    private static Integer _beginnBerechnungJahr;
     ProfilWerkzeug PW;
     GuthabenWerkzeugUI _ui;
     Profil profil;
@@ -29,8 +32,12 @@ public class GuthabenWerkzeug
         profil = aktProfil;
         _ui = new GuthabenWerkzeugUI(profil);
         EinAusBetrag = 0;
-        _ui.get_AuszahlenButton().setEnabled(!profil.getMomentanesGuthaben().istBetragNegativ());
-        if (aktProfil.istBezahler())
+        if (profil.getMomentanesGuthaben().istBetragNegativ())
+        {
+            _ui.get_AuszahlenButton().setEnabled(false);
+            _ui.getTextVorrausGuthabenLabel().setForeground(SystemColor.control);
+        }
+        if (profil.istBezahler())
         {
             _ui.get_textGuthabenLabel().setText(profil.getName().toFormattedString() + " ist der Bezahler.");
             _ui.getNurTextGuthabenLabel().setForeground(SystemColor.control);
@@ -42,21 +49,20 @@ public class GuthabenWerkzeug
 
     public void berechneGuthaben()
     {
-        new GregorianCalendar();
         for (Profil profil : PW.getProfile())
         {
             int betragCent = 0;
 
-            int jahr = 2018;
-            int monat = 10;
+            int monat = _beginnBerechnungMonat - 1;
+            int jahr = _beginnBerechnungJahr;
 
-            for (int i = 0; i < (getAnzahlMonate()); i++)
+            for (int i = 0; i <= getAnzahlMonate(); i++)
             {
                 monat++;
-
                 if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
                 {
-                    int diesenMonat = runden(17500 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
+                    int diesenMonat = runden(17500
+                            / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
                     betragCent -= diesenMonat;
                 }
                 if (monat == 12)
@@ -66,17 +72,31 @@ public class GuthabenWerkzeug
                 }
             }
             int DiffBetragCent = betragCent + profil.getGuthaben().getBetragInCent();
-            profil.setMomentanesGuthaben(new Geldbetrag(Math.abs(DiffBetragCent), (DiffBetragCent <= 0)));
+            Geldbetrag momentan = new Geldbetrag(Math.abs(DiffBetragCent), (DiffBetragCent <= 0));
+            profil.setMomentanesGuthaben(momentan);
+            int RestMonate;
+            if (momentan.istBetragNegativ())
+            {
+                RestMonate = 0;
+            }
+            else
+            {
+                RestMonate = momentan.getBetragInCent()
+                        / (runden(17500
+                                / PW.getAnzahlZahlendeBewohner(new GregorianCalendar())));
+            }
+            profil.setVorraussichtlicheDauer(RestMonate);
         }
     }
 
     private int getAnzahlMonate()
     {
-        GregorianCalendar beginn = new GregorianCalendar(2018, 10, 01);
+        GregorianCalendar beginn = new GregorianCalendar(_beginnBerechnungJahr, _beginnBerechnungMonat, 01);
         GregorianCalendar heute = new GregorianCalendar();
-        long difference = heute.getTimeInMillis() - beginn.getTimeInMillis();
-        int Monate = (int) (difference / (1000 * 60 * 60 * 24 * 30.4167));
-        return Monate + 1;
+        int y = heute.get(Calendar.YEAR) - beginn.get(Calendar.YEAR);
+        int m = heute.get(Calendar.MONTH) - beginn.get(Calendar.MONTH);
+        int Monate = y * 12 + m;
+        return Monate;
     }
 
     private void Auszahlen()
@@ -117,8 +137,8 @@ public class GuthabenWerkzeug
             }
             else
             {
-                PW.MomentanesGuthabenEinzahlen(profil, Integer.valueOf(eingabe));
                 EinAusBetrag += Integer.valueOf(eingabe);
+                PW.MomentanesGuthabenEinzahlen(profil, Integer.valueOf(EinAusBetrag));
             }
         }
     }
@@ -131,6 +151,8 @@ public class GuthabenWerkzeug
             {
                 Einzahlen();
                 _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
+                _ui.get_AuszahlenButton().setEnabled(false);
+                _ui.get_EinzahlenButton().setEnabled(false);
             }
         });
 
@@ -140,6 +162,8 @@ public class GuthabenWerkzeug
             {
                 Auszahlen();
                 _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
+                _ui.get_AuszahlenButton().setEnabled(false);
+                _ui.get_EinzahlenButton().setEnabled(false);
             }
         });
 
@@ -148,7 +172,6 @@ public class GuthabenWerkzeug
             public void actionPerformed(ActionEvent e)
             {
                 PW.speichereGuthaben(profil, EinAusBetrag);
-                berechneGuthaben();
                 GuthabenWerkzeugUI.schliessen();
             }
         });
@@ -210,6 +233,18 @@ public class GuthabenWerkzeug
             break;
         }
         return monat;
+    }
+
+    public static void registriereBezahlMonat(String seitMonat)
+    {
+        _beginnBerechnungMonat = Integer.valueOf(seitMonat) - 1;
+
+    }
+
+    public static void registriereBezahlJahr(String seitJahr)
+    {
+        _beginnBerechnungJahr = Integer.valueOf(seitJahr);
+
     }
 
 }

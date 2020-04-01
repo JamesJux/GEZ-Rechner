@@ -28,24 +28,6 @@ public final class Geldbetrag
     }
 
     /**
-     * Gibt den Eurobetrag ohne Cent zurück.
-     * 
-     * @return Den Eurobetrag ohne Cent.
-     */
-    public int getEuroAnteil()
-    {
-        return _euroAnteil;
-    }
-
-    /**
-     * Gibt den Centbetrag ohne Eurobetrag zurück.
-     */
-    public int getCentAnteil()
-    {
-        return _centAnteil;
-    }
-
-    /**
      * Gibt den Betrag in Eurocent zurück.
      */
     public int getBetragInCent()
@@ -76,6 +58,8 @@ public final class Geldbetrag
     /**
      * Liefert einen formatierten String des Geldbetrags in der Form "10,23"
      * zurück.
+     * 
+     * Format: (-) X,YY€
      * 
      * @return eine String-Repräsentation.
      */

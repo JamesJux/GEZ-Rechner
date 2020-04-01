@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import Fachwerte.Errors;
 import Materialien.Profil;
+import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 /**
@@ -67,12 +68,14 @@ public class DeteiWerkzeug
             printer.println("Bereits_Initialisiert=false");
             printer.println("Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.");
             printer.println("Bezahler=");
+            printer.println("SeitJahr=");
+            printer.println("SeitMonat=");
             printer.println("Beitragsnummer='9-stellige Zahl'");
             printer.println("Geburtstag='TT.MM.JJJJ'");
             printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
-            printer.println("A/BCC;VORNAME;NACHNAME;EMAIL;HANDYNR;GUTHABENINCENT;EINZUGSMONAT;EINZUGS_JAHR;AUSZUGSMONAT;AUSZUGS_JAHR");
+            printer.println("A/BCC;VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
             printer.print("1/515;Dominick;Labatz;d.jamesjux@gmail.com;017696588507;0;12;2018;0;0");
             printer.close();
             printer = new PrintStream(OUTPUT);
@@ -169,6 +172,14 @@ public class DeteiWerkzeug
                 case "Bezahler":
                     String Bezahler = tokenizer.nextToken();
                     PW.registriereBezahler(Bezahler);
+                    break;
+                case "SeitJahr":
+                    String SeitJahr = tokenizer.nextToken();
+                    GuthabenWerkzeug.registriereBezahlJahr(SeitJahr);
+                    break;
+                case "SeitMonat":
+                    String SeitMonat = tokenizer.nextToken();
+                    GuthabenWerkzeug.registriereBezahlMonat(SeitMonat);
                     break;
                 case "Beitragsnummer":
                     String Beitragsnummer = tokenizer.nextToken();

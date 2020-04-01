@@ -8,8 +8,8 @@ import Fachwerte.Zimmer;
 
 public class Profil
 {
-    private Name _name;
-    private Zimmer _zimmer;
+    private final Name _name;
+    private final Zimmer _zimmer;
     private GregorianCalendar _einzugsdatum;
     private GregorianCalendar _auszugsdatum;
 
@@ -18,6 +18,7 @@ public class Profil
     private String _handynummer;
     private boolean _bezahler;
     private Geldbetrag _momentanesGuthaben;
+    private int _VorraussichtlicheDauer;
 
     /**
      * Erstellung eines Profils für eine neue Person
@@ -45,6 +46,7 @@ public class Profil
         _handynummer = handynummer;
         _bezahler = false;
         _momentanesGuthaben = new Geldbetrag(guthaben, false);
+        _VorraussichtlicheDauer = 0;
     }
 
     public Name getName()
@@ -120,5 +122,15 @@ public class Profil
     public void setBezahler()
     {
         _bezahler = true;
+    }
+
+    public int getVorrsichtlicheDauer()
+    {
+        return _VorraussichtlicheDauer;
+    }
+
+    public void setVorraussichtlicheDauer(int monate)
+    {
+        _VorraussichtlicheDauer = monate;
     }
 }

@@ -99,7 +99,8 @@ public class ProfilWerkzeug
 
     public boolean wohntImHaus(Profil profil, GregorianCalendar datum)
     {
-        if (profil.getEinzugsdatum().getTime().before(datum.getTime()) && datum.getTime().before(profil.getAuszugsdatum().getTime()))
+        if ((profil.getEinzugsdatum().getTimeInMillis() <= datum.getTimeInMillis())
+                && (datum.getTimeInMillis() <= profil.getAuszugsdatum().getTimeInMillis()))
         {
             return true;
         }

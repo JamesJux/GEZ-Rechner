@@ -27,16 +27,19 @@ public class GuthabenWerkzeugUI extends JInternalFrame
     }
 
     private static Font FontGuthaben = new Font("Tahoma", Font.PLAIN, 20);
+    private static Font FontGuthabenKlein = new Font("Tahoma", Font.PLAIN, 12);
     private JButton _AuszahlenButton;
     private JButton _EinzahlenButton;
     private JButton _OKButton;
     private JLabel _textGuthabenLabel;
     private JLabel NurTextGuthabenLabel;
+    private JLabel _textVorrausGuthabenLabel;
+    private JPanel buttonPanel;
 
     public void intitialisieren(Profil profil)
     {
         _frame.setTitle(profil.getName().toFormattedString());
-        _frame.setBounds(625, 400, 400, 150);
+        _frame.setBounds(625, 400, 400, 160);
         _frame.setVisible(true);
         _frame.setResizable(false);
         _frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -69,7 +72,14 @@ public class GuthabenWerkzeugUI extends JInternalFrame
         _textGuthabenLabel.setFont(FontGuthaben);
         GuthabenPanel.add(_textGuthabenLabel);
 
-        JPanel buttonPanel = new JPanel();
+        JPanel VorrausGuthabenPanel = new JPanel();
+        hauptPanel.add(VorrausGuthabenPanel, BorderLayout.SOUTH);
+
+        _textVorrausGuthabenLabel = new JLabel("Reicht vorraussichtlich noch " + profil.getVorrsichtlicheDauer() + " Monate.");
+        _textVorrausGuthabenLabel.setFont(FontGuthabenKlein);
+        VorrausGuthabenPanel.add(_textVorrausGuthabenLabel);
+
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         _frame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
         _EinzahlenButton = new JButton("Einzahlen");
@@ -82,6 +92,16 @@ public class GuthabenWerkzeugUI extends JInternalFrame
         buttonPanel.add(_OKButton);
 
         _frame.revalidate();
+    }
+
+    public JPanel getButtonPanel()
+    {
+        return buttonPanel;
+    }
+
+    public JLabel getTextVorrausGuthabenLabel()
+    {
+        return _textVorrausGuthabenLabel;
     }
 
     public JLabel getNurTextGuthabenLabel()
