@@ -65,7 +65,11 @@ public class DeteiWerkzeug
         {
             printer = new PrintStream(EINSTELLUNGEN);
             printer.println("Bereits_Initialisiert=false");
-            printer.print("Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.");
+            printer.println("Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.");
+            printer.println("Bezahler=");
+            printer.println("Beitragsnummer='9-stellige Zahl'");
+            printer.println("Geburtstag='TT.MM.JJJJ'");
+            printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
             printer.println("A/BCC;VORNAME;NACHNAME;EMAIL;HANDYNR;GUTHABENINCENT;EINZUGSMONAT;EINZUGS_JAHR;AUSZUGSMONAT;AUSZUGS_JAHR");
@@ -159,10 +163,28 @@ public class DeteiWerkzeug
             {
                 StringTokenizer tokenizer = new StringTokenizer(line, "=");
                 String eingelesenerString = tokenizer.nextToken();
-                if (eingelesenerString.equals("Bezahlt"))
+
+                switch (eingelesenerString)
                 {
+                case "Bezahler":
                     String Bezahler = tokenizer.nextToken();
                     PW.registriereBezahler(Bezahler);
+                    break;
+                case "Beitragsnummer":
+                    String Beitragsnummer = tokenizer.nextToken();
+                    System.out.println(Beitragsnummer);
+                    //TODO: registriere(Beitragsnummer);
+                    break;
+                case "Geburtstag":
+                    String Geburtstag = tokenizer.nextToken();
+                    System.out.println(Geburtstag);
+                    //TODO: registriere(Geburtstag);
+                    break;
+                case "Sprache":
+                    String Sprache = tokenizer.nextToken();
+                    System.out.println(Sprache);
+                    //TODO: registriere(Sprache);
+                    break;
                 }
             }
         }

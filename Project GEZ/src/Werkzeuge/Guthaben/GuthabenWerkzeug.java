@@ -1,5 +1,6 @@
 package Werkzeuge.Guthaben;
 
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.GregorianCalendar;
@@ -29,6 +30,13 @@ public class GuthabenWerkzeug
         _ui = new GuthabenWerkzeugUI(profil);
         EinAusBetrag = 0;
         _ui.get_AuszahlenButton().setEnabled(!profil.getMomentanesGuthaben().istBetragNegativ());
+        if (aktProfil.istBezahler())
+        {
+            _ui.get_textGuthabenLabel().setText(profil.getName().toFormattedString() + " ist der Bezahler.");
+            _ui.getNurTextGuthabenLabel().setForeground(SystemColor.control);
+            _ui.get_AuszahlenButton().setEnabled(false);
+            _ui.get_EinzahlenButton().setEnabled(false);
+        }
         registriereUIAktionen();
     }
 
@@ -42,26 +50,23 @@ public class GuthabenWerkzeug
             int jahr = 2018;
             int monat = 10;
 
-            if (!(profil.getBezahler()))
+            for (int i = 0; i < (getAnzahlMonate()); i++)
             {
-                for (int i = 0; i < (getAnzahlMonate()); i++)
-                {
-                    monat++;
+                monat++;
 
-                    if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
-                    {
-                        int diesenMonat = runden(17500 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
-                        betragCent -= diesenMonat;
-                    }
-                    if (monat == 12)
-                    {
-                        monat = 0;
-                        jahr++;
-                    }
+                if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
+                {
+                    int diesenMonat = runden(17500 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
+                    betragCent -= diesenMonat;
                 }
-                int DiffBetragCent = betragCent + profil.getGuthaben().getBetragInCent();
-                profil.setMomentanesGuthaben(new Geldbetrag(Math.abs(DiffBetragCent), (DiffBetragCent <= 0)));
+                if (monat == 12)
+                {
+                    monat = 0;
+                    jahr++;
+                }
             }
+            int DiffBetragCent = betragCent + profil.getGuthaben().getBetragInCent();
+            profil.setMomentanesGuthaben(new Geldbetrag(Math.abs(DiffBetragCent), (DiffBetragCent <= 0)));
         }
     }
 

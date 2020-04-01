@@ -115,7 +115,19 @@ public class ProfilWerkzeug
                 return profil;
             }
         }
-        return new Profil("", "", "", 0, "", "", 1, 2018, 0, 0);
+        return null;
+    }
+
+    public Profil getBezahler()
+    {
+        for (Profil profil : profile)
+        {
+            if (profil.istBezahler())
+            {
+                return profil;
+            }
+        }
+        return null;
     }
 
     public void registriereBezahler(String Bezahler)

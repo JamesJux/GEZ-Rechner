@@ -31,6 +31,7 @@ public class GuthabenWerkzeugUI extends JInternalFrame
     private JButton _EinzahlenButton;
     private JButton _OKButton;
     private JLabel _textGuthabenLabel;
+    private JLabel NurTextGuthabenLabel;
 
     public void intitialisieren(Profil profil)
     {
@@ -57,7 +58,7 @@ public class GuthabenWerkzeugUI extends JInternalFrame
 
         JPanel textPanel = new JPanel();
         hauptPanel.add(textPanel, BorderLayout.NORTH);
-        JLabel NurTextGuthabenLabel = new JLabel("Momentanes Guthaben von :");
+        NurTextGuthabenLabel = new JLabel("Momentanes Guthaben von :");
         textPanel.add(NurTextGuthabenLabel);
         _frame.getContentPane().add(hauptPanel, BorderLayout.CENTER);
 
@@ -81,6 +82,11 @@ public class GuthabenWerkzeugUI extends JInternalFrame
         buttonPanel.add(_OKButton);
 
         _frame.revalidate();
+    }
+
+    public JLabel getNurTextGuthabenLabel()
+    {
+        return NurTextGuthabenLabel;
     }
 
     public JLabel get_textGuthabenLabel()

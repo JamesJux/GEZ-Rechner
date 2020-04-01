@@ -112,7 +112,7 @@ public class Profil
         _momentanesGuthaben = betrag;
     }
 
-    public boolean getBezahler()
+    public boolean istBezahler()
     {
         return _bezahler;
     }
