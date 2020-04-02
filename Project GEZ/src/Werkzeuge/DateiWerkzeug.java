@@ -19,7 +19,7 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
  * @author Dominick Labatz
  * @version 02.04.2020
  */
-public class DeteiWerkzeug
+public class DateiWerkzeug
 {
     private static final String PATH = "./Textdateien";
     private static final File BEWOHNER_DATEI = new File(PATH + "/Bewohner.txt");
@@ -27,6 +27,7 @@ public class DeteiWerkzeug
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
 
     static ProfilWerkzeug PW;
+    private static boolean _einstellungenVollständig;
 
     public static boolean bereitsInitialisiert(ProfilWerkzeug _profilWerkzeug)
     {
@@ -55,11 +56,14 @@ public class DeteiWerkzeug
     }
 
     /**
-     * Hilfsmethode zum initialisieren.
+     * Methode zur Erstinitialisierung.
+     * Sie erstellt die notwendigen Textdateien unm beim nächsten mal erfolgreich zu starten und schreibt notwendige Informationen in die Textdateien. 
      * 
+     * Danach ist der Benutzer angeweiesen die notwendigen Einstellungen zu treffen.
      */
     private static void erstInitialisierung()
     {
+        erstInitialisierung();
         PrintStream printer;
         try
         {
@@ -88,14 +92,10 @@ public class DeteiWerkzeug
     /**
     * Liest Bewohner aus einer Textdatei ein 
     * 
-    * Die Bewohnerinformationen müssen mit
-    * einem ";" getrennt sein.
+    * Die Bewohnerinformationen müssen mit einem ";" getrennt sein.
     * 
-    * Die Reihenfolge der Kundeninformationen:
-    * 
+    * Die Reihenfolge der Bewohnerinformationen:
     * Zimmernummer; Vorname; Nachname; EMail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
-    * 
-    * @param profilManager Der Profil Manager, der die Bewohner erstellt.
     */
     public static void leseBewohnerEin()
     {
@@ -146,6 +146,9 @@ public class DeteiWerkzeug
         }
     }
 
+    /**
+     * Speichert beim Beenden des Programms alle Informationen in die Textdatei "Output Bewohner" Textdatei.
+     */
     public static void speichereInDatei()
     {
         try (PrintStream printer = new PrintStream(OUTPUT))
@@ -172,8 +175,14 @@ public class DeteiWerkzeug
         }
     }
 
+    /**
+     * Liest die vorhandenen Einstellungen ein.
+     * 
+     * Notwendig für die Funktionalität.
+     */
     public static void leseEinstellungenEin()
     {
+        int eingeleseneEinstellungen = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
             String line = null;
@@ -185,23 +194,28 @@ public class DeteiWerkzeug
                 switch (eingelesenerString)
                 {
                 case "Bezahler":
+                    eingeleseneEinstellungen++;
                     String Bezahler = tokenizer.nextToken();
                     PW.registriereBezahler(Bezahler);
                     break;
                 case "SeitJahr":
+                    eingeleseneEinstellungen++;
                     String SeitJahr = tokenizer.nextToken();
                     GuthabenWerkzeug.registriereBezahlJahr(SeitJahr);
                     break;
                 case "SeitMonat":
+                    eingeleseneEinstellungen++;
                     String SeitMonat = tokenizer.nextToken();
                     GuthabenWerkzeug.registriereBezahlMonat(SeitMonat);
                     break;
                 case "Beitragsnummer":
+                    eingeleseneEinstellungen++;
                     String Beitragsnummer = tokenizer.nextToken();
                     System.out.println(Beitragsnummer);
                     //TODO: registriere(Beitragsnummer);
                     break;
                 case "Geburtstag":
+                    eingeleseneEinstellungen++;
                     String Geburtstag = tokenizer.nextToken();
                     System.out.println(Geburtstag);
                     //TODO: registriere(Geburtstag);
@@ -212,11 +226,25 @@ public class DeteiWerkzeug
                     //TODO: registriere(Sprache);
                     break;
                 }
+                if (eingeleseneEinstellungen == 5)
+                {
+                    _einstellungenVollständig = true;
+                }
             }
         }
         catch (IOException e)
         {
             ErrorOutputWerkzeug.ErrorOutput(Errors.DateiLesenError);
         }
+    }
+
+    /**
+     * Gibt aus ob alle notwendigen Einstellungen geladen werden konnten.
+     * 
+     * @return true wenn alle eingelesen werden konnten, anderfalls false.
+     */
+    public static boolean sindEinstellungenVollständig()
+    {
+        return _einstellungenVollständig;
     }
 }

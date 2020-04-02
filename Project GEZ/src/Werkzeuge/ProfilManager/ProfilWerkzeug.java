@@ -152,25 +152,18 @@ public class ProfilWerkzeug
     public void MomentanesGuthabenEinzahlen(Profil profil, int betrag)
     {
         int momentanCent = profil.getMomentanesGuthaben().getBetragInCent();
+        int neu;
+        boolean neuNegativ = false;
         if (profil.getMomentanesGuthaben().istBetragNegativ())
         {
-            if (momentanCent > betrag)
-            {
-                profil.setMomentanesGuthaben(new Geldbetrag(momentanCent -= betrag, true));
-            }
-            else if (momentanCent == betrag)
-            {
-                profil.setMomentanesGuthaben(new Geldbetrag(0, false));
-            }
-            else
-            {
-                profil.setMomentanesGuthaben(new Geldbetrag(momentanCent -= betrag, false));
-            }
+            momentanCent = -momentanCent;
         }
-        else
+        neu = momentanCent + betrag;
+        if (neu <= 0)
         {
-            profil.setMomentanesGuthaben(new Geldbetrag(profil.getMomentanesGuthaben().getBetragInCent() + betrag, false));
+            neuNegativ = true;
         }
+        profil.setMomentanesGuthaben(new Geldbetrag(neu, neuNegativ));
     }
 
     public void speichereGuthaben(Profil profil, int betrag)

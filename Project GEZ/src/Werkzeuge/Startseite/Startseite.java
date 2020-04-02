@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 
 import Fachwerte.Errors;
 import Materialien.Profil;
-import Werkzeuge.DeteiWerkzeug;
+import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.ErrorOutputWerkzeug;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
@@ -52,14 +52,21 @@ public class Startseite
 
     public static void start()
     {
-        if (DeteiWerkzeug.bereitsInitialisiert(PW))
+        if (DateiWerkzeug.bereitsInitialisiert(PW))
         {
-            DeteiWerkzeug.leseBewohnerEin();
-            DeteiWerkzeug.leseEinstellungenEin();
-            _ui = new StartseiteUI();
-            aktiv = true;
-            setzeBewohnerChoice();
-            GW.berechneGuthaben();
+            DateiWerkzeug.leseBewohnerEin();
+            DateiWerkzeug.leseEinstellungenEin();
+            if (DateiWerkzeug.sindEinstellungenVollständig())
+            {
+                _ui = new StartseiteUI();
+                aktiv = true;
+                setzeBewohnerChoice();
+                GW.berechneGuthaben();
+            }
+            else
+            {
+
+            }
 
         }
     }
@@ -88,7 +95,7 @@ public class Startseite
             {
                 if (aktiv)
                 {
-                    DeteiWerkzeug.speichereInDatei();
+                    DateiWerkzeug.speichereInDatei();
                     System.exit(1);
                 }
             }

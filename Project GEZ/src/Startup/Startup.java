@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import Werkzeuge.DeteiWerkzeug;
+import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 import Werkzeuge.Startseite.Startseite;
@@ -41,7 +41,7 @@ public class Startup
                     {
                         public void windowClosing(WindowEvent e)
                         {
-                            DeteiWerkzeug.speichereInDatei();
+                            DateiWerkzeug.speichereInDatei();
                             System.exit(0);
                         }
                     });

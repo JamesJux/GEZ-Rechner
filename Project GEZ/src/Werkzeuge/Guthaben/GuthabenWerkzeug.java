@@ -47,10 +47,33 @@ public class GuthabenWerkzeug
         {
             _ui.get_textGuthabenLabel().setText(profil.getVorname() + " " + profil.getNachname() + " ist der Bezahler.");
             _ui.getNurTextGuthabenLabel().setForeground(SystemColor.control);
+            _ui.getTextVorrausGuthabenLabel().setForeground(SystemColor.control);
             _ui.get_AuszahlenButton().setEnabled(false);
             _ui.get_EinzahlenButton().setEnabled(false);
         }
         registriereUIAktionen();
+    }
+
+    /**
+     * Registriert den Berechnungs Monat im BezahlWerkzeug.
+     * 
+     * Notwendig für die Funktionalität.
+     */
+    public static void registriereBezahlMonat(String seitMonat)
+    {
+        _beginnBerechnungMonat = Integer.valueOf(seitMonat) - 1;
+
+    }
+
+    /**
+     * Registriert das Berechnungs Jahr im BezahlWerkzeug.
+     * 
+     * Notwendig für die Funktionalität.
+     */
+    public static void registriereBezahlJahr(String seitJahr)
+    {
+        _beginnBerechnungJahr = Integer.valueOf(seitJahr);
+
     }
 
     public void berechneGuthaben()
@@ -105,6 +128,11 @@ public class GuthabenWerkzeug
         return Monate;
     }
 
+    /**
+     * Fragt den Benutzer welcher Betrag ausgezahlt werden soll, und übergibt diesen Wert an das ProfilWerkzeug.
+     * 
+     * Bei falscher Eingabe wird noch mal gefragt, ausser man beendet den Dialog mit 'WindowClosing'.
+     */
     private void Auszahlen()
     {
         String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie auszahlen möchten", "Auszahlung", JOptionPane.PLAIN_MESSAGE);
@@ -131,6 +159,11 @@ public class GuthabenWerkzeug
         }
     }
 
+    /**
+     * Fragt den Benutzer welcher Betrag eingezahlt werden soll, und übergibt diesen Wert an das ProfilWerkzeug.
+     * 
+     * Bei falscher Eingabe wird noch mal gefragt, ausser man beendet den Dialog mit 'WindowClosing'.
+     */
     private void Einzahlen()
     {
         String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie einzahlen möchten", "Einzahlung", JOptionPane.PLAIN_MESSAGE);
@@ -147,40 +180,6 @@ public class GuthabenWerkzeug
                 PW.MomentanesGuthabenEinzahlen(profil, Integer.valueOf(EinAusBetrag));
             }
         }
-    }
-
-    private void registriereUIAktionen()
-    {
-        _ui.get_EinzahlenButton().addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                Einzahlen();
-                _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
-                _ui.get_AuszahlenButton().setEnabled(false);
-                _ui.get_EinzahlenButton().setEnabled(false);
-            }
-        });
-
-        _ui.get_AuszahlenButton().addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                Auszahlen();
-                _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
-                _ui.get_AuszahlenButton().setEnabled(false);
-                _ui.get_EinzahlenButton().setEnabled(false);
-            }
-        });
-
-        _ui.get_OKButton().addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                PW.speichereGuthaben(profil, EinAusBetrag);
-                GuthabenWerkzeugUI.schliessen();
-            }
-        });
     }
 
     static int runden(int zahl)
@@ -241,16 +240,37 @@ public class GuthabenWerkzeug
         return monat;
     }
 
-    public static void registriereBezahlMonat(String seitMonat)
+    private void registriereUIAktionen()
     {
-        _beginnBerechnungMonat = Integer.valueOf(seitMonat) - 1;
+        _ui.get_EinzahlenButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                Einzahlen();
+                _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
+                _ui.get_AuszahlenButton().setEnabled(false);
+                _ui.get_EinzahlenButton().setEnabled(false);
+            }
+        });
 
+        _ui.get_AuszahlenButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                Auszahlen();
+                _ui.get_textGuthabenLabel().setText(profil.getMomentanesGuthaben().toFormattedString());
+                _ui.get_AuszahlenButton().setEnabled(false);
+                _ui.get_EinzahlenButton().setEnabled(false);
+            }
+        });
+
+        _ui.get_OKButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                PW.speichereGuthaben(profil, EinAusBetrag);
+                GuthabenWerkzeugUI.schliessen();
+            }
+        });
     }
-
-    public static void registriereBezahlJahr(String seitJahr)
-    {
-        _beginnBerechnungJahr = Integer.valueOf(seitJahr);
-
-    }
-
 }

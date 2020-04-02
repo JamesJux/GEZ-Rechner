@@ -18,7 +18,8 @@ public final class Geldbetrag
     /**
      * Wählt einen Geldbetrag aus.
      * 
-     * @param eurocent Der Betrag in ganzen Euro-Cent
+     * @param eurocent Der Betrag in ganzen Euro-Cent.
+     * @param minus Gibt an ob der Betrag minus ist.
      */
     public Geldbetrag(int eurocent, boolean minus)
     {
@@ -39,7 +40,7 @@ public final class Geldbetrag
     /**
      * Gibt zurück ob der Betrag negativ ist.
      * 
-     * @return Boolean ob der Betrag negativ ist.
+     * @return true wenn der Betrag negativ ist, andernfalls false.
      */
     public boolean istBetragNegativ()
     {
@@ -49,7 +50,7 @@ public final class Geldbetrag
     /**
      * Gibt zurück ob der Betrag null ist.
      * 
-     * @return Boolean ob der Betrag 0,00€ ist.
+     * @return Gibt true zurück, wenn der Betrag 0,00€ ist.
      */
     public boolean istBetragNull()
     {
@@ -57,12 +58,10 @@ public final class Geldbetrag
     }
 
     /**
-     * Liefert einen formatierten String des Geldbetrags in der Form "10,23"
+     * Liefert einen formatierten String des Geldbetrags in der Form "(-) 10,23€"
      * zurück.
      * 
-     * Format: (-) X,YY€
-     * 
-     * @return eine String-Repräsentation.
+     * @return Die String-Repräsentation.
      */
     public String toFormattedString()
     {
