@@ -7,38 +7,44 @@ import Fachwerte.Errors;
 
 public class ErrorOutputWerkzeug
 {
-
-    /*
-     * Funktioniert nach folgendem Beispiel: 		
-     * ErrorOutputService.ErrorOutput(Errors.inputError);
+    /**
+     *  Das Werkzeug zum Verarbeiten von Fehler und zum protokollieren dieser.
+     *  
+     * @author Dominick Labatz
+     * @author Marvin Taube
+     * @version 02.04.2020
      */
-    public static void ErrorOutputConsole(Errors error)
+    public static void ErrorOutput(Errors error)
     {
         String output = null;
 
         switch (error)
         {
-        case inputError:
+        case BewohnerEinlesenError:
+            output = "Einlesen der Bewohner Fehlerhaft bitte überfrüfen sie die Korrektheit der Werte in der Bewohner.txt.";
+            break;
+        case EingabeError:
             output = "InputError: Eingabe ist Fehlerhaft.";
             break;
-        case uncompledMethode:
-            output = "UncompledMethode: Die Methode wurde nur Teilweise oder noch garnicht implementiert.";
+        case UnfertigeMethode:
+            output = "Die angeforderte Methode wurde nur teilweise oder noch garnicht implementiert.";
             break;
-        case profileAddError:
+        case ProfilSpeichernError:
             output = "ProfileSetAddError: Problem beim Hinzufügen des Profils";
             break;
-        case profileRemoveError:
+        case ProfilEntfernenError:
             output = "ProfileSetRemoveError: Problem beim Entfernen des Profils";
             break;
-        case fileNotFoundError:
+        case DateiLesenError:
             output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gefunden wurde.";
             break;
-        case fileNotReadError:
+        case DateiSchreibenError:
             output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gelesen werden konnte.";
             break;
         default:
             output = "ErrorOutputService Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
         }
+        System.out.println(output);
         ErrorOutputTextfile(output);
     }
 
@@ -61,6 +67,6 @@ public class ErrorOutputWerkzeug
      */
     public static void ErrorCheck()
     {
-        ErrorOutputWerkzeug.ErrorOutputConsole(Errors.uncompledMethode);
+        ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
     }
 }

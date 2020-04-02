@@ -12,6 +12,12 @@ import Fachwerte.Geldbetrag;
 import Materialien.Profil;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
+/**
+ * Das GuthabenWerkzeug des GEZ-Rechners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class GuthabenWerkzeug
 {
     private static Integer _beginnBerechnungMonat;
@@ -39,7 +45,7 @@ public class GuthabenWerkzeug
         }
         if (profil.istBezahler())
         {
-            _ui.get_textGuthabenLabel().setText(profil.getName().toFormattedString() + " ist der Bezahler.");
+            _ui.get_textGuthabenLabel().setText(profil.getVorname() + " " + profil.getNachname() + " ist der Bezahler.");
             _ui.getNurTextGuthabenLabel().setForeground(SystemColor.control);
             _ui.get_AuszahlenButton().setEnabled(false);
             _ui.get_EinzahlenButton().setEnabled(false);

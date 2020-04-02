@@ -14,11 +14,10 @@ import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 /**
- * 
- *  Das Werkzeug zum Verarbeiten der Bewohner und anderer Dateien.
+ *  Das Werkzeug zum Verarbeiten der Bewohner, der Einstellungen und anderer Dateien.
  *  
- * @author Dominick
- * @version 28.03.2020
+ * @author Dominick Labatz
+ * @version 02.04.2020
  */
 public class DeteiWerkzeug
 {
@@ -75,7 +74,7 @@ public class DeteiWerkzeug
             printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
-            printer.println("A/BCC;VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
+            printer.println("'Zimmernr';VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
             printer.print("1/515;Dominick;Labatz;d.jamesjux@gmail.com;017696588507;0;12;2018;0;0");
             printer.close();
             printer = new PrintStream(OUTPUT);
@@ -94,7 +93,7 @@ public class DeteiWerkzeug
     * 
     * Die Reihenfolge der Kundeninformationen:
     * 
-    * Zimmernummer(Haus/Flur+Zimmernr); Vorname; Nachname; EMail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
+    * Zimmernummer; Vorname; Nachname; EMail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
     * 
     * @param profilManager Der Profil Manager, der die Bewohner erstellt.
     */
@@ -107,27 +106,43 @@ public class DeteiWerkzeug
             while ((line = reader.readLine()) != null)
             {
                 StringTokenizer tokenizer = new StringTokenizer(line, ";");
-                String ZimmerID = tokenizer.nextToken();
+                String Zimmer = tokenizer.nextToken();
                 String Vorname = tokenizer.nextToken();
                 String Nachname = tokenizer.nextToken();
                 String EMail = tokenizer.nextToken();
                 String Handynr = tokenizer.nextToken();
                 int Guthaben = Integer.valueOf(tokenizer.nextToken());
                 int EinMonat = Integer.valueOf(tokenizer.nextToken());
+                if (EinMonat > 12 || EinMonat < 1)
+                {
+                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
+                }
                 int EinJahr = Integer.valueOf(tokenizer.nextToken());
+                if (EinJahr < 2018 || EinJahr > 2050)
+                {
+                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
+                }
                 int AusMonat = Integer.valueOf(tokenizer.nextToken());
+                if (AusMonat > 12 || AusMonat < 1)
+                {
+                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
+                }
                 int AusJahr = Integer.valueOf(tokenizer.nextToken());
+                if (AusJahr < 2018 || AusJahr > 2100)
+                {
+                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
+                }
 
-                PW.erstelleProfil(ZimmerID, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr);
+                PW.erstelleProfil(Zimmer, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr);
             }
         }
         catch (FileNotFoundException e)
         {
-            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.fileNotFoundError);
+            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiNichtGefundenError);
         }
         catch (IOException e)
         {
-            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.fileNotReadError);
+            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiLesenError);
         }
     }
 
@@ -137,9 +152,9 @@ public class DeteiWerkzeug
         {
             for (Profil p : PW.getProfile())
             {
-                String aa = p.getZimmer().toFormattedString();
-                String ab = p.getName().getVorname();
-                String ac = p.getName().getNachname();
+                String aa = p.getZimmer();
+                String ab = p.getVorname();
+                String ac = p.getNachname();
                 String ad = p.getEmail();
                 String ae = p.getHandynummer();
                 int af = p.getGuthaben().getBetragInCent();
@@ -201,7 +216,7 @@ public class DeteiWerkzeug
         }
         catch (IOException e)
         {
-            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.fileNotReadError);
+            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiLesenError);
         }
     }
 }

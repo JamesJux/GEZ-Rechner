@@ -3,13 +3,18 @@ package Materialien;
 import java.util.GregorianCalendar;
 
 import Fachwerte.Geldbetrag;
-import Fachwerte.Name;
-import Fachwerte.Zimmer;
 
+/**
+ * Erzeugt das Profil eines jeden Bewohners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class Profil
 {
-    private final Name _name;
-    private final Zimmer _zimmer;
+    private final String _vorname;
+    private final String _nachname;
+    private String _zimmer;
     private GregorianCalendar _einzugsdatum;
     private GregorianCalendar _auszugsdatum;
 
@@ -24,7 +29,8 @@ public class Profil
      * Erstellung eines Profils für eine neue Person
      * 
      * @param zimmer Das Zimmer der Person
-     * @param name Der Name der Person
+     * @param vorname Der Vorame der Person
+     * @param nachname Der Nachname der Person
      * @param guthaben Der bisher eingezahlte Betrag in Eurocent
      * @param email Die Email der Person
      * @param handynummer Die Handynummer der Person
@@ -37,8 +43,9 @@ public class Profil
     public Profil(String zimmer, String vorname, String name, int guthaben, String email, String handynummer,
             int EinMonat, int EinJahr, int AusMonat, int AusJahr)
     {
-        _zimmer = new Zimmer(zimmer);
-        _name = new Name(vorname, name);
+        _zimmer = zimmer;
+        _vorname = vorname;
+        _nachname = name;
         _einzugsdatum = new GregorianCalendar(EinJahr, EinMonat - 1, 2);
         _auszugsdatum = new GregorianCalendar(AusJahr, AusMonat - 1, 20);
         _guthaben = new Geldbetrag(guthaben, false);
@@ -49,12 +56,17 @@ public class Profil
         _VorraussichtlicheDauer = 0;
     }
 
-    public Name getName()
+    public String getVorname()
     {
-        return _name;
+        return _vorname;
     }
 
-    public Zimmer getZimmer()
+    public String getNachname()
+    {
+        return _nachname;
+    }
+
+    public String getZimmer()
     {
         return _zimmer;
     }

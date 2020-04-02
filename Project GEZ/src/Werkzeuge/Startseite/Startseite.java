@@ -9,11 +9,19 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import Fachwerte.Errors;
 import Materialien.Profil;
 import Werkzeuge.DeteiWerkzeug;
+import Werkzeuge.ErrorOutputWerkzeug;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
+/**
+ * Die Startseite des GEZ-Rechners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class Startseite
 {
 
@@ -61,7 +69,7 @@ public class Startseite
         _ui.get_bewohnerChoice().removeAll();
         for (Profil profil : PW.getProfile())
         {
-            _ui.get_bewohnerChoice().add(profil.getName().toFormattedString());
+            _ui.get_bewohnerChoice().add(profil.getVorname() + " " + profil.getNachname());
         }
         _ui.get_bewohnerChoice().add("Neuer Bewohner");
     }
@@ -129,9 +137,9 @@ public class Startseite
             {
                 if (aktiv)
                 {
-//                    aktiv = false;
-                    // TODO: Übersichtsfenster gestalten. 
-                    System.out.println("Übersicht button");
+                    //aktiv = false;
+                    //TODO: Übersichtsfenster gestalten. 
+                    ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
                 }
             }
         });

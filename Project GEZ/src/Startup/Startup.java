@@ -11,6 +11,12 @@ import Werkzeuge.Guthaben.GuthabenWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 import Werkzeuge.Startseite.Startseite;
 
+/**
+ * Das StartUp des GEZ-Rechners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class Startup
 {
     private static ProfilWerkzeug _profilWerkzeug;

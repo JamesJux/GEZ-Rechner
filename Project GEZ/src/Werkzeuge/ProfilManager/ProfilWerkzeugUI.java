@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +19,12 @@ import javax.swing.JTextField;
 import Materialien.Profil;
 import Werkzeuge.Startseite.Startseite;
 
+/**
+ * Das GUI des ProfilWerkzeuges des GEZ-Rechners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class ProfilWerkzeugUI extends JInternalFrame
 {
     private static final String TITEL = "Bewohner - Editor";
@@ -25,13 +32,11 @@ public class ProfilWerkzeugUI extends JInternalFrame
     private JButton _infoButton;
     JTextField _textFieldVorname;
     JTextField _textFieldNachname;
-    JTextField _textFieldTelefon;
-    JTextField _textFieldEmail;
+    JTextField _textFieldZimmer;
     Choice _choiceMonat;
     Choice _choiceJahr;
-    Choice _choiceHaus;
-    Choice _choiceEtage;
-    Choice _choiceZimmer;
+    JTextField _textFieldTelefon;
+    JTextField _textFieldEmail;
     Choice _choiceJahrAus;
     Choice _choiceMonatAus;
     JButton _speichernButton;
@@ -46,17 +51,29 @@ public class ProfilWerkzeugUI extends JInternalFrame
     public ProfilWerkzeugUI(Profil profil)
     {
         intitialisieren();
-        _textFieldVorname.setText(profil.getName().getVorname());
-        _textFieldNachname.setText(profil.getName().getNachname());
+        _textFieldVorname.setText(profil.getVorname());
+        _textFieldNachname.setText(profil.getNachname());
         _textFieldTelefon.setText(profil.getHandynummer());
         _textFieldEmail.setText(profil.getEmail());
         _choiceMonat.select("" + profil.getEinzugsdatum().toInstant().toString().substring(5, 7));
-        _choiceJahr.select("" + profil.getEinzugsdatum().toInstant().toString().substring(0, 4));
-        _choiceHaus.select("" + profil.getZimmer().getHaus());
-        _choiceEtage.select("" + profil.getZimmer().getStockwerk());
-        _choiceZimmer.select("" + profil.getZimmer().getZimmernummer());
+        _textFieldZimmer.setText(profil.getZimmer());
         _choiceMonatAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(5, 7));
         _choiceJahrAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(0, 4));
+        try
+        {
+            String temp = profil.getEinzugsdatum().toInstant().toString().substring(0, 4);
+            _choiceJahr.remove(temp);
+            _choiceJahr.add(temp);
+            _choiceJahr.select(temp);
+            temp = profil.getAuszugsdatum().toInstant().toString().substring(0, 4);
+            _choiceJahrAus.remove(temp);
+            _choiceJahrAus.add(temp);
+            _choiceJahrAus.select(temp);
+        }
+        catch (IllegalArgumentException e)
+        {
+
+        }
     }
 
     public void intitialisieren()
@@ -90,56 +107,20 @@ public class ProfilWerkzeugUI extends JInternalFrame
         JLabel NameLabel = new JLabel("  Vor- Nachname :");
         NamePanel.add(NameLabel);
         _textFieldVorname = new JTextField();
-        NamePanel.add(_textFieldVorname);
         _textFieldVorname.setColumns(15);
+        NamePanel.add(_textFieldVorname);
         _textFieldNachname = new JTextField();
-        NamePanel.add(_textFieldNachname);
         _textFieldNachname.setColumns(15);
+        NamePanel.add(_textFieldNachname);
 
-        JPanel HausUndZimmer = new JPanel();
-        HauptPanel.add(HausUndZimmer);
-        HausUndZimmer.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        JLabel HausLabel = new JLabel("  Haus :");
-        HausUndZimmer.add(HausLabel);
-        _choiceHaus = new Choice();
-        _choiceHaus.add("1");
-        _choiceHaus.add("2");
-        HausUndZimmer.add(_choiceHaus);
-        JLabel EtageLabel = new JLabel("  Etage :");
-        HausUndZimmer.add(EtageLabel);
-        _choiceEtage = new Choice();
-        _choiceEtage.add("0");
-        _choiceEtage.add("1");
-        _choiceEtage.add("2");
-        _choiceEtage.add("3");
-        _choiceEtage.add("4");
-        _choiceEtage.add("5");
-        HausUndZimmer.add(_choiceEtage);
+        JPanel ZimmerPanel = new JPanel();
+        HauptPanel.add(ZimmerPanel);
+        ZimmerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         JLabel ZimmerLabel = new JLabel("  Zimmer :");
-        HausUndZimmer.add(ZimmerLabel);
-        _choiceZimmer = new Choice();
-        _choiceZimmer.add("00");
-        _choiceZimmer.add("01");
-        _choiceZimmer.add("02");
-        _choiceZimmer.add("03");
-        _choiceZimmer.add("04");
-        _choiceZimmer.add("05");
-        _choiceZimmer.add("06");
-        _choiceZimmer.add("07");
-        _choiceZimmer.add("08");
-        _choiceZimmer.add("09");
-        _choiceZimmer.add("10");
-        _choiceZimmer.add("11");
-        _choiceZimmer.add("12");
-        _choiceZimmer.add("13");
-        _choiceZimmer.add("14");
-        _choiceZimmer.add("15");
-        _choiceZimmer.add("16");
-        _choiceZimmer.add("17");
-        _choiceZimmer.add("18");
-        _choiceZimmer.add("19");
-        _choiceZimmer.add("20");
-        HausUndZimmer.add(_choiceZimmer);
+        ZimmerPanel.add(ZimmerLabel);
+        _textFieldZimmer = new JTextField();
+        _textFieldZimmer.setColumns(10);
+        ZimmerPanel.add(_textFieldZimmer);
 
         JPanel EinzugdatumPanel = new JPanel();
         HauptPanel.add(EinzugdatumPanel);
@@ -147,25 +128,9 @@ public class ProfilWerkzeugUI extends JInternalFrame
         JLabel EinzugsLabel = new JLabel("  Einzugsmonat :");
         EinzugdatumPanel.add(EinzugsLabel);
         _choiceMonat = new Choice();
-        _choiceMonat.add("1");
-        _choiceMonat.add("2");
-        _choiceMonat.add("3");
-        _choiceMonat.add("4");
-        _choiceMonat.add("5");
-        _choiceMonat.add("6");
-        _choiceMonat.add("7");
-        _choiceMonat.add("8");
-        _choiceMonat.add("9");
-        _choiceMonat.add("10");
-        _choiceMonat.add("11");
-        _choiceMonat.add("12");
+
         EinzugdatumPanel.add(_choiceMonat);
         _choiceJahr = new Choice();
-        _choiceJahr.add("2018");
-        _choiceJahr.add("2019");
-        _choiceJahr.add("2020");
-        _choiceJahr.add("2021");
-        _choiceJahr.add("2022");
         EinzugdatumPanel.add(_choiceJahr);
 
         JPanel TelefonPanel = new JPanel();
@@ -192,26 +157,9 @@ public class ProfilWerkzeugUI extends JInternalFrame
         JLabel _auszugsLabel = new JLabel("  Auszugsmonat :");
         AuszugsdatumPanel.add(_auszugsLabel);
         _choiceMonatAus = new Choice();
-        _choiceMonatAus.add("1");
-        _choiceMonatAus.add("2");
-        _choiceMonatAus.add("3");
-        _choiceMonatAus.add("4");
-        _choiceMonatAus.add("5");
-        _choiceMonatAus.add("6");
-        _choiceMonatAus.add("7");
-        _choiceMonatAus.add("8");
-        _choiceMonatAus.add("9");
-        _choiceMonatAus.add("10");
-        _choiceMonatAus.add("11");
-        _choiceMonatAus.add("12");
         AuszugsdatumPanel.add(_choiceMonatAus);
         _choiceJahrAus = new Choice();
-        _choiceJahrAus.add("2018");
-        _choiceJahrAus.add("2019");
-        _choiceJahrAus.add("2020");
-        _choiceJahrAus.add("2021");
-        _choiceJahrAus.add("2022");
-        _choiceJahrAus.add("2099");
+
         AuszugsdatumPanel.add(_choiceJahrAus);
         _infoButton = new JButton("Info");
         AuszugsdatumPanel.add(_infoButton);
@@ -224,6 +172,20 @@ public class ProfilWerkzeugUI extends JInternalFrame
         ButtonPanel.add(_speichernButton);
         _abbrechenButton = new JButton("Abbrechen");
         ButtonPanel.add(_abbrechenButton);
+
+        for (int i = 1; i <= 12; i++)
+        {
+            _choiceMonat.add("" + i);
+            _choiceMonatAus.add("" + i);
+        }
+
+        int aktJahr = Integer.valueOf(new GregorianCalendar().toInstant().toString().substring(0, 4));
+        for (int i = -2; i <= 2; i++)
+        {
+            _choiceJahr.add("" + (aktJahr + i));
+            _choiceJahrAus.add("" + (aktJahr + i));
+        }
+        _choiceJahrAus.add("2099");
 
         _frame.revalidate();
     }
@@ -258,19 +220,9 @@ public class ProfilWerkzeugUI extends JInternalFrame
         return _choiceJahr;
     }
 
-    public Choice get_choiceHaus()
+    public JTextField get_textFieldZimmer()
     {
-        return _choiceHaus;
-    }
-
-    public Choice get_choiceEtage()
-    {
-        return _choiceEtage;
-    }
-
-    public Choice get_choiceZimmer()
-    {
-        return _choiceZimmer;
+        return _textFieldZimmer;
     }
 
     public Choice get_choiceJahrAus()

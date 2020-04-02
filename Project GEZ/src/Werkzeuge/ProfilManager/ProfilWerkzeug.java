@@ -12,6 +12,12 @@ import Fachwerte.Geldbetrag;
 import Materialien.Profil;
 import Werkzeuge.ErrorOutputWerkzeug;
 
+/**
+ * Das ProfilWerkzeug des GEZ-Rechners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class ProfilWerkzeug
 {
     private HashSet<Profil> profile;
@@ -35,9 +41,7 @@ public class ProfilWerkzeug
         _ui = new ProfilWerkzeugUI(profil);
         _ui.get_textFieldNachname().setEditable(false);
         _ui.get_textFieldVorname().setEditable(false);
-        _ui.get_choiceEtage().setEnabled(false);
-        _ui.get_choiceHaus().setEnabled(false);
-        _ui.get_choiceZimmer().setEnabled(false);
+        _ui.get_textFieldZimmer().setEditable(false);
         benutzerBearbeiten = true;
         registriereUIAktionen();
     }
@@ -47,23 +51,22 @@ public class ProfilWerkzeug
         return profile;
     }
 
-    public void erstelleProfil(String zimmer, String vorname, String name, int guthaben, int EinMonat, int EinJahr, String email,
+    public void erstelleProfil(String zimmer, String vorname, String nachname, int guthaben, int EinMonat, int EinJahr, String email,
             String handynummer, int AusMonat, int AusJahr)
     {
-        Profil neuesProfil = new Profil(zimmer, vorname, name, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr);
+        Profil neuesProfil = new Profil(zimmer, vorname, nachname, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr);
 
         profile.add(neuesProfil);
     }
 
     public void neuenBenutzerSpeichern()
     {
-        String zimmer = _ui.get_choiceHaus().getSelectedItem() + "/" + _ui.get_choiceEtage().getSelectedItem()
-                + _ui.get_choiceZimmer().getSelectedItem();
+        String zimmer = _ui.get_textFieldZimmer().getText();
         String vorname = _ui.get_textFieldVorname().getText();
-        String name = _ui.get_textFieldNachname().getText();
-        if (vorname.equals("") || name.equals(""))
+        String nachname = _ui.get_textFieldNachname().getText();
+        if (vorname.equals("") || nachname.equals(""))
         {
-            ErrorOutputWerkzeug.ErrorOutputConsole(Errors.inputError);
+            ErrorOutputWerkzeug.ErrorOutput(Errors.EingabeError);
         }
         int Guthaben = 0;
         int EinMonat = Integer.parseInt(_ui.get_choiceMonat().getSelectedItem());
@@ -80,7 +83,7 @@ public class ProfilWerkzeug
         }
         int AusMonat = Integer.parseInt(_ui.get_choiceMonatAus().getSelectedItem());
         int AusJahr = Integer.parseInt(_ui.get_choiceJahrAus().getSelectedItem());
-        erstelleProfil(zimmer, vorname, name, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
+        erstelleProfil(zimmer, vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
     }
 
     public int getAnzahlZahlendeBewohner(GregorianCalendar datum)
@@ -111,7 +114,7 @@ public class ProfilWerkzeug
     {
         for (Profil profil : profile)
         {
-            if (gesProfil.equals(profil.getName().toFormattedString()))
+            if (gesProfil.equals(profil.getVorname() + " " + profil.getNachname()))
             {
                 return profil;
             }

@@ -1,10 +1,11 @@
 package Fachwerte;
 
 /**
- * Ein Geldbetrag in Euro, gespeichert als ganze Euro- und ganze Cent-Beträge.
+ * Ein Geldbetrag in Euro, gespeichert als Cent-Beträge.
+ * Der Geldbetrag kann negativ sein.
  * 
  * @author Dominick Labatz
- * @version 19.10.2019
+ * @version 02.04.2020
  */
 public final class Geldbetrag
 {
@@ -116,8 +117,7 @@ public final class Geldbetrag
         if (obj instanceof Geldbetrag)
         {
             Geldbetrag other = (Geldbetrag) obj;
-            result = (_centAnteil == other._centAnteil)
-                    && (_euroAnteil == other._euroAnteil) && (_negativ = other._negativ);
+            result = (_eurocent == other._eurocent) && (_negativ = other._negativ);
         }
         return result;
     }

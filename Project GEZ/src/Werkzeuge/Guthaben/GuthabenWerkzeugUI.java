@@ -16,6 +16,12 @@ import javax.swing.JPanel;
 import Materialien.Profil;
 import Werkzeuge.Startseite.Startseite;
 
+/**
+ * Das GUI des GuthabenWerkzeuges des GEZ-Rechners.
+ *  
+ * @author Dominick Labatz
+ * @version 02.04.2020
+ */
 public class GuthabenWerkzeugUI extends JInternalFrame
 {
     private static JFrame _frame;
@@ -38,7 +44,7 @@ public class GuthabenWerkzeugUI extends JInternalFrame
 
     public void intitialisieren(Profil profil)
     {
-        _frame.setTitle(profil.getName().toFormattedString());
+        _frame.setTitle(profil.getVorname() + " " + profil.getNachname());
         _frame.setBounds(625, 400, 400, 160);
         _frame.setVisible(true);
         _frame.setResizable(false);
