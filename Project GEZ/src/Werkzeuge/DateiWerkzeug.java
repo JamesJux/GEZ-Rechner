@@ -57,7 +57,7 @@ public class DateiWerkzeug
 
     /**
      * Methode zur Erstinitialisierung.
-     * Sie erstellt die notwendigen Textdateien unm beim nächsten mal erfolgreich zu starten und schreibt notwendige Informationen in die Textdateien. 
+     * Sie erstellt die notwendigen Textdateien um beim nächsten mal erfolgreich zu starten und schreibt notwendige Informationen in die Textdateien. 
      * 
      * Danach ist der Benutzer angeweiesen die notwendigen Einstellungen zu treffen.
      */

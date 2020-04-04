@@ -9,5 +9,5 @@ package Fachwerte;
  */
 public enum Errors
 {
-    BewohnerEinlesenError, EingabeError, UnfertigeMethode, ProfilSpeichernError, ProfilEntfernenError, DateiNichtGefundenError, DateiLesenError, DateiSchreibenError
+    EinstellungenEinlesenError, BewohnerEinlesenError, EingabeError, UnfertigeMethode, ProfilSpeichernError, ProfilEntfernenError, DateiNichtGefundenError, DateiLesenError, DateiSchreibenError
 }

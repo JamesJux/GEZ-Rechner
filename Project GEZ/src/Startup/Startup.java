@@ -21,7 +21,6 @@ public class Startup
 {
     private static ProfilWerkzeug _profilWerkzeug;
     private static GuthabenWerkzeug _guthabenWerkzeug;
-
     private JFrame frame;
 
     /**
@@ -55,10 +54,11 @@ public class Startup
     }
 
     /**
-     * Erstellt die Services und lädt die Daten.
+     * Erstellt die notwendige Dinge und lädt die Daten.
      */
     public Startup()
     {
+
         erstelleServices();
         new Startseite(frame, _profilWerkzeug, _guthabenWerkzeug);
     }
@@ -70,9 +70,7 @@ public class Startup
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         _profilWerkzeug = new ProfilWerkzeug();
         _guthabenWerkzeug = new GuthabenWerkzeug(_profilWerkzeug);
-
     }
-
 }
 
 /*

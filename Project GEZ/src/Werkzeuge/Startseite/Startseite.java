@@ -37,7 +37,7 @@ public class Startseite
         PW = profilWerkzeug;
         GW = guthabenWerkzeug;
         start();
-        registriereUIAktionen();
+
     }
 
     private static Profil getSelectedProfil()
@@ -62,12 +62,13 @@ public class Startseite
                 aktiv = true;
                 setzeBewohnerChoice();
                 GW.berechneGuthaben();
+                registriereUIAktionen();
             }
             else
             {
-
+                ErrorOutputWerkzeug.ErrorOutput(Errors.EinstellungenEinlesenError);
+                System.exit(1);
             }
-
         }
     }
 

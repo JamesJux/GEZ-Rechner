@@ -8,8 +8,10 @@ import java.util.GregorianCalendar;
 
 import javax.swing.JOptionPane;
 
+import Fachwerte.Errors;
 import Fachwerte.Geldbetrag;
 import Materialien.Profil;
+import Werkzeuge.ErrorOutputWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
 /**
@@ -76,6 +78,9 @@ public class GuthabenWerkzeug
 
     }
 
+    /**
+     * Berechnet die aktuellen Guthaben aller Profile und schreibt diese "momentanen Guthaben" in die Profile.
+     */
     public void berechneGuthaben()
     {
         for (Profil profil : PW.getProfile())
@@ -118,7 +123,12 @@ public class GuthabenWerkzeug
         }
     }
 
-    private int getAnzahlMonate()
+    /**
+     * Berechnet die Anzahl an Monaten seit Beginn der Berechnungen (in den Einstellungen angegeben) vergangen sind.
+     * 
+     * @return Die Anzahl an Monate.
+     */
+    private static int getAnzahlMonate()
     {
         GregorianCalendar beginn = new GregorianCalendar(_beginnBerechnungJahr, _beginnBerechnungMonat, 01);
         GregorianCalendar heute = new GregorianCalendar();
@@ -182,7 +192,12 @@ public class GuthabenWerkzeug
         }
     }
 
-    static int runden(int zahl)
+    /**
+     * Rundet einen Zahl auf oder ab nach den normalen Regeln. 
+     * 
+     * @return Die angegebene Zahl mit einer gerundeten Stelle weniger.
+     */
+    private static int runden(int zahl)
     {
 
         if (zahl % 10 < 5)
@@ -195,6 +210,11 @@ public class GuthabenWerkzeug
         }
     }
 
+    /**
+     * Gibt den Namen des Monates des übergebenen Monates als String. 
+     * 
+     * @return Den Monat als String.
+     */
     static String findeMonat(int rechnendeMonate)
     {
         String monat = "";
@@ -236,6 +256,8 @@ public class GuthabenWerkzeug
         case 0:
             monat = "Januar";
             break;
+        default:
+            ErrorOutputWerkzeug.ErrorOutput(Errors.EingabeError);
         }
         return monat;
     }

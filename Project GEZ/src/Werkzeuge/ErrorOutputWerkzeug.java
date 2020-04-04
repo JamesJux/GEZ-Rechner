@@ -1,18 +1,21 @@
 package Werkzeuge;
 
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
+import javax.swing.JOptionPane;
 
 import Fachwerte.Errors;
 
+/**
+ *  Das Werkzeug zum Verarbeiten von Fehler und zum protokollieren dieser.
+ *  
+ * @author Dominick Labatz
+ * @author Marvin Taube
+ * @version 02.04.2020
+ */
 public class ErrorOutputWerkzeug
 {
     /**
-     *  Das Werkzeug zum Verarbeiten von Fehler und zum protokollieren dieser.
+     *  Dient zum Verarbeiten von Fehler und zum protokollieren dieser.
      *  
-     * @author Dominick Labatz
-     * @author Marvin Taube
-     * @version 02.04.2020
      */
     public static void ErrorOutput(Errors error)
     {
@@ -20,11 +23,14 @@ public class ErrorOutputWerkzeug
 
         switch (error)
         {
+        case EinstellungenEinlesenError:
+            output = "Einlesen der Einstellungen fehlerhaft, bitte überprüfen sie die Korrektheit der der Einstellungen.txt.";
+            break;
         case BewohnerEinlesenError:
-            output = "Einlesen der Bewohner Fehlerhaft bitte überfrüfen sie die Korrektheit der Werte in der Bewohner.txt.";
+            output = "Einlesen der Bewohner fehlerhaft, bitte überprüfen sie die Korrektheit der Werte in der Bewohner.txt.";
             break;
         case EingabeError:
-            output = "InputError: Eingabe ist Fehlerhaft.";
+            output = "InputError: Eingabe ist fehlerhaft.";
             break;
         case UnfertigeMethode:
             output = "Die angeforderte Methode wurde nur teilweise oder noch garnicht implementiert.";
@@ -42,24 +48,15 @@ public class ErrorOutputWerkzeug
             output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gelesen werden konnte.";
             break;
         default:
-            output = "ErrorOutputService Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
+            output = "ErrorOutputWerkzeug Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
         }
         System.out.println(output);
         ErrorOutputTextfile(output);
     }
 
-    public static void ErrorOutputTextfile(String ErrorString)
+    private static void ErrorOutputTextfile(String ErrorString)
     {
-        PrintStream printer;
-        try
-        {
-            printer = new PrintStream("./Textdatein/Error_Log.txt");
-            printer.println(ErrorString);
-            printer.close();
-        }
-        catch (FileNotFoundException e)
-        {
-        }
+        JOptionPane.showMessageDialog(null, ErrorString, "Fehler", JOptionPane.WARNING_MESSAGE);
     }
 
     /*

@@ -24,14 +24,8 @@ import Werkzeuge.Startseite.Startseite;
  */
 public class GuthabenWerkzeugUI extends JInternalFrame
 {
+    private static final long serialVersionUID = 3186765458959922537L;
     private static JFrame _frame;
-
-    public GuthabenWerkzeugUI(Profil profil)
-    {
-        _frame = new JFrame();
-        intitialisieren(profil);
-    }
-
     private static Font FontGuthaben = new Font("Tahoma", Font.PLAIN, 20);
     private static Font FontGuthabenKlein = new Font("Tahoma", Font.PLAIN, 12);
     private JButton _AuszahlenButton;
@@ -41,6 +35,12 @@ public class GuthabenWerkzeugUI extends JInternalFrame
     private JLabel NurTextGuthabenLabel;
     private JLabel _textVorrausGuthabenLabel;
     private JPanel buttonPanel;
+
+    public GuthabenWerkzeugUI(Profil profil)
+    {
+        _frame = new JFrame();
+        intitialisieren(profil);
+    }
 
     public void intitialisieren(Profil profil)
     {

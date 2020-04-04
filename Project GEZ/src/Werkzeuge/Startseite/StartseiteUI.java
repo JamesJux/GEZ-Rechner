@@ -2,7 +2,6 @@ package Werkzeuge.Startseite;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -22,27 +21,8 @@ import javax.swing.SwingConstants;
  */
 public class StartseiteUI extends JInternalFrame
 {
-    public static void main(String[] args)
-    {
-        EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
-                    StartseiteUI frame = new StartseiteUI();
-                    frame.setVisible(true);
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
+    private static final long serialVersionUID = -8459893871697694920L;
     private static final String TITEL = "Startseite - GEZ-Rechner";
-
     private static JFrame _frame;
     private Choice _bewohnerChoice;
     private JButton _bewohnerBearbeitenButton;

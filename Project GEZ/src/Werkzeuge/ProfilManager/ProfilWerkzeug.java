@@ -20,7 +20,7 @@ import Werkzeuge.ErrorOutputWerkzeug;
  */
 public class ProfilWerkzeug
 {
-    private HashSet<Profil> profile;
+    private static HashSet<Profil> profile;
     ProfilWerkzeugUI _ui;
     private boolean benutzerBearbeiten;
 
@@ -176,7 +176,7 @@ public class ProfilWerkzeug
         return profil.istAuszahlenMoeglich(betrag);
     }
 
-    public final void registriereUIAktionen()
+    private void registriereUIAktionen()
     {
         _ui.getAbbrechenButton().addActionListener(new ActionListener()
         {
