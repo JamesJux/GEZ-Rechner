@@ -1,8 +1,0 @@
-Bereits_Initialisiert=true
-Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.
-Bezahler=Dominick Labatz
-SeitJahr=2019
-SeitMonat=05
-Beitragsnummer=450765655
-Geburtstag=07.03.1996
-Sprache=de
