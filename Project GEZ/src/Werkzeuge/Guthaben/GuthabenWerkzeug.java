@@ -91,41 +91,44 @@ public class GuthabenWerkzeug
     {
         for (Profil profil : PW.getProfile())
         {
-            int betragCent = 0;
+            if (!profil.istBezahler())
+            {
+                int betragCent = 0;
 
-            int monat = _beginnBerechnungMonat - 1;
-            int jahr = _beginnBerechnungJahr;
+                int monat = _beginnBerechnungMonat - 1;
+                int jahr = _beginnBerechnungJahr;
 
-            for (int i = 0; i <= getAnzahlMonate(); i++)
-            {
-                monat++;
-                if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
+                for (int i = 0; i <= getAnzahlMonate(); i++)
                 {
-                    int diesenMonat = runden(17500
-                            / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
-                    betragCent -= diesenMonat;
+                    monat++;
+                    if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
+                    {
+                        int diesenMonat = runden(17500
+                                / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
+                        betragCent -= diesenMonat;
+                    }
+                    if (monat == 12)
+                    {
+                        monat = 0;
+                        jahr++;
+                    }
                 }
-                if (monat == 12)
+                int DiffBetragCent = betragCent + profil.getGuthaben().getBetragInCent();
+                Geldbetrag momentan = new Geldbetrag(Math.abs(DiffBetragCent), (DiffBetragCent < 0));
+                profil.setMomentanesGuthaben(momentan);
+                int RestMonate;
+                if (momentan.istBetragNegativ())
                 {
-                    monat = 0;
-                    jahr++;
+                    RestMonate = 0;
                 }
+                else
+                {
+                    RestMonate = momentan.getBetragInCent()
+                            / (runden(17500
+                                    / PW.getAnzahlZahlendeBewohner(new GregorianCalendar())));
+                }
+                profil.setVorraussichtlicheDauer(RestMonate);
             }
-            int DiffBetragCent = betragCent + profil.getGuthaben().getBetragInCent();
-            Geldbetrag momentan = new Geldbetrag(Math.abs(DiffBetragCent), (DiffBetragCent <= 0));
-            profil.setMomentanesGuthaben(momentan);
-            int RestMonate;
-            if (momentan.istBetragNegativ())
-            {
-                RestMonate = 0;
-            }
-            else
-            {
-                RestMonate = momentan.getBetragInCent()
-                        / (runden(17500
-                                / PW.getAnzahlZahlendeBewohner(new GregorianCalendar())));
-            }
-            profil.setVorraussichtlicheDauer(RestMonate);
         }
     }
 

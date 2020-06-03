@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -81,7 +83,9 @@ public class GuthabenWerkzeugUI extends JInternalFrame
         JPanel VorrausGuthabenPanel = new JPanel();
         hauptPanel.add(VorrausGuthabenPanel, BorderLayout.SOUTH);
 
-        _textVorrausGuthabenLabel = new JLabel("Reicht vorraussichtlich noch " + profil.getVorrsichtlicheDauer() + " Monate.");
+        String Monat = GuthabenWerkzeug.findeMonat((new GregorianCalendar().get(Calendar.MONTH) + profil.getVorrsichtlicheDauer()) % 12);
+        _textVorrausGuthabenLabel = new JLabel("Reicht vorraussichtlich noch " + profil.getVorrsichtlicheDauer()
+                + " Monate, also bis einschließlich " + Monat);
         _textVorrausGuthabenLabel.setFont(FontGuthabenKlein);
         VorrausGuthabenPanel.add(_textVorrausGuthabenLabel);
 

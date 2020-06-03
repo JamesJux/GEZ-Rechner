@@ -231,7 +231,7 @@ public class ProfilWerkzeug
             momentanCent = -momentanCent;
         }
         neu = momentanCent + betrag;
-        if (neu <= 0)
+        if (neu < 0)
         {
             neuNegativ = true;
             neu = -neu;

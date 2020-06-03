@@ -152,7 +152,11 @@ public class Startseite
                 {
                     //aktiv = false;
                     //TODO: Übersichtsfenster gestalten. 
-                    ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
+                    //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
+                    for (Profil profile : PW.getProfile())
+                    {
+                        System.out.println(profile.getName() + ": " + profile.getMomentanesGuthaben().toFormattedString());
+                    }
                 }
             }
         });

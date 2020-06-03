@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
@@ -166,10 +167,10 @@ public class DateiWerkzeug
                 String ad = p.getEmail();
                 String ae = p.getHandynummer();
                 int af = p.getGuthaben().getBetragInCent();
-                String ag = p.getEinzugsdatum().toInstant().toString().substring(5, 7);
-                String ah = p.getEinzugsdatum().toInstant().toString().substring(0, 4);
-                String ai = p.getAuszugsdatum().toInstant().toString().substring(5, 7);
-                String aj = p.getAuszugsdatum().toInstant().toString().substring(0, 4);
+                String ag = "" + p.getEinzugsdatum().get(Calendar.MONTH);
+                String ah = "" + p.getEinzugsdatum().get(Calendar.YEAR);
+                String ai = "" + p.getAuszugsdatum().get(Calendar.MONTH);
+                String aj = "" + p.getAuszugsdatum().get(Calendar.YEAR);
 
                 printer.println(aa + ";" + ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai + ";" + aj);
             }
@@ -251,8 +252,8 @@ public class DateiWerkzeug
         try (PrintWriter printer = new PrintWriter(new FileWriter(LOGDATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
-            printer.println(heute.toInstant().toString().substring(0, 4) + "-" + heute.toInstant().toString().substring(5, 7) + "-"
-                    + heute.toInstant().toString().substring(8, 10) + " - " + text);
+            printer.println(heute.get(Calendar.YEAR) + "-" + heute.get(Calendar.MONTH) + "-"
+                    + heute.get(Calendar.DAY_OF_MONTH) + " - " + text);
         }
         catch (IOException e)
         {
