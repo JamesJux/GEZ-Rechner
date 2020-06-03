@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import Fachwerte.Errors;
 import Fachwerte.Geldbetrag;
 import Materialien.Profil;
+import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.ErrorOutputWerkzeug;
 
 /**
@@ -59,6 +60,13 @@ public class ProfilWerkzeug
         profile.add(neuesProfil);
     }
 
+    /**
+     * Speichert einen Bewohner anhand der in dem UI eingegebenen Informationen.
+     * 
+     * @apiNote Prüft ob Fehler in der Eingabe sind.
+     * TODO: Fehler in den Eingaben abfangen.
+     * 
+     **/
     public void neuenBenutzerSpeichern()
     {
         String zimmer = _ui.get_textFieldZimmer().getText();
@@ -86,6 +94,12 @@ public class ProfilWerkzeug
         erstelleProfil(zimmer, vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
     }
 
+    /**
+     * Prüft wie viele Bewohner/Profil zu einem gewissen Zeitpunkt im Haus gewohnt hat.
+     * 
+     * @param datum Das Datum an dem geprüft werden soll.
+     * @return die Anzahl an zahlenden Bewohner zu dem Zeitpunkt.
+     **/
     public int getAnzahlZahlendeBewohner(GregorianCalendar datum)
     {
         int temp = 0;
@@ -100,6 +114,13 @@ public class ProfilWerkzeug
 
     }
 
+    /**
+     * Prüft ob ein Bewohner/Profil zu einem gewissen Zeitpunkt im Haus gewohnt hat.
+     * 
+     * @param profil Das Profil bzw. Der Bewohner der überprüft werden soll.
+     * @param datum Das Datum an dem geprüft werden soll.
+     * @return true wenn der Profil an dem Zeitpunkt im haus gewohnt hat.
+     **/
     public boolean wohntImHaus(Profil profil, GregorianCalendar datum)
     {
         if ((profil.getEinzugsdatum().getTimeInMillis() <= datum.getTimeInMillis())
@@ -110,6 +131,11 @@ public class ProfilWerkzeug
         return false;
     }
 
+    /**
+     * Gibt zu einem String das Profil.
+     * 
+     * @return Das gesuchte Profil, ruturnt 'null' wenn kein passendes Profil gefunden werden kann.
+     **/
     public Profil getProfil(String gesProfil)
     {
         for (Profil profil : profile)
@@ -122,6 +148,11 @@ public class ProfilWerkzeug
         return null;
     }
 
+    /**
+     * Gibt den Bezahler aus.
+     * 
+     * @return Das Profil des Bezahlers, ruturnt 'null' wenn das Profil nicht gefunden werden kann.
+     **/
     public Profil getBezahler()
     {
         for (Profil profil : profile)
@@ -134,21 +165,62 @@ public class ProfilWerkzeug
         return null;
     }
 
+    /**
+     * Registriert im Bezahlprofil seinen Status.
+     * 
+     * @apiNote Notwendig für die Funktionalität
+     * @param Bezahler Namens-String des Bezahlers.
+     **/
     public void registriereBezahler(String Bezahler)
     {
-        getProfil(Bezahler).setBezahler();
+        Profil temp = getProfil(Bezahler);
+        if (temp != null)
+        {
+            temp.setBezahler();
+        }
+        else
+        {
+            ErrorOutputWerkzeug.ErrorOutput(Errors.BezahlerRegistrierenError);
+        }
     }
 
+    /**
+     * Löscht ein Profil mit dem übergebendem Namen. 
+     **/
     public void loescheProfil(String loeschendesProfil)
     {
-        profile.remove(getProfil(loeschendesProfil));
+        Profil temp = getProfil(loeschendesProfil);
+        if (temp != null)
+        {
+            profile.remove(temp);
+        }
+        else
+        {
+            ErrorOutputWerkzeug.ErrorOutput(Errors.ProfilEntfernenError);
+        }
     }
 
+    /**
+     * Zahlt den übergebenen Betrag nur temporär aus, sodass ein neues Momentanes Guthaben ausgegeben wird.
+     * Erst mit {@link ProfilWerkzeug.speichereGuthaben()} speichert er das Guthaben endgültig.
+     * 
+     * @param profil Das betreffende Profil von dem ausgezahlt werden soll.
+     * @param betrag Der Betrag der Auszahlung.
+     **/
     public void MomentanesGuthabenAuszahlen(Profil profil, int betrag)
     {
         profil.setMomentanesGuthaben(new Geldbetrag(profil.getMomentanesGuthaben().getBetragInCent() - betrag, false));
+        DateiWerkzeug.loggeEinAuszahlung("Auszahlung von " + profil.getVorname() + ": " + betrag + " Cent.");
     }
 
+    /**
+     * Zahlt den übergebenen Betrag nur temporär ein, sodass ein neues Momentanes Guthaben ausgegeben wird.
+     * 
+     * Erst mit {@link ProfilWerkzeug.speichereGuthaben()} speichert er das Guthaben endgültig.
+     * 
+     * @param profil Das betreffende Profil auf das eingezahlt werden soll.
+     * @param betrag Der Betrag der Einzahlung.
+     **/
     public void MomentanesGuthabenEinzahlen(Profil profil, int betrag)
     {
         int momentanCent = profil.getMomentanesGuthaben().getBetragInCent();
@@ -162,20 +234,39 @@ public class ProfilWerkzeug
         if (neu <= 0)
         {
             neuNegativ = true;
+            neu = -neu;
         }
         profil.setMomentanesGuthaben(new Geldbetrag(neu, neuNegativ));
+        DateiWerkzeug.loggeEinAuszahlung("Einzahlung von " + profil.getVorname() + ": " + betrag + " Cent.");
     }
 
+    /**
+     * Speichert den übergebenen Betrag, sodass ein neues Guthaben im Profil gespeichert wird.
+     * 
+     * @param profil Das betreffende Profil auf das ein- oder ausgezahlt werden soll.
+     * @param betrag Der Betrag der Ein- bzw. Auszahlung.
+     **/
     public void speichereGuthaben(Profil profil, int betrag)
     {
         profil.setGuthaben(new Geldbetrag(profil.getGuthaben().getBetragInCent() + betrag, false));
     }
 
+    /**
+     * Prüft ob der übergebene Betrag von dem Profil auszahlbar ist.
+     * 
+     * @param profil Das betreffende Profil von dem ausgezahlt werden soll.
+     * @param betrag Der Betrag der angefragten Auszahlung.
+     * @return true wenn das auszahlen möglich ist.
+     **/
     public boolean istAuszahlenMoeglich(Profil profil, int betrag)
     {
         return profil.istAuszahlenMoeglich(betrag);
     }
 
+    /**
+     * Prüft ob der UI- Aktionen ausgelöst werden und reagiert entsprechend.
+     * 
+     **/
     private void registriereUIAktionen()
     {
         _ui.getAbbrechenButton().addActionListener(new ActionListener()

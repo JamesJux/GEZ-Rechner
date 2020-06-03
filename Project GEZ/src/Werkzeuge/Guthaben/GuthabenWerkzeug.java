@@ -19,7 +19,7 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
  *  
  * @author Dominick Labatz
  * @version 02.04.2020
- */
+ **/
 public class GuthabenWerkzeug
 {
     private static Integer _beginnBerechnungMonat;
@@ -35,6 +35,12 @@ public class GuthabenWerkzeug
         berechneGuthaben();
     }
 
+    /**
+     * Öffnet ein GuthabenWerkzeugUI Instanz mit dem übergebenem Profil.
+     * Zum editieren oder angucken der hinterlegten Informationen.
+     *  
+     *  @param aktProfil das Profil das bearbeitet/angeguckt werden soll.
+     **/
     public void erzeugeGuthabenWerkzeugUI(Profil aktProfil)
     {
         profil = aktProfil;
@@ -59,28 +65,28 @@ public class GuthabenWerkzeug
     /**
      * Registriert den Berechnungs Monat im BezahlWerkzeug.
      * 
-     * Notwendig für die Funktionalität.
-     */
+     * @apiNote Notwendig für die Funktionalität.
+     * @param seitMonat Der Monat des Beginn der Berechnung der Guthaben.
+     **/
     public static void registriereBezahlMonat(String seitMonat)
     {
         _beginnBerechnungMonat = Integer.valueOf(seitMonat) - 1;
-
     }
 
     /**
      * Registriert das Berechnungs Jahr im BezahlWerkzeug.
      * 
-     * Notwendig für die Funktionalität.
-     */
+     * @apiNote Notwendig für die Funktionalität.
+     * @param seitJahr Das Jahr des Beginn der Berechnung der Guthaben.
+     **/
     public static void registriereBezahlJahr(String seitJahr)
     {
         _beginnBerechnungJahr = Integer.valueOf(seitJahr);
-
     }
 
     /**
      * Berechnet die aktuellen Guthaben aller Profile und schreibt diese "momentanen Guthaben" in die Profile.
-     */
+     **/
     public void berechneGuthaben()
     {
         for (Profil profil : PW.getProfile())
@@ -127,7 +133,7 @@ public class GuthabenWerkzeug
      * Berechnet die Anzahl an Monaten seit Beginn der Berechnungen (in den Einstellungen angegeben) vergangen sind.
      * 
      * @return Die Anzahl an Monate.
-     */
+     **/
     private static int getAnzahlMonate()
     {
         GregorianCalendar beginn = new GregorianCalendar(_beginnBerechnungJahr, _beginnBerechnungMonat, 01);
@@ -142,7 +148,7 @@ public class GuthabenWerkzeug
      * Fragt den Benutzer welcher Betrag ausgezahlt werden soll, und übergibt diesen Wert an das ProfilWerkzeug.
      * 
      * Bei falscher Eingabe wird noch mal gefragt, ausser man beendet den Dialog mit 'WindowClosing'.
-     */
+     **/
     private void Auszahlen()
     {
         String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie auszahlen möchten", "Auszahlung", JOptionPane.PLAIN_MESSAGE);
@@ -173,7 +179,7 @@ public class GuthabenWerkzeug
      * Fragt den Benutzer welcher Betrag eingezahlt werden soll, und übergibt diesen Wert an das ProfilWerkzeug.
      * 
      * Bei falscher Eingabe wird noch mal gefragt, ausser man beendet den Dialog mit 'WindowClosing'.
-     */
+     **/
     private void Einzahlen()
     {
         String eingabe = JOptionPane.showInputDialog(_ui, "Geben Sie den Betrag in Cent ein den Sie einzahlen möchten", "Einzahlung", JOptionPane.PLAIN_MESSAGE);
@@ -196,7 +202,7 @@ public class GuthabenWerkzeug
      * Rundet einen Zahl auf oder ab nach den normalen Regeln. 
      * 
      * @return Die angegebene Zahl mit einer gerundeten Stelle weniger.
-     */
+     **/
     private static int runden(int zahl)
     {
 
@@ -214,7 +220,7 @@ public class GuthabenWerkzeug
      * Gibt den Namen des Monates des übergebenen Monates als String. 
      * 
      * @return Den Monat als String.
-     */
+     **/
     static String findeMonat(int rechnendeMonate)
     {
         String monat = "";
@@ -262,6 +268,10 @@ public class GuthabenWerkzeug
         return monat;
     }
 
+    /**
+     * Prüft ob der UI- Aktionen ausgelöst werden und reagiert entsprechend.
+     * 
+     **/
     private void registriereUIAktionen()
     {
         _ui.get_EinzahlenButton().addActionListener(new ActionListener()

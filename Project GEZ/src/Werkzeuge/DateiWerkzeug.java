@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
 import Fachwerte.Errors;
@@ -25,6 +28,7 @@ public class DateiWerkzeug
     private static final File BEWOHNER_DATEI = new File(PATH + "/Bewohner.txt");
     private static final File OUTPUT = new File(PATH + "/Output Bewohner.txt");
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
+    private static final File LOGDATEI = new File(PATH + "/Log-Datei.txt");
 
     static ProfilWerkzeug PW;
     private static boolean _einstellungenVollständig;
@@ -63,7 +67,6 @@ public class DateiWerkzeug
      */
     private static void erstInitialisierung()
     {
-        erstInitialisierung();
         PrintStream printer;
         try
         {
@@ -74,14 +77,16 @@ public class DateiWerkzeug
             printer.println("SeitJahr=");
             printer.println("SeitMonat=");
             printer.println("Beitragsnummer='9-stellige Zahl'");
-            printer.println("Geburtstag='TT.MM.JJJJ'");
-            printer.print("Sprache='de/en'");
+            printer.println("Geburtstag=TT.MM.JJJJ");
+            //printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
             printer.println("'Zimmernr';VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
-            printer.print("1/515;Dominick;Labatz;d.jamesjux@gmail.com;017696588507;0;12;2018;0;0");
+            printer.print("1/515;Dominick;Labatz;<EMAIL>;<Handynr.>;0;12;2018;0;0");
             printer.close();
             printer = new PrintStream(OUTPUT);
+            printer.close();
+            printer = new PrintStream(LOGDATEI);
             printer.close();
         }
         catch (IOException a)
@@ -213,18 +218,21 @@ public class DateiWerkzeug
                     String Beitragsnummer = tokenizer.nextToken();
                     System.out.println(Beitragsnummer);
                     //TODO: registriere(Beitragsnummer);
+                    //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
                     break;
                 case "Geburtstag":
                     eingeleseneEinstellungen++;
                     String Geburtstag = tokenizer.nextToken();
                     System.out.println(Geburtstag);
                     //TODO: registriere(Geburtstag);
+                    //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
                     break;
-                case "Sprache":
-                    String Sprache = tokenizer.nextToken();
-                    System.out.println(Sprache);
-                    //TODO: registriere(Sprache);
-                    break;
+                //                case "Sprache":
+                //                    String Sprache = tokenizer.nextToken();
+                //                    System.out.println(Sprache);
+                //                    //TODO: registriere(Sprache);
+                //                    ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
+                //                    break;
                 }
                 if (eingeleseneEinstellungen == 5)
                 {
@@ -235,6 +243,19 @@ public class DateiWerkzeug
         catch (IOException e)
         {
             ErrorOutputWerkzeug.ErrorOutput(Errors.DateiLesenError);
+        }
+    }
+
+    public static void loggeEinAuszahlung(String text)
+    {
+        try (PrintWriter printer = new PrintWriter(new FileWriter(LOGDATEI, true), true))
+        {
+            GregorianCalendar heute = new GregorianCalendar();
+            printer.println(heute.toInstant().toString().substring(0, 4) + "-" + heute.toInstant().toString().substring(5, 7) + "-"
+                    + heute.toInstant().toString().substring(8, 10) + " - " + text);
+        }
+        catch (IOException e)
+        {
         }
     }
 

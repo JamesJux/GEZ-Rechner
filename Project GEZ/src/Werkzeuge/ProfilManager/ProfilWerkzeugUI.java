@@ -176,8 +176,17 @@ public class ProfilWerkzeugUI extends JInternalFrame
 
         for (int i = 1; i <= 12; i++)
         {
-            _choiceMonat.add("" + i);
-            _choiceMonatAus.add("" + i);
+            if (i < 10)
+            {
+                _choiceMonat.add("0" + i);
+                _choiceMonatAus.add("0" + i);
+            }
+            else
+            {
+                _choiceMonat.add("" + i);
+                _choiceMonatAus.add("" + i);
+            }
+
         }
 
         int aktJahr = Integer.valueOf(new GregorianCalendar().toInstant().toString().substring(0, 4));

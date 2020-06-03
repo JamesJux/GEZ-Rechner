@@ -70,6 +70,10 @@ public class Startseite
                 System.exit(1);
             }
         }
+        else
+        {
+            System.exit(1);
+        }
     }
 
     private static void setzeBewohnerChoice()
@@ -135,6 +139,7 @@ public class Startseite
                     {
                         PW.erzeugeProfilWerkzeugUI(getSelectedProfil());
                     }
+                    GW.berechneGuthaben();
                 }
             }
         });

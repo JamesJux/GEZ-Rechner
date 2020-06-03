@@ -29,6 +29,12 @@ public class ErrorOutputWerkzeug
         case BewohnerEinlesenError:
             output = "Einlesen der Bewohner fehlerhaft, bitte überprüfen sie die Korrektheit der Werte in der Bewohner.txt.";
             break;
+        case DateiNichtGefundenError:
+            output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gefunden wurde.";
+            break;
+        case DateiLesenError:
+            output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gefunden wurde.";
+            break;
         case EingabeError:
             output = "InputError: Eingabe ist fehlerhaft.";
             break;
@@ -41,11 +47,8 @@ public class ErrorOutputWerkzeug
         case ProfilEntfernenError:
             output = "ProfileSetRemoveError: Problem beim Entfernen des Profils";
             break;
-        case DateiLesenError:
-            output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gefunden wurde.";
-            break;
-        case DateiSchreibenError:
-            output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gelesen werden konnte.";
+        case BezahlerRegistrierenError:
+            output = "BezahlerError: Problem beim Einlesen des Bezahlers";
             break;
         default:
             output = "ErrorOutputWerkzeug Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";

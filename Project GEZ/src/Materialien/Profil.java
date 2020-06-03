@@ -9,7 +9,7 @@ import Fachwerte.Geldbetrag;
  *  
  * @author Dominick Labatz
  * @version 02.04.2020
- */
+ **/
 public class Profil
 {
     private final String _vorname;
@@ -29,118 +29,203 @@ public class Profil
      * Erstellung eines Profils für eine neue Person
      * 
      * @param zimmer Das Zimmer der Person
-     * @param vorname Der Vorame der Person
-     * @param nachname Der Nachname der Person
+     * @param Vorname Der Vorame der Person
+     * @param Nachname Der Nachname der Person
      * @param guthaben Der bisher eingezahlte Betrag in Eurocent
-     * @param email Die Email der Person
-     * @param handynummer Die Handynummer der Person
+     * @param Email Die Email der Person
+     * @param Handynummer Die Handynummer der Person
      * @param EinMonat Der Einzugsmonat der Person
      * @param EinJahr Das Einzugsjahr der Person
      * @param AusMonat Der Auszugsmonat der Person
      * @param AusMonat Das Auszugsjahr der Person
-     */
-
-    public Profil(String zimmer, String vorname, String name, int guthaben, String email, String handynummer,
+     **/
+    public Profil(String zimmer, String Vorname, String Nachname, int guthaben, String Email, String Handynummer,
             int EinMonat, int EinJahr, int AusMonat, int AusJahr)
     {
         _zimmer = zimmer;
-        _vorname = vorname;
-        _nachname = name;
+        _vorname = Vorname;
+        _nachname = Nachname;
         _einzugsdatum = new GregorianCalendar(EinJahr, EinMonat - 1, 2);
         _auszugsdatum = new GregorianCalendar(AusJahr, AusMonat - 1, 20);
         _guthaben = new Geldbetrag(guthaben, false);
-        _email = email;
-        _handynummer = handynummer;
+        _email = Email;
+        _handynummer = Handynummer;
         _bezahler = false;
         _momentanesGuthaben = new Geldbetrag(guthaben, false);
         _VorraussichtlicheDauer = 0;
     }
 
+    /**
+     * Gibt den String des Vornamen des Profils.
+     * 
+     * @return Den Vornamen
+     **/
     public String getVorname()
     {
         return _vorname;
     }
 
+    /**
+     * Gibt den String des Nachnamen des Profils.
+     * 
+     * @return  Den Nachnamen
+     **/
     public String getNachname()
     {
         return _nachname;
     }
 
+    /**
+     * Gibt den gesammten Namen aus als formatierten String aus.
+     * 
+     * @return Den Vor- und Nachnamen
+     **/
+    public String getName()
+    {
+        return _vorname + " " + _nachname;
+    }
+
+    /**
+     * Gibt das Zimmer des Profils aus.
+     * 
+     * @return Das Zimmer
+     **/
     public String getZimmer()
     {
         return _zimmer;
     }
 
+    /**
+     * Gibt das Einzugsdateum als Instanz eines GregorianCalender zurück.
+     * 
+     * @return Das Einzugsdatum
+     **/
     public GregorianCalendar getEinzugsdatum()
     {
         return _einzugsdatum;
     }
 
+    /**
+     * Gibt das Auszugsdateum als Instanz eines GregorianCalender zurück.
+     * 
+     * @return Das Auszugsdatum
+     **/
     public GregorianCalendar getAuszugsdatum()
     {
         return _auszugsdatum;
     }
 
+    /**
+     * Gibt die Email-Adresse aus.
+     * 
+     * @return Die angegebene E-Mailadresse
+     **/
     public String getEmail()
     {
         return _email;
     }
 
-    public void setEmail(String email)
-    {
-        this._email = email;
-    }
-
+    /**
+     * Gibt die Handynummer aus.
+     * 
+     * @return Die angegebene Handynummer
+     **/
     public String getHandynummer()
     {
         return _handynummer;
     }
 
-    public void setHandynummer(String handynummer)
-    {
-        _handynummer = handynummer;
-    }
-
+    /**
+     * Gibt das gesammte bereits eingezahlte Guthaben als Geldbetrag zurück.
+     * 
+     * @return Das eingezahlte Guthaben
+     **/
     public Geldbetrag getGuthaben()
     {
         return _guthaben;
     }
 
+    /**
+     * Setzt das eingezahlte Guthaben auf den übergebenen Wert.
+     * 
+     * @param guthaben Das neue Guthaben
+     **/
     public void setGuthaben(Geldbetrag guthaben)
     {
         _guthaben = guthaben;
     }
 
+    /**
+     * Prüft ob der Betrag aus gezahlt werden kann.
+     * 
+     * @param betrag Der Betrag der geprüft werden soll.
+     * @return {@code true} wenn der Betrag ausgezahlt werden kann, andernfalls {@code false}
+     **/
     public boolean istAuszahlenMoeglich(int betrag)
     {
-        return (_guthaben.getBetragInCent() >= betrag);
+        return (_momentanesGuthaben.getBetragInCent() >= betrag);
     }
 
+    /**
+     * Gibt das Momentane Guthaben als Geldbetrag aus.
+     * 
+     * @return Der Momentane Guthabenstand
+     **/
     public Geldbetrag getMomentanesGuthaben()
     {
         return _momentanesGuthaben;
     }
 
+    /**
+     * Setzt den Momentanen Guthabenstand auf den übergebenen Geldbetrag.
+     * 
+     * @apiNote Wichtig: Dies wird nur temporär gespeichert, falls der
+     * Betrag nicht durch {@link ProfilWerkzeug.speichereGuthaben(Profil, int)}
+     * im Profil gespeichert wird.
+     * 
+     * @param betrag Der Betrag auf den es gesetzt werden soll
+     **/
     public void setMomentanesGuthaben(Geldbetrag betrag)
     {
         _momentanesGuthaben = betrag;
     }
 
+    /**
+     * Gibt den Status, des Bezahlers zurück.
+     * 
+     * @return Nur {@code true} wenn das Profil als Bezahler registriert ist, andernfalls {@code false}
+     **/
     public boolean istBezahler()
     {
         return _bezahler;
     }
 
+    /**
+     * Registriert dieses Konto als Bezahler.
+     * 
+     * @apiNote Es ist darauf zu achten, dass es nur einen Bezahler gibt.
+     * 
+     **/
     public void setBezahler()
     {
         _bezahler = true;
     }
 
+    /**
+     * Gibt die Anzahl an Monaten die das {@link _momentaneGuthaben} noch reicht.
+     * 
+     * @return Die Anzahl an Monaten, 
+     **/
     public int getVorrsichtlicheDauer()
     {
         return _VorraussichtlicheDauer;
     }
 
+    /**
+     * 
+     * 
+     * @return 
+     **/
     public void setVorraussichtlicheDauer(int monate)
     {
         _VorraussichtlicheDauer = monate;
