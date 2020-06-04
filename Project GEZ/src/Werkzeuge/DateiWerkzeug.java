@@ -27,12 +27,12 @@ public class DateiWerkzeug
 {
     private static final String PATH = "./Textdateien";
     private static final File BEWOHNER_DATEI = new File(PATH + "/Bewohner.txt");
-    private static final File OUTPUT = new File(PATH + "/Output Bewohner.txt");
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
-    private static final File LOGDATEI = new File(PATH + "/Log-Datei.txt");
-
-    static ProfilWerkzeug PW;
+    private static final File GUTHABEN_LOG_DATEI = new File(PATH + "/Guthaben-Log-Datei.txt");
+    private static final File FEHLER_LOG_DATEI = new File(PATH + "/Fehler-Log-Datei.txt");
+    private static File OUTPUT = BEWOHNER_DATEI;
     private static boolean _einstellungenVollständig;
+    static ProfilWerkzeug PW;
 
     public static boolean bereitsInitialisiert(ProfilWerkzeug _profilWerkzeug)
     {
@@ -79,15 +79,12 @@ public class DateiWerkzeug
             printer.println("SeitMonat=");
             printer.println("Beitragsnummer='9-stellige Zahl'");
             printer.println("Geburtstag=TT.MM.JJJJ");
+            printer.println("Debugmodus=false");
             //printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
             printer.println("'Zimmernr';VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
             printer.print("1/515;Dominick;Labatz;<EMAIL>;<Handynr.>;0;12;2018;0;0");
-            printer.close();
-            printer = new PrintStream(OUTPUT);
-            printer.close();
-            printer = new PrintStream(LOGDATEI);
             printer.close();
         }
         catch (IOException a)
@@ -121,6 +118,7 @@ public class DateiWerkzeug
                 int EinMonat = Integer.valueOf(tokenizer.nextToken());
                 if (EinMonat > 12 || EinMonat < 1)
                 {
+                    System.out.println("" + Vorname + EinMonat);
                     ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
                 }
                 int EinJahr = Integer.valueOf(tokenizer.nextToken());
@@ -131,6 +129,8 @@ public class DateiWerkzeug
                 int AusMonat = Integer.valueOf(tokenizer.nextToken());
                 if (AusMonat > 12 || AusMonat < 1)
                 {
+                    System.out.println("" + Vorname + AusMonat);
+
                     ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
                 }
                 int AusJahr = Integer.valueOf(tokenizer.nextToken());
@@ -167,9 +167,19 @@ public class DateiWerkzeug
                 String ad = p.getEmail();
                 String ae = p.getHandynummer();
                 int af = p.getGuthaben().getBetragInCent();
-                String ag = "" + p.getEinzugsdatum().get(Calendar.MONTH);
+                String ag = "";
+                if ((p.getEinzugsdatum().get(Calendar.MONTH) + 1) < 10)
+                {
+                    ag = "0";
+                }
+                ag = ag + (p.getEinzugsdatum().get(Calendar.MONTH) + 1);
                 String ah = "" + p.getEinzugsdatum().get(Calendar.YEAR);
-                String ai = "" + p.getAuszugsdatum().get(Calendar.MONTH);
+                String ai = "";
+                if ((p.getAuszugsdatum().get(Calendar.MONTH) + 1) < 10)
+                {
+                    ai = "0";
+                }
+                ai = ai + (p.getAuszugsdatum().get(Calendar.MONTH) + 1);
                 String aj = "" + p.getAuszugsdatum().get(Calendar.YEAR);
 
                 printer.println(aa + ";" + ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai + ";" + aj);
@@ -228,6 +238,13 @@ public class DateiWerkzeug
                     //TODO: registriere(Geburtstag);
                     //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
                     break;
+                case "Debugmodus":
+                    String option = tokenizer.nextToken();
+                    if (option.equals("true"))
+                    {
+                        OUTPUT = new File(PATH + "/Output Bewohner.txt");
+                    }
+                    break;
                 //                case "Sprache":
                 //                    String Sprache = tokenizer.nextToken();
                 //                    System.out.println(Sprache);
@@ -249,7 +266,7 @@ public class DateiWerkzeug
 
     public static void loggeEinAuszahlung(String text)
     {
-        try (PrintWriter printer = new PrintWriter(new FileWriter(LOGDATEI, true), true))
+        try (PrintWriter printer = new PrintWriter(new FileWriter(GUTHABEN_LOG_DATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
             printer.println(heute.get(Calendar.YEAR) + "-" + heute.get(Calendar.MONTH) + "-"
@@ -257,13 +274,46 @@ public class DateiWerkzeug
         }
         catch (IOException e)
         {
+            PrintStream printer;
+            try
+            {
+                printer = new PrintStream(GUTHABEN_LOG_DATEI);
+                printer.close();
+                loggeEinAuszahlung(text);
+            }
+            catch (FileNotFoundException e1)
+            {
+            }
+        }
+    }
+
+    public static void loggeFehler(String text)
+    {
+        try (PrintWriter printer = new PrintWriter(new FileWriter(FEHLER_LOG_DATEI, true), true))
+        {
+            GregorianCalendar heute = new GregorianCalendar();
+            printer.println(heute.get(Calendar.DAY_OF_MONTH) + "." + heute.get(Calendar.MONTH) + "." + heute.get(Calendar.YEAR) + " "
+                    + heute.get(Calendar.HOUR_OF_DAY) + ":" + heute.get(Calendar.MINUTE) + ":" + heute.get(Calendar.SECOND) + "\n" + text);
+        }
+        catch (IOException e)
+        {
+            PrintStream printer;
+            try
+            {
+                printer = new PrintStream(FEHLER_LOG_DATEI);
+                printer.close();
+                loggeFehler(text);
+            }
+            catch (FileNotFoundException e1)
+            {
+            }
         }
     }
 
     /**
      * Gibt aus ob alle notwendigen Einstellungen geladen werden konnten.
      * 
-     * @return true wenn alle eingelesen werden konnten, anderfalls false.
+     * @return true wenn alle notwendigen Einstellungen eingelesen werden konnten, anderfalls false.
      */
     public static boolean sindEinstellungenVollständig()
     {

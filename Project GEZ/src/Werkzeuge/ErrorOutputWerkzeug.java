@@ -53,13 +53,20 @@ public class ErrorOutputWerkzeug
         default:
             output = "ErrorOutputWerkzeug Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
         }
-        System.out.println(output);
+        String trace = "\nTrace:" +
+                "\nfile: " + new Throwable().getStackTrace()[1].getFileName() +
+                "\nclass: " + new Throwable().getStackTrace()[1].getClassName() +
+                "\nmethod: " + new Throwable().getStackTrace()[1].getMethodName() +
+                "\nline: " + new Throwable().getStackTrace()[1].getLineNumber();
+        System.out.println(output + trace);
         ErrorOutputTextfile(output);
+        DateiWerkzeug.loggeFehler(output + trace);
     }
 
     private static void ErrorOutputTextfile(String ErrorString)
     {
-        JOptionPane.showMessageDialog(null, ErrorString, "Fehler", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, ErrorString
+                + "\nFür mehr Informationen lesen Sie bitte die Log-Datei.", "Ein Fehler ist aufgetreten...", JOptionPane.WARNING_MESSAGE);
     }
 
     /*
