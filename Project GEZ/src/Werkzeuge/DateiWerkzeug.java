@@ -269,8 +269,19 @@ public class DateiWerkzeug
         try (PrintWriter printer = new PrintWriter(new FileWriter(GUTHABEN_LOG_DATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
-            printer.println(heute.get(Calendar.YEAR) + "-" + heute.get(Calendar.MONTH) + "-"
-                    + heute.get(Calendar.DAY_OF_MONTH) + " - " + text);
+            String hMonat = "";
+            if ((heute.get(Calendar.MONTH) + 1) < 10)
+            {
+                hMonat = "0";
+            }
+            hMonat += (heute.get(Calendar.MONTH) + 1);
+            String hTag = "";
+            if (heute.get(Calendar.DAY_OF_MONTH) < 10)
+            {
+                hTag = "0";
+            }
+            hTag += heute.get(Calendar.DAY_OF_MONTH);
+            printer.println(heute.get(Calendar.YEAR) + "-" + hMonat + "-" + hTag + " - " + text);
         }
         catch (IOException e)
         {
