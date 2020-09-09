@@ -153,11 +153,11 @@ public class ProfilWerkzeug
      * 
      * @return Das Profil des Bezahlers, ruturnt 'null' wenn das Profil nicht gefunden werden kann.
      **/
-    public Profil getBezahler()
+    public Profil getBeitragszahler()
     {
         for (Profil profil : profile)
         {
-            if (profil.istBezahler())
+            if (profil.istBeitragszahler())
             {
                 return profil;
             }
@@ -169,14 +169,16 @@ public class ProfilWerkzeug
      * Registriert im Bezahlprofil seinen Status.
      * 
      * @apiNote Notwendig für die Funktionalität
-     * @param Bezahler Namens-String des Bezahlers.
+     * @param Bezahler Namens-String des Beitragszahlers.
+     * @param Beitragsnummer Beitragsnummer-String des Beitragszahlers.
+     * @param Geburtstag Geburtstag-String des Beitragszahlers.
      **/
-    public void registriereBezahler(String Bezahler)
+    public void registriereBeitragszahler(String Bezahler, String Beitragsnummer, String Geburtstag)
     {
         Profil temp = getProfil(Bezahler);
         if (temp != null)
         {
-            temp.setBezahler();
+            temp.setBeitragszahler(Beitragsnummer, Geburtstag);
         }
         else
         {

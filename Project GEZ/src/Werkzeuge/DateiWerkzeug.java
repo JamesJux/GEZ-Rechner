@@ -199,6 +199,9 @@ public class DateiWerkzeug
     public static void leseEinstellungenEin()
     {
         int eingeleseneEinstellungen = 0;
+        String Beitragszahler = "";
+        String Geburtstag = "";
+        String Beitragsnummer = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
             String line = null;
@@ -211,8 +214,8 @@ public class DateiWerkzeug
                 {
                 case "Bezahler":
                     eingeleseneEinstellungen++;
-                    String Bezahler = tokenizer.nextToken();
-                    PW.registriereBezahler(Bezahler);
+                    Beitragszahler = tokenizer.nextToken();
+
                     break;
                 case "SeitJahr":
                     eingeleseneEinstellungen++;
@@ -226,17 +229,11 @@ public class DateiWerkzeug
                     break;
                 case "Beitragsnummer":
                     eingeleseneEinstellungen++;
-                    String Beitragsnummer = tokenizer.nextToken();
-                    System.out.println(Beitragsnummer);
-                    //TODO: registriere(Beitragsnummer);
-                    //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
+                    Beitragsnummer = tokenizer.nextToken();
                     break;
                 case "Geburtstag":
                     eingeleseneEinstellungen++;
-                    String Geburtstag = tokenizer.nextToken();
-                    System.out.println(Geburtstag);
-                    //TODO: registriere(Geburtstag);
-                    //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
+                    Geburtstag = tokenizer.nextToken();
                     break;
                 case "Debugmodus":
                     String option = tokenizer.nextToken();
@@ -262,6 +259,7 @@ public class DateiWerkzeug
         {
             ErrorOutputWerkzeug.ErrorOutput(Errors.DateiLesenError);
         }
+        PW.registriereBeitragszahler(Beitragszahler, Beitragsnummer, Geburtstag);
     }
 
     public static void loggeEinAuszahlung(String text)

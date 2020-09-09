@@ -21,9 +21,11 @@ public class Profil
     private Geldbetrag _guthaben;
     private String _email;
     private String _handynummer;
-    private boolean _bezahler;
+    private boolean _beitragszahler;
     private Geldbetrag _momentanesGuthaben;
     private int _VorraussichtlicheDauer;
+    private String _beitragsnummer;
+    private String _geburtstag;
 
     /**
      * Erstellung eines Profils für eine neue Person
@@ -50,7 +52,9 @@ public class Profil
         _guthaben = new Geldbetrag(guthaben, false);
         _email = Email;
         _handynummer = Handynummer;
-        _bezahler = false;
+        _beitragszahler = false;
+        _beitragsnummer = "";
+        _geburtstag = "";
         _momentanesGuthaben = new Geldbetrag(guthaben, false);
         _VorraussichtlicheDauer = 0;
     }
@@ -195,9 +199,9 @@ public class Profil
      * 
      * @return Nur {@code true} wenn das Profil als Bezahler registriert ist, andernfalls {@code false}
      **/
-    public boolean istBezahler()
+    public boolean istBeitragszahler()
     {
-        return _bezahler;
+        return _beitragszahler;
     }
 
     /**
@@ -206,9 +210,31 @@ public class Profil
      * @apiNote Es ist darauf zu achten, dass es nur einen Bezahler gibt.
      * 
      **/
-    public void setBezahler()
+    public void setBeitragszahler(String beitragsnummer, String geburtstag)
     {
-        _bezahler = true;
+        _beitragszahler = true;
+        _beitragsnummer = beitragsnummer;
+        _geburtstag = geburtstag;
+    }
+
+    /**
+     * Gibt die Beitragsnummer des Beitragszahlers, sonst leerer String.
+     * 
+     * @return Die Beitragsnummer als String.
+     **/
+    public String getBeitragsnummer()
+    {
+        return _beitragsnummer;
+    }
+
+    /**
+     * Gibt den Geburtstag des Beitragszahlers, sonst leerer String.
+     * 
+     * @return Den Geburtstag als String.
+     **/
+    public String getGeburtstag()
+    {
+        return _geburtstag;
     }
 
     /**

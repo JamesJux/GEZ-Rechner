@@ -6,10 +6,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 
 import Fachwerte.Errors;
+import Fachwerte.Geldbetrag;
 import Materialien.Profil;
 import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.ErrorOutputWerkzeug;
@@ -152,10 +154,21 @@ public class Startseite
                 {
                     //aktiv = false;
                     //TODO: Übersichtsfenster gestalten. 
-                    //ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
-                    for (Profil profile : PW.getProfile())
+                    System.out.println("Infos zum Beitragsbezahlenden:");
+                    Profil Beitragszahler = PW.getBeitragszahler();
+                    System.out.println(Beitragszahler.getName() + " (" + Beitragszahler.getGeburtstag() + ")");
+                    System.out.println("Beitragsnummer: " + Beitragszahler.getBeitragsnummer());
+                    System.out.println();
+                    System.out.println("Aktuell zahlende Bewohner: " + PW.getAnzahlZahlendeBewohner(new GregorianCalendar()));
+                    System.out.println();
+                    System.out.println("Noch offene Beträge: ");
+                    for (Profil profil : PW.getProfile())
                     {
-                        System.out.println(profile.getName() + ": " + profile.getMomentanesGuthaben().toFormattedString());
+                        Geldbetrag momentanesGuthaben = profil.getMomentanesGuthaben();
+                        if (!momentanesGuthaben.istBetragNull() && momentanesGuthaben.istBetragNegativ())
+                        {
+                            System.out.println(profil.getName() + ": " + momentanesGuthaben.toFormattedString());
+                        }
                     }
                 }
             }

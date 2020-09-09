@@ -51,7 +51,7 @@ public class GuthabenWerkzeug
             _ui.get_AuszahlenButton().setEnabled(false);
             _ui.getTextVorrausGuthabenLabel().setForeground(SystemColor.control);
         }
-        if (profil.istBezahler())
+        if (profil.istBeitragszahler())
         {
             _ui.get_textGuthabenLabel().setText(profil.getVorname() + " " + profil.getNachname() + " ist der Bezahler.");
             _ui.getNurTextGuthabenLabel().setForeground(SystemColor.control);
@@ -91,7 +91,7 @@ public class GuthabenWerkzeug
     {
         for (Profil profil : PW.getProfile())
         {
-            if (!profil.istBezahler())
+            if (!profil.istBeitragszahler())
             {
                 int betragCent = 0;
 
