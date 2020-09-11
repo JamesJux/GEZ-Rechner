@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
@@ -159,7 +160,10 @@ public class Startseite
                     System.out.println(Beitragszahler.getName() + " (" + Beitragszahler.getGeburtstag() + ")");
                     System.out.println("Beitragsnummer: " + Beitragszahler.getBeitragsnummer());
                     System.out.println();
-                    System.out.println("Aktuell zahlende Bewohner: " + PW.getAnzahlZahlendeBewohner(new GregorianCalendar()));
+                    int ZahlendeBewohner = PW.getAnzahlZahlendeBewohner(new GregorianCalendar());
+                    System.out.println("Aktuell zahlende Bewohner: " + ZahlendeBewohner);
+                    DecimalFormat df = new DecimalFormat("###.##");
+                    System.out.println("Aktuell pro Monat: " + df.format(17.50 / ZahlendeBewohner));
                     System.out.println();
                     System.out.println("Noch offene Beträge: ");
                     for (Profil profil : PW.getProfile())
