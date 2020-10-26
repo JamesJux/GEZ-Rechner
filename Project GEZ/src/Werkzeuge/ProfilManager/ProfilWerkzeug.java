@@ -42,7 +42,6 @@ public class ProfilWerkzeug
         _ui = new ProfilWerkzeugUI(profil);
         _ui.get_textFieldNachname().setEditable(false);
         _ui.get_textFieldVorname().setEditable(false);
-        _ui.get_textFieldZimmer().setEditable(false);
         benutzerBearbeiten = true;
         registriereUIAktionen();
     }
@@ -52,10 +51,10 @@ public class ProfilWerkzeug
         return profile;
     }
 
-    public void erstelleProfil(String zimmer, String vorname, String nachname, int guthaben, int EinMonat, int EinJahr, String email,
+    public void erstelleProfil(String vorname, String nachname, int guthaben, int EinMonat, int EinJahr, String email,
             String handynummer, int AusMonat, int AusJahr)
     {
-        Profil neuesProfil = new Profil(zimmer, vorname, nachname, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr);
+        Profil neuesProfil = new Profil(vorname, nachname, guthaben, email, handynummer, EinMonat, EinJahr, AusMonat, AusJahr);
 
         profile.add(neuesProfil);
     }
@@ -69,12 +68,11 @@ public class ProfilWerkzeug
      **/
     public void neuenBenutzerSpeichern()
     {
-        String zimmer = _ui.get_textFieldZimmer().getText();
         String vorname = _ui.get_textFieldVorname().getText();
         String nachname = _ui.get_textFieldNachname().getText();
         if (vorname.equals("") || nachname.equals(""))
         {
-            ErrorOutputWerkzeug.ErrorOutput(Errors.EingabeError);
+            ErrorOutputWerkzeug.ErrorOutput(Errors.NamenEingabeError);
         }
         int Guthaben = 0;
         int EinMonat = Integer.parseInt(_ui.get_choiceMonat().getSelectedItem());
@@ -91,7 +89,7 @@ public class ProfilWerkzeug
         }
         int AusMonat = Integer.parseInt(_ui.get_choiceMonatAus().getSelectedItem());
         int AusJahr = Integer.parseInt(_ui.get_choiceJahrAus().getSelectedItem());
-        erstelleProfil(zimmer, vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
+        erstelleProfil(vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
     }
 
     /**
@@ -187,12 +185,14 @@ public class ProfilWerkzeug
     }
 
     /**
-     * Löscht ein Profil mit dem übergebendem Namen. 
+     * Löscht ein Profil mit dem übergebendem Namen, wenn dieses nicht der Beitragszahler ist.
+     * 
+     *  @param loeschendesProfil Das Profil das gelöscht werden soll.
      **/
     public void loescheProfil(String loeschendesProfil)
     {
         Profil temp = getProfil(loeschendesProfil);
-        if (temp != null)
+        if (temp != null && !temp.istBeitragszahler())
         {
             profile.remove(temp);
         }
@@ -204,7 +204,8 @@ public class ProfilWerkzeug
 
     /**
      * Zahlt den übergebenen Betrag nur temporär aus, sodass ein neues Momentanes Guthaben ausgegeben wird.
-     * Erst mit {@link ProfilWerkzeug.speichereGuthaben()} speichert er das Guthaben endgültig.
+     * 
+     * @apiNote Erst mit {@link ProfilWerkzeug.speichereGuthaben()} speichert er das Guthaben endgültig.
      * 
      * @param profil Das betreffende Profil von dem ausgezahlt werden soll.
      * @param betrag Der Betrag der Auszahlung.
@@ -218,7 +219,7 @@ public class ProfilWerkzeug
     /**
      * Zahlt den übergebenen Betrag nur temporär ein, sodass ein neues Momentanes Guthaben ausgegeben wird.
      * 
-     * Erst mit {@link ProfilWerkzeug.speichereGuthaben()} speichert er das Guthaben endgültig.
+     * @apiNote Erst mit {@link ProfilWerkzeug.speichereGuthaben()} speichert er das Guthaben endgültig.
      * 
      * @param profil Das betreffende Profil auf das eingezahlt werden soll.
      * @param betrag Der Betrag der Einzahlung.

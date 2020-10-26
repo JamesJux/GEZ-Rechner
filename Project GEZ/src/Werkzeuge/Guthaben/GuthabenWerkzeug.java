@@ -266,7 +266,7 @@ public class GuthabenWerkzeug
             monat = "Januar";
             break;
         default:
-            ErrorOutputWerkzeug.ErrorOutput(Errors.EingabeError);
+            ErrorOutputWerkzeug.ErrorOutput(Errors.MonatAusgabeError);
         }
         return monat;
     }

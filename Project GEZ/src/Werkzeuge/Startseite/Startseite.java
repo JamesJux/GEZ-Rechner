@@ -55,26 +55,20 @@ public class Startseite
 
     public static void start()
     {
-        if (DateiWerkzeug.bereitsInitialisiert(PW))
+        DateiWerkzeug.bereitsInitialisiert(PW);
+        DateiWerkzeug.leseBewohnerEin();
+        DateiWerkzeug.leseEinstellungenEin();
+        if (DateiWerkzeug.sindEinstellungenVollständig())
         {
-            DateiWerkzeug.leseBewohnerEin();
-            DateiWerkzeug.leseEinstellungenEin();
-            if (DateiWerkzeug.sindEinstellungenVollständig())
-            {
-                _ui = new StartseiteUI();
-                aktiv = true;
-                setzeBewohnerChoice();
-                GW.berechneGuthaben();
-                registriereUIAktionen();
-            }
-            else
-            {
-                ErrorOutputWerkzeug.ErrorOutput(Errors.EinstellungenEinlesenError);
-                System.exit(1);
-            }
+            _ui = new StartseiteUI();
+            aktiv = true;
+            setzeBewohnerChoice();
+            GW.berechneGuthaben();
+            registriereUIAktionen();
         }
         else
         {
+            ErrorOutputWerkzeug.ErrorOutput(Errors.EinstellungenEinlesenError);
             System.exit(1);
         }
     }
@@ -104,7 +98,7 @@ public class Startseite
                 if (aktiv)
                 {
                     DateiWerkzeug.speichereInDatei();
-                    System.exit(1);
+                    System.exit(0);
                 }
             }
         });
@@ -143,6 +137,8 @@ public class Startseite
                         PW.erzeugeProfilWerkzeugUI(getSelectedProfil());
                     }
                     GW.berechneGuthaben();
+                    _ui.get_bewohnerBearbeitenButton().setText("Bewohner bearbeiten");
+                    _ui.get_guthabenButton().setEnabled(true);
                 }
             }
         });

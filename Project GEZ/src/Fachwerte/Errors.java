@@ -1,7 +1,7 @@
 package Fachwerte;
 
 /**
- * Enums für verschiedene Errors die möglicherweise autauchen können.
+ * Enums für verschiedene Errors, die auftreten können.
  *  
  * @author Dominick Labatz
  * @author Marvin Taube
@@ -9,5 +9,5 @@ package Fachwerte;
  */
 public enum Errors
 {
-    EinstellungenEinlesenError, BewohnerEinlesenError, DateiNichtGefundenError, DateiLesenError, DateiSchreibenError, EingabeError, UnfertigeMethode, ProfilSpeichernError, ProfilEntfernenError, BezahlerRegistrierenError
+    EinstellungenEinlesenError, EinAuszugBewohnerEinlesenError, AuszugBewohnerEinlesenError, EinzugBewohnerEinlesenError, BewohnerEinlesenError, NamenEingabeError, MonatAusgabeError, DateiNichtGefundenError, DateiLesenError, DateiSchreibenError, UnfertigeMethode, ProfilSpeichernError, ProfilEntfernenError, BezahlerRegistrierenError
 }

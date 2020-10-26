@@ -57,7 +57,6 @@ public class ProfilWerkzeugUI extends JInternalFrame
         _textFieldTelefon.setText(profil.getHandynummer());
         _textFieldEmail.setText(profil.getEmail());
         _choiceMonat.select("" + profil.getEinzugsdatum().toInstant().toString().substring(5, 7));
-        _textFieldZimmer.setText(profil.getZimmer());
         _choiceMonatAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(5, 7));
         _choiceJahrAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(0, 4));
         try
@@ -80,7 +79,7 @@ public class ProfilWerkzeugUI extends JInternalFrame
     public void intitialisieren()
     {
         _frame = new JFrame(TITEL);
-        _frame.setBounds(600, 400, 450, 320);
+        _frame.setBounds(600, 400, 450, 250);
         _frame.setVisible(true);
         _frame.setResizable(false);
         _frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -113,15 +112,6 @@ public class ProfilWerkzeugUI extends JInternalFrame
         _textFieldNachname = new JTextField();
         _textFieldNachname.setColumns(15);
         NamePanel.add(_textFieldNachname);
-
-        JPanel ZimmerPanel = new JPanel();
-        HauptPanel.add(ZimmerPanel);
-        ZimmerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        JLabel ZimmerLabel = new JLabel("  Zimmer :");
-        ZimmerPanel.add(ZimmerLabel);
-        _textFieldZimmer = new JTextField();
-        _textFieldZimmer.setColumns(10);
-        ZimmerPanel.add(_textFieldZimmer);
 
         JPanel EinzugdatumPanel = new JPanel();
         HauptPanel.add(EinzugdatumPanel);

@@ -29,20 +29,32 @@ public class ErrorOutputWerkzeug
         case BewohnerEinlesenError:
             output = "Einlesen der Bewohner fehlerhaft, bitte überprüfen sie die Korrektheit der Werte in der Bewohner.txt.";
             break;
+        case EinAuszugBewohnerEinlesenError:
+            output = "Daten des Ein- bzw. Auszuges fehlerhaft,vielleicht vertauscht? Bitte überprüfen sie die Korrektheit der Werte in der Bewohner.txt.";
+            break;
+        case EinzugBewohnerEinlesenError:
+            output = "Einzugs Datum des Bewohner fehlerhaft, bitte überprüfen sie die Korrektheit der Werte in der Bewohner.txt.";
+            break;
+        case AuszugBewohnerEinlesenError:
+            output = "Auszugs Datum des Bewohner fehlerhaft, bitte überprüfen sie die Korrektheit der Werte in der Bewohner.txt.";
+            break;
         case DateiNichtGefundenError:
             output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gefunden wurde.";
             break;
         case DateiLesenError:
-            output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gefunden wurde.";
-            break;
-        case EingabeError:
-            output = "InputError: Eingabe ist fehlerhaft.";
+            output = "Die Bewohner konnte nicht eingelesen werden, da die Datei nicht gelesen werden konnte.";
             break;
         case UnfertigeMethode:
             output = "Die angeforderte Methode wurde nur teilweise oder noch garnicht implementiert.";
             break;
         case ProfilSpeichernError:
             output = "ProfileSetAddError: Problem beim Hinzufügen des Profils";
+            break;
+        case NamenEingabeError:
+            output = "Problem beim Hinzufügen des Profils, der Name enthält leere Strings.";
+            break;
+        case MonatAusgabeError:
+            output = "Ein Problem bei der Monatausgabe ist aufgetreten.";
             break;
         case ProfilEntfernenError:
             output = "ProfileSetRemoveError: Problem beim Entfernen des Profils";
@@ -59,14 +71,15 @@ public class ErrorOutputWerkzeug
                 "\nmethod: " + new Throwable().getStackTrace()[1].getMethodName() +
                 "\nline: " + new Throwable().getStackTrace()[1].getLineNumber();
         System.out.println(output + trace);
-        ErrorOutputTextfile(output);
         DateiWerkzeug.loggeFehler(output + trace);
+        ErrorOutputTextfile(output);
+        System.exit(1);
     }
 
     private static void ErrorOutputTextfile(String ErrorString)
     {
         JOptionPane.showMessageDialog(null, ErrorString
-                + "\nFür mehr Informationen lesen Sie bitte die Log-Datei.", "Ein Fehler ist aufgetreten...", JOptionPane.WARNING_MESSAGE);
+                + "\nFür mehr Informationen lesen Sie bitte die Log-Datei.\nDas Programm wurde beendet...", "Ein Fehler ist aufgetreten...", JOptionPane.WARNING_MESSAGE);
     }
 
     /*

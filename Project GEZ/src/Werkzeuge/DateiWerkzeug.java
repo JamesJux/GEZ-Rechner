@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
+
 import Fachwerte.Errors;
 import Materialien.Profil;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
@@ -34,21 +36,12 @@ public class DateiWerkzeug
     private static boolean _einstellungenVollständig;
     static ProfilWerkzeug PW;
 
-    public static boolean bereitsInitialisiert(ProfilWerkzeug _profilWerkzeug)
+    public static void bereitsInitialisiert(ProfilWerkzeug _profilWerkzeug)
     {
         PW = _profilWerkzeug;
         new File(PATH).mkdir();
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
-            String line = null;
-            line = reader.readLine();
-            StringTokenizer tokenizer = new StringTokenizer(line, "=");
-            tokenizer.nextToken();
-            String option = tokenizer.nextToken();
-            if (option.equals("true"))
-            {
-                return true;
-            }
         }
         catch (FileNotFoundException e)
         {
@@ -57,34 +50,43 @@ public class DateiWerkzeug
         catch (IOException e)
         {
         }
-        return false;
     }
 
     /**
      * Methode zur Erstinitialisierung.
      * Sie erstellt die notwendigen Textdateien um beim nächsten mal erfolgreich zu starten und schreibt notwendige Informationen in die Textdateien. 
      * 
-     * Danach ist der Benutzer angeweiesen die notwendigen Einstellungen zu treffen.
+     * Danach ist der Benutzer angewiesen die notwendigen Einstellungen zu treffen.
      */
     private static void erstInitialisierung()
     {
+
+        JOptionPane.showMessageDialog(null, "Willkommen beim GEZ-Rechner\nBenutzungshinweise und weitere Hilfe erhälst du beim Programmierer\n"
+                +
+                "Lizensiert unter GNU General Public License v3.0\nDominick Labatz, 2020", "GEZ-Rechner", JOptionPane.PLAIN_MESSAGE);
+
+        String bezahler = JOptionPane.showInputDialog(null, "Wie heißt der Beitragszahler?", "Beitragszahler", JOptionPane.PLAIN_MESSAGE);
+        String beitragszahler_seit_monat = JOptionPane.showInputDialog(null, "Seit welchem Monat der Beitragszahler?", "Beitragszahler Monat", JOptionPane.PLAIN_MESSAGE);
+        String beitragszahler_seit_jahr = JOptionPane.showInputDialog(null, "Seit welchem Jahr der Beitragszahler?", "Beitragszahler Jahr", JOptionPane.PLAIN_MESSAGE);
+        String beitragsnummer = JOptionPane.showInputDialog(null, "Wie lautet die Beitragsnummer?", "Beitragsnummer", JOptionPane.PLAIN_MESSAGE);
+        String geburtstag = JOptionPane.showInputDialog(null, "Wann hat der Beitragszahler Geburtstag?\nFormat: TT.MM.JJJJ", "Geburtstag", JOptionPane.PLAIN_MESSAGE);
+
         PrintStream printer;
         try
         {
             printer = new PrintStream(EINSTELLUNGEN);
-            printer.println("Bereits_Initialisiert=false");
-            printer.println("Bitte ändern sie in der Ersten Zeile das 'false' auf 'true' damit die aktuellen Einstellungen gespeichert werden.");
-            printer.println("Bezahler=");
-            printer.println("SeitJahr=");
-            printer.println("SeitMonat=");
-            printer.println("Beitragsnummer='9-stellige Zahl'");
-            printer.println("Geburtstag=TT.MM.JJJJ");
+            printer.println("Ändern sie hier nur Einstellungen wenn Sie wissen was sie machen...");
+            printer.println("Bezahler=" + bezahler);
+            printer.println("BeitragszahlerSeitJahr=" + beitragszahler_seit_jahr);
+            printer.println("BeitragszahlerSeitMonat=" + beitragszahler_seit_monat);
+            printer.println("Beitragsnummer=" + beitragsnummer);
+            printer.println("Geburtstag=" + geburtstag);
             printer.println("Debugmodus=false");
             //printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
-            printer.println("'Zimmernr';VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
-            printer.print("1/515;Dominick;Labatz;<EMAIL>;<Handynr.>;0;12;2018;0;0");
+            printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
+            printer.print("Dominick;Labatz;<E-Mail>;<Handynr.>;0;12;2018;12;2099");
             printer.close();
         }
         catch (IOException a)
@@ -98,7 +100,7 @@ public class DateiWerkzeug
     * Die Bewohnerinformationen müssen mit einem ";" getrennt sein.
     * 
     * Die Reihenfolge der Bewohnerinformationen:
-    * Zimmernummer; Vorname; Nachname; EMail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
+    * Vorname; Nachname; E-Mail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
     */
     public static void leseBewohnerEin()
     {
@@ -109,37 +111,49 @@ public class DateiWerkzeug
             while ((line = reader.readLine()) != null)
             {
                 StringTokenizer tokenizer = new StringTokenizer(line, ";");
-                String Zimmer = tokenizer.nextToken();
                 String Vorname = tokenizer.nextToken();
-                String Nachname = tokenizer.nextToken();
-                String EMail = tokenizer.nextToken();
-                String Handynr = tokenizer.nextToken();
-                int Guthaben = Integer.valueOf(tokenizer.nextToken());
-                int EinMonat = Integer.valueOf(tokenizer.nextToken());
-                if (EinMonat > 12 || EinMonat < 1)
+                if (!Vorname.equals("VORNAME")) // Überspringt die Erklärungszeile
                 {
-                    System.out.println("" + Vorname + EinMonat);
-                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
-                }
-                int EinJahr = Integer.valueOf(tokenizer.nextToken());
-                if (EinJahr < 2018 || EinJahr > 2050)
-                {
-                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
-                }
-                int AusMonat = Integer.valueOf(tokenizer.nextToken());
-                if (AusMonat > 12 || AusMonat < 1)
-                {
-                    System.out.println("" + Vorname + AusMonat);
+                    String Nachname = tokenizer.nextToken();
+                    String EMail = tokenizer.nextToken();
+                    String Handynr = tokenizer.nextToken();
+                    try
+                    {
+                        int Guthaben = Integer.valueOf(tokenizer.nextToken());
+                        int EinMonat = Integer.valueOf(tokenizer.nextToken());
+                        if (EinMonat > 12 || EinMonat < 1)
+                        {
+                            ErrorOutputWerkzeug.ErrorOutput(Errors.EinzugBewohnerEinlesenError);
+                        }
+                        int EinJahr = Integer.valueOf(tokenizer.nextToken());
+                        if (EinJahr < 2018 || EinJahr > 2050)
+                        {
+                            ErrorOutputWerkzeug.ErrorOutput(Errors.EinzugBewohnerEinlesenError);
+                        }
+                        int AusMonat = Integer.valueOf(tokenizer.nextToken());
+                        if (AusMonat > 12 || AusMonat < 1)
+                        {
+                            System.out.println("" + Vorname + AusMonat);
 
-                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
-                }
-                int AusJahr = Integer.valueOf(tokenizer.nextToken());
-                if (AusJahr < 2018 || AusJahr > 2100)
-                {
-                    ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
-                }
+                            ErrorOutputWerkzeug.ErrorOutput(Errors.AuszugBewohnerEinlesenError);
+                        }
+                        int AusJahr = Integer.valueOf(tokenizer.nextToken());
+                        if (AusJahr < 2018 || AusJahr > 2100)
+                        {
+                            ErrorOutputWerkzeug.ErrorOutput(Errors.AuszugBewohnerEinlesenError);
+                        }
+                        if ((EinJahr * 12) + EinMonat > (AusJahr * 12) + AusMonat)
+                        {
+                            ErrorOutputWerkzeug.ErrorOutput(Errors.EinAuszugBewohnerEinlesenError);
+                        }
+                        PW.erstelleProfil(Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
+                    }
 
-                PW.erstelleProfil(Zimmer, Vorname, Nachname, Guthaben, EinMonat, EinJahr, EMail, Handynr, AusMonat, AusJahr);
+                }
             }
         }
         catch (FileNotFoundException e)
@@ -153,15 +167,15 @@ public class DateiWerkzeug
     }
 
     /**
-     * Speichert beim Beenden des Programms alle Informationen in die Textdatei "Output Bewohner" Textdatei.
+     * Speichert beim Beenden des Programms alle Informationen in die Textdatei "Bewohner".
      */
     public static void speichereInDatei()
     {
         try (PrintStream printer = new PrintStream(OUTPUT))
         {
+            printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
             for (Profil p : PW.getProfile())
             {
-                String aa = p.getZimmer();
                 String ab = p.getVorname();
                 String ac = p.getNachname();
                 String ad = p.getEmail();
@@ -182,7 +196,7 @@ public class DateiWerkzeug
                 ai = ai + (p.getAuszugsdatum().get(Calendar.MONTH) + 1);
                 String aj = "" + p.getAuszugsdatum().get(Calendar.YEAR);
 
-                printer.println(aa + ";" + ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai + ";" + aj);
+                printer.println(ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai + ";" + aj);
             }
             printer.close();
         }
@@ -215,14 +229,13 @@ public class DateiWerkzeug
                 case "Bezahler":
                     eingeleseneEinstellungen++;
                     Beitragszahler = tokenizer.nextToken();
-
                     break;
-                case "SeitJahr":
+                case "BeitragszahlerSeitJahr":
                     eingeleseneEinstellungen++;
                     String SeitJahr = tokenizer.nextToken();
                     GuthabenWerkzeug.registriereBezahlJahr(SeitJahr);
                     break;
-                case "SeitMonat":
+                case "BeitragszahlerSeitMonat":
                     eingeleseneEinstellungen++;
                     String SeitMonat = tokenizer.nextToken();
                     GuthabenWerkzeug.registriereBezahlMonat(SeitMonat);
@@ -301,7 +314,7 @@ public class DateiWerkzeug
         try (PrintWriter printer = new PrintWriter(new FileWriter(FEHLER_LOG_DATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
-            printer.println(heute.get(Calendar.DAY_OF_MONTH) + "." + heute.get(Calendar.MONTH) + "." + heute.get(Calendar.YEAR) + " "
+            printer.println(heute.get(Calendar.DAY_OF_MONTH) + "." + (heute.get(Calendar.MONTH) + 1) + "." + heute.get(Calendar.YEAR) + " "
                     + heute.get(Calendar.HOUR_OF_DAY) + ":" + heute.get(Calendar.MINUTE) + ":" + heute.get(Calendar.SECOND) + "\n" + text);
         }
         catch (IOException e)

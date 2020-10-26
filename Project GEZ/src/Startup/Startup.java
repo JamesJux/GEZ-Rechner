@@ -23,9 +23,6 @@ public class Startup
     private static GuthabenWerkzeug _guthabenWerkzeug;
     private JFrame frame;
 
-    /**
-     * Launch the application.
-     */
     public static void main(String[] args)
     {
         EventQueue.invokeLater(new Runnable()
@@ -54,7 +51,7 @@ public class Startup
     }
 
     /**
-     * Erstellt die notwendige Dinge und lädt die Daten.
+     * Erstellt die notwendige Werkzeuge und lädt die Daten.
      */
     public Startup()
     {
@@ -74,9 +71,8 @@ public class Startup
 }
 
 /*
- * Bereich für ToDo Liste:
+ * Bereich für mögliche ToDo Liste:
  * TODO Datenbank implementierung
  * TODO Maybe Übertragung auf eine Webanwendung (Javascript)
  * TODO Verschlüsselung
- * 
  */

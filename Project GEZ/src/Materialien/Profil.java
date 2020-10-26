@@ -14,7 +14,6 @@ public class Profil
 {
     private final String _vorname;
     private final String _nachname;
-    private String _zimmer;
     private GregorianCalendar _einzugsdatum;
     private GregorianCalendar _auszugsdatum;
 
@@ -23,14 +22,13 @@ public class Profil
     private String _handynummer;
     private boolean _beitragszahler;
     private Geldbetrag _momentanesGuthaben;
-    private int _VorraussichtlicheDauer;
+    private int _vorraussichtlicheDauer;
     private String _beitragsnummer;
     private String _geburtstag;
 
     /**
      * Erstellung eines Profils für eine neue Person
      * 
-     * @param zimmer Das Zimmer der Person
      * @param Vorname Der Vorame der Person
      * @param Nachname Der Nachname der Person
      * @param guthaben Der bisher eingezahlte Betrag in Eurocent
@@ -41,10 +39,9 @@ public class Profil
      * @param AusMonat Der Auszugsmonat der Person
      * @param AusMonat Das Auszugsjahr der Person
      **/
-    public Profil(String zimmer, String Vorname, String Nachname, int guthaben, String Email, String Handynummer,
+    public Profil(String Vorname, String Nachname, int guthaben, String Email, String Handynummer,
             int EinMonat, int EinJahr, int AusMonat, int AusJahr)
     {
-        _zimmer = zimmer;
         _vorname = Vorname;
         _nachname = Nachname;
         _einzugsdatum = new GregorianCalendar(EinJahr, EinMonat - 1, 2);
@@ -56,7 +53,7 @@ public class Profil
         _beitragsnummer = "";
         _geburtstag = "";
         _momentanesGuthaben = new Geldbetrag(guthaben, false);
-        _VorraussichtlicheDauer = 0;
+        _vorraussichtlicheDauer = 0;
     }
 
     /**
@@ -87,16 +84,6 @@ public class Profil
     public String getName()
     {
         return _vorname + " " + _nachname;
-    }
-
-    /**
-     * Gibt das Zimmer des Profils aus.
-     * 
-     * @return Das Zimmer
-     **/
-    public String getZimmer()
-    {
-        return _zimmer;
     }
 
     /**
@@ -244,16 +231,16 @@ public class Profil
      **/
     public int getVorrsichtlicheDauer()
     {
-        return _VorraussichtlicheDauer;
+        return _vorraussichtlicheDauer;
     }
 
     /**
+     * Setzt {@link _vorraussichtlicheDauer} auf die übergebenen Anzahl an Monaten.
      * 
-     * 
-     * @return 
+     * @param monate Die Anzahl an Monaten die das Restgethaben noch reicht. 
      **/
     public void setVorraussichtlicheDauer(int monate)
     {
-        _VorraussichtlicheDauer = monate;
+        _vorraussichtlicheDauer = monate;
     }
 }
