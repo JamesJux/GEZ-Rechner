@@ -47,7 +47,8 @@ public class GuthabenWerkzeugUI extends JInternalFrame
     public void intitialisieren(Profil profil)
     {
         _frame.setTitle(profil.getVorname() + " " + profil.getNachname());
-        _frame.setBounds(625, 400, 400, 160);
+        _frame.setLocation(625, 400);
+        _frame.setSize(440, 160);
         _frame.setVisible(true);
         _frame.setResizable(false);
         _frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

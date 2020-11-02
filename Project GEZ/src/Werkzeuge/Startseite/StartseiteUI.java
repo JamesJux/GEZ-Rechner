@@ -38,7 +38,8 @@ public class StartseiteUI extends JInternalFrame
     public void intitialisieren()
     {
         _frame.setTitle(TITEL);
-        _frame.setBounds(600, 400, 450, 150);
+        _frame.setLocation(600, 400);
+        _frame.setSize(450, 150);
         _frame.setVisible(true);
         _frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         _frame.getContentPane().setLayout(new BorderLayout(0, 0));

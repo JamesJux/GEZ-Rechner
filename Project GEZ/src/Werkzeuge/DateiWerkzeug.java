@@ -314,8 +314,38 @@ public class DateiWerkzeug
         try (PrintWriter printer = new PrintWriter(new FileWriter(FEHLER_LOG_DATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
-            printer.println(heute.get(Calendar.DAY_OF_MONTH) + "." + (heute.get(Calendar.MONTH) + 1) + "." + heute.get(Calendar.YEAR) + " "
-                    + heute.get(Calendar.HOUR_OF_DAY) + ":" + heute.get(Calendar.MINUTE) + ":" + heute.get(Calendar.SECOND) + "\n" + text);
+            String hMonat = "";
+            if ((heute.get(Calendar.MONTH) + 1) < 10)
+            {
+                hMonat = "0";
+            }
+            hMonat += (heute.get(Calendar.MONTH) + 1);
+            String hTag = "";
+            if (heute.get(Calendar.DAY_OF_MONTH) < 10)
+            {
+                hTag = "0";
+            }
+            hTag += heute.get(Calendar.DAY_OF_MONTH);
+            String hStunde = "";
+            if (heute.get(Calendar.HOUR_OF_DAY) < 10)
+            {
+                hStunde = "0";
+            }
+            hStunde += heute.get(Calendar.HOUR_OF_DAY);
+            String hMinute = "";
+            if (heute.get(Calendar.MINUTE) < 10)
+            {
+                hMinute = "0";
+            }
+            hMinute += heute.get(Calendar.MINUTE);
+            String hSekunde = "";
+            if (heute.get(Calendar.SECOND) < 10)
+            {
+                hSekunde = "0";
+            }
+            hSekunde += heute.get(Calendar.SECOND);
+            printer.println(heute.get(Calendar.YEAR) + "-" + hMonat + "-" + hTag + " "
+                    + hStunde + ":" + hMinute + ":" + hSekunde + "\n" + text);
         }
         catch (IOException e)
         {

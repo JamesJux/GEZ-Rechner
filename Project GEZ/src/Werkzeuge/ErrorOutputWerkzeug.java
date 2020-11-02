@@ -66,10 +66,10 @@ public class ErrorOutputWerkzeug
             output = "ErrorOutputWerkzeug Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
         }
         String trace = "\nTrace:" +
-                "\nfile: " + new Throwable().getStackTrace()[1].getFileName() +
-                "\nclass: " + new Throwable().getStackTrace()[1].getClassName() +
-                "\nmethod: " + new Throwable().getStackTrace()[1].getMethodName() +
-                "\nline: " + new Throwable().getStackTrace()[1].getLineNumber();
+                "\nDatei: " + new Throwable().getStackTrace()[1].getFileName() +
+                "\nClass: " + new Throwable().getStackTrace()[1].getClassName() +
+                "\nMethode: " + new Throwable().getStackTrace()[1].getMethodName() +
+                "\nZeile: " + new Throwable().getStackTrace()[1].getLineNumber();
         System.out.println(output + trace);
         DateiWerkzeug.loggeFehler(output + trace);
         ErrorOutputTextfile(output);

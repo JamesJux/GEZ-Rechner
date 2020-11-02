@@ -86,6 +86,7 @@ public class Startseite
     public static void setzeAktiv()
     {
         aktiv = true;
+        GW.berechneGuthaben();
         setzeBewohnerChoice();
     }
 

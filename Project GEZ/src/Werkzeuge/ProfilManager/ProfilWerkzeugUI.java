@@ -79,7 +79,8 @@ public class ProfilWerkzeugUI extends JInternalFrame
     public void intitialisieren()
     {
         _frame = new JFrame(TITEL);
-        _frame.setBounds(600, 400, 450, 250);
+        _frame.setLocation(600, 400);
+        _frame.setSize(430, 250);
         _frame.setVisible(true);
         _frame.setResizable(false);
         _frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -107,10 +108,10 @@ public class ProfilWerkzeugUI extends JInternalFrame
         JLabel NameLabel = new JLabel("  Vor- Nachname :");
         NamePanel.add(NameLabel);
         _textFieldVorname = new JTextField();
-        _textFieldVorname.setColumns(15);
+        _textFieldVorname.setColumns(12);
         NamePanel.add(_textFieldVorname);
         _textFieldNachname = new JTextField();
-        _textFieldNachname.setColumns(15);
+        _textFieldNachname.setColumns(13);
         NamePanel.add(_textFieldNachname);
 
         JPanel EinzugdatumPanel = new JPanel();
