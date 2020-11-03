@@ -77,7 +77,7 @@ public class DateiWerkzeug
         {
             printer = new PrintStream(EINSTELLUNGEN);
             printer.println("Ändern sie hier nur Einstellungen wenn Sie wissen was sie machen...");
-            printer.println("Bezahler=" + vornameBezahler + nachnameBezahler);
+            printer.println("Bezahler=" + vornameBezahler + " " + nachnameBezahler);
             printer.println("BeitragszahlerSeitJahr=" + beitragszahler_seit_jahr);
             printer.println("BeitragszahlerSeitMonat=" + beitragszahler_seit_monat);
             printer.println("Beitragsnummer=" + beitragsnummer);
