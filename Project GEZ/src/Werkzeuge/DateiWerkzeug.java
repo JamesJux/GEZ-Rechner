@@ -63,9 +63,10 @@ public class DateiWerkzeug
 
         JOptionPane.showMessageDialog(null, "Willkommen beim GEZ-Rechner\nBenutzungshinweise und weitere Hilfe erhälst du beim Programmierer\n"
                 +
-                "Lizensiert unter GNU General Public License v3.0\nDominick Labatz, 2020", "GEZ-Rechner", JOptionPane.PLAIN_MESSAGE);
+                "Lizensiert unter GNU General Public License v3.0\n2020, Dominick Labatz", "GEZ-Rechner", JOptionPane.PLAIN_MESSAGE);
 
-        String bezahler = JOptionPane.showInputDialog(null, "Wie heißt der Beitragszahler?", "Beitragszahler", JOptionPane.PLAIN_MESSAGE);
+        String vornameBezahler = JOptionPane.showInputDialog(null, "Wie heißt der Beitragszahler mit Vornamen?", "Vorname Beitragszahler", JOptionPane.PLAIN_MESSAGE);
+        String nachnameBezahler = JOptionPane.showInputDialog(null, "Wie heißt der Beitragszahler mit Nachnamen?", "Nachname Beitragszahler", JOptionPane.PLAIN_MESSAGE);
         String beitragszahler_seit_monat = JOptionPane.showInputDialog(null, "Seit welchem Monat der Beitragszahler?", "Beitragszahler Monat", JOptionPane.PLAIN_MESSAGE);
         String beitragszahler_seit_jahr = JOptionPane.showInputDialog(null, "Seit welchem Jahr der Beitragszahler?", "Beitragszahler Jahr", JOptionPane.PLAIN_MESSAGE);
         String beitragsnummer = JOptionPane.showInputDialog(null, "Wie lautet die Beitragsnummer?", "Beitragsnummer", JOptionPane.PLAIN_MESSAGE);
@@ -76,7 +77,7 @@ public class DateiWerkzeug
         {
             printer = new PrintStream(EINSTELLUNGEN);
             printer.println("Ändern sie hier nur Einstellungen wenn Sie wissen was sie machen...");
-            printer.println("Bezahler=" + bezahler);
+            printer.println("Bezahler=" + vornameBezahler + nachnameBezahler);
             printer.println("BeitragszahlerSeitJahr=" + beitragszahler_seit_jahr);
             printer.println("BeitragszahlerSeitMonat=" + beitragszahler_seit_monat);
             printer.println("Beitragsnummer=" + beitragsnummer);
@@ -86,7 +87,8 @@ public class DateiWerkzeug
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
             printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
-            printer.print("Dominick;Labatz;<E-Mail>;<Handynr.>;0;12;2018;12;2099");
+            printer.print(vornameBezahler + ";" + nachnameBezahler + ";<E-Mail>;<Handynr.>;0;" + beitragszahler_seit_monat + ";"
+                    + beitragszahler_seit_jahr + ";12;2099");
             printer.close();
         }
         catch (IOException a)
@@ -290,6 +292,7 @@ public class DateiWerkzeug
         }
     }
 
+    @SuppressWarnings("unused")
     private static String führendeNull(String string)
     {
         if (string.length() == 0)
