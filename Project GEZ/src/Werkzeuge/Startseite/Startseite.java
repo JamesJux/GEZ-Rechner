@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import Fachwerte.Errors;
 import Fachwerte.Geldbetrag;
@@ -150,27 +151,25 @@ public class Startseite
             {
                 if (aktiv)
                 {
-                    //aktiv = false;
-                    //TODO: Übersichtsfenster gestalten. 
-                    System.out.println("Infos zum Beitragsbezahlenden:");
                     Profil Beitragszahler = PW.getBeitragszahler();
-                    System.out.println(Beitragszahler.getName() + " (" + Beitragszahler.getGeburtstag() + ")");
-                    System.out.println("Beitragsnummer: " + Beitragszahler.getBeitragsnummer());
-                    System.out.println();
                     int ZahlendeBewohner = PW.getAnzahlZahlendeBewohner(new GregorianCalendar());
-                    System.out.println("Aktuell zahlende Bewohner: " + ZahlendeBewohner);
+                    String Text1 = "Infos zum Beitragsbezahlenden:\n" + Beitragszahler.getName() + " (" + Beitragszahler.getGeburtstag()
+                            + ")\nBeitragsnummer: " + Beitragszahler.getBeitragsnummer() + "\n\n";
+
                     DecimalFormat df = new DecimalFormat("###.##");
-                    System.out.println("Aktuell pro Monat: " + df.format(17.50 / ZahlendeBewohner));
-                    System.out.println();
-                    System.out.println("Noch offene Beträge: ");
+                    String Text2 = "Aktuell zahlende Bewohner: " + ZahlendeBewohner + "\nAktuell pro Monat: "
+                            + df.format(17.50 / ZahlendeBewohner) + "\n\n";
+
+                    String TextBeiträge = "Noch offene Beträge: \n";
                     for (Profil profil : PW.getProfile())
                     {
                         Geldbetrag momentanesGuthaben = profil.getMomentanesGuthaben();
                         if (!momentanesGuthaben.istBetragNull() && momentanesGuthaben.istBetragNegativ())
                         {
-                            System.out.println(profil.getName() + ": " + momentanesGuthaben.toFormattedString());
+                            TextBeiträge += profil.getName() + ": " + momentanesGuthaben.toFormattedString() + "\n";
                         }
                     }
+                    JOptionPane.showMessageDialog(null, Text1 + Text2 + TextBeiträge, "Übersicht", JOptionPane.PLAIN_MESSAGE);
                 }
             }
         });
