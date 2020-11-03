@@ -176,27 +176,17 @@ public class DateiWerkzeug
             printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
             for (Profil p : PW.getProfile())
             {
-                String ab = p.getVorname();
-                String ac = p.getNachname();
-                String ad = p.getEmail();
-                String ae = p.getHandynummer();
-                int af = p.getGuthaben().getBetragInCent();
-                String ag = "";
-                if ((p.getEinzugsdatum().get(Calendar.MONTH) + 1) < 10)
-                {
-                    ag = "0";
-                }
-                ag = ag + (p.getEinzugsdatum().get(Calendar.MONTH) + 1);
-                String ah = "" + p.getEinzugsdatum().get(Calendar.YEAR);
-                String ai = "";
-                if ((p.getAuszugsdatum().get(Calendar.MONTH) + 1) < 10)
-                {
-                    ai = "0";
-                }
-                ai = ai + (p.getAuszugsdatum().get(Calendar.MONTH) + 1);
-                String aj = "" + p.getAuszugsdatum().get(Calendar.YEAR);
+                String aa = p.getVorname();
+                String ab = p.getNachname();
+                String ac = p.getEmail();
+                String ad = p.getHandynummer();
+                int ae = p.getGuthaben().getBetragInCent();
+                String af = führendeNull(p.getEinzugsdatum().get(Calendar.MONTH) + 1);
+                int ag = p.getEinzugsdatum().get(Calendar.YEAR);
+                String ah = führendeNull(p.getAuszugsdatum().get(Calendar.MONTH) + 1);
+                int ai = p.getAuszugsdatum().get(Calendar.YEAR);
 
-                printer.println(ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai + ";" + aj);
+                printer.println(aa + ";" + ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai);
             }
             printer.close();
         }
@@ -280,18 +270,9 @@ public class DateiWerkzeug
         try (PrintWriter printer = new PrintWriter(new FileWriter(GUTHABEN_LOG_DATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
-            String hMonat = "";
-            if ((heute.get(Calendar.MONTH) + 1) < 10)
-            {
-                hMonat = "0";
-            }
-            hMonat += (heute.get(Calendar.MONTH) + 1);
-            String hTag = "";
-            if (heute.get(Calendar.DAY_OF_MONTH) < 10)
-            {
-                hTag = "0";
-            }
-            hTag += heute.get(Calendar.DAY_OF_MONTH);
+            String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
+            String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
+
             printer.println(heute.get(Calendar.YEAR) + "-" + hMonat + "-" + hTag + " - " + text);
         }
         catch (IOException e)
@@ -309,41 +290,42 @@ public class DateiWerkzeug
         }
     }
 
+    private static String führendeNull(String string)
+    {
+        if (string.length() == 0)
+        {
+            return "0" + string;
+        }
+        else
+        {
+            return string;
+        }
+
+    }
+
+    private static String führendeNull(int zahl)
+    {
+        if (zahl < 10)
+        {
+            return "0" + zahl;
+        }
+        else
+        {
+            return "" + zahl;
+        }
+
+    }
+
     public static void loggeFehler(String text)
     {
         try (PrintWriter printer = new PrintWriter(new FileWriter(FEHLER_LOG_DATEI, true), true))
         {
             GregorianCalendar heute = new GregorianCalendar();
-            String hMonat = "";
-            if ((heute.get(Calendar.MONTH) + 1) < 10)
-            {
-                hMonat = "0";
-            }
-            hMonat += (heute.get(Calendar.MONTH) + 1);
-            String hTag = "";
-            if (heute.get(Calendar.DAY_OF_MONTH) < 10)
-            {
-                hTag = "0";
-            }
-            hTag += heute.get(Calendar.DAY_OF_MONTH);
-            String hStunde = "";
-            if (heute.get(Calendar.HOUR_OF_DAY) < 10)
-            {
-                hStunde = "0";
-            }
-            hStunde += heute.get(Calendar.HOUR_OF_DAY);
-            String hMinute = "";
-            if (heute.get(Calendar.MINUTE) < 10)
-            {
-                hMinute = "0";
-            }
-            hMinute += heute.get(Calendar.MINUTE);
-            String hSekunde = "";
-            if (heute.get(Calendar.SECOND) < 10)
-            {
-                hSekunde = "0";
-            }
-            hSekunde += heute.get(Calendar.SECOND);
+            String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
+            String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
+            String hStunde = führendeNull(heute.get(Calendar.HOUR_OF_DAY));
+            String hMinute = führendeNull(heute.get(Calendar.MINUTE));
+            String hSekunde = führendeNull(heute.get(Calendar.SECOND));
             printer.println(heute.get(Calendar.YEAR) + "-" + hMonat + "-" + hTag + " "
                     + hStunde + ":" + hMinute + ":" + hSekunde + "\n" + text);
         }
