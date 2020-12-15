@@ -193,7 +193,6 @@ public class DateiWerkzeug
             for (Profil p : sortedProfile)
             {
                 String output = p.getVorname() + ";";
-                output += p.getVorname() + ";";
                 output += p.getNachname() + ";";
                 output += p.getEmail() + ";";
                 output += p.getHandynummer() + ";";
