@@ -8,8 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
@@ -67,8 +71,8 @@ public class DateiWerkzeug
 
         String vornameBezahler = JOptionPane.showInputDialog(null, "Wie heißt der Beitragszahler mit Vornamen?", "Vorname Beitragszahler", JOptionPane.PLAIN_MESSAGE);
         String nachnameBezahler = JOptionPane.showInputDialog(null, "Wie heißt der Beitragszahler mit Nachnamen?", "Nachname Beitragszahler", JOptionPane.PLAIN_MESSAGE);
-        String beitragszahler_seit_monat = JOptionPane.showInputDialog(null, "Seit welchem Monat der Beitragszahler?", "Beitragszahler Monat", JOptionPane.PLAIN_MESSAGE);
-        String beitragszahler_seit_jahr = JOptionPane.showInputDialog(null, "Seit welchem Jahr der Beitragszahler?", "Beitragszahler Jahr", JOptionPane.PLAIN_MESSAGE);
+        String beitragszahler_seit_monat = JOptionPane.showInputDialog(null, "Ab welchem Monat soll die Berechnung stattfinden?", "Berechnungszeitraum Monat", JOptionPane.PLAIN_MESSAGE);
+        String beitragszahler_seit_jahr = JOptionPane.showInputDialog(null, "Ab welchem Jahr soll die Berechnung stattfinden?", "Berechnungszeitraum Jahr", JOptionPane.PLAIN_MESSAGE);
         String beitragsnummer = JOptionPane.showInputDialog(null, "Wie lautet die Beitragsnummer?", "Beitragsnummer", JOptionPane.PLAIN_MESSAGE);
         String geburtstag = JOptionPane.showInputDialog(null, "Wann hat der Beitragszahler Geburtstag?\nFormat: TT.MM.JJJJ", "Geburtstag", JOptionPane.PLAIN_MESSAGE);
 
@@ -173,10 +177,20 @@ public class DateiWerkzeug
      */
     public static void speichereInDatei()
     {
+        List<Profil> sortedProfile = new ArrayList<>(PW.getProfile());
+        Collections.sort(sortedProfile, new Comparator<Profil>()
+        {
+            @Override
+            public int compare(Profil p1, Profil p2)
+            {
+                return p1.getName().compareTo(p2.getName());
+            }
+        });
+
         try (PrintStream printer = new PrintStream(OUTPUT))
         {
             printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
-            for (Profil p : PW.getProfile())
+            for (Profil p : sortedProfile)
             {
                 String aa = p.getVorname();
                 String ab = p.getNachname();
