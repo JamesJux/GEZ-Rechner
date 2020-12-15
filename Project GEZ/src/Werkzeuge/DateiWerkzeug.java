@@ -192,17 +192,18 @@ public class DateiWerkzeug
             printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
             for (Profil p : sortedProfile)
             {
-                String aa = p.getVorname();
-                String ab = p.getNachname();
-                String ac = p.getEmail();
-                String ad = p.getHandynummer();
-                int ae = p.getGuthaben().getBetragInCent();
-                String af = führendeNull(p.getEinzugsdatum().get(Calendar.MONTH) + 1);
-                int ag = p.getEinzugsdatum().get(Calendar.YEAR);
-                String ah = führendeNull(p.getAuszugsdatum().get(Calendar.MONTH) + 1);
-                int ai = p.getAuszugsdatum().get(Calendar.YEAR);
+                String output = p.getVorname() + ";";
+                output += p.getVorname() + ";";
+                output += p.getNachname() + ";";
+                output += p.getEmail() + ";";
+                output += p.getHandynummer() + ";";
+                output += p.getGuthaben().getBetragInCent() + ";";
+                output += führendeNull(p.getEinzugsdatum().get(Calendar.MONTH) + 1) + ";";
+                output += p.getEinzugsdatum().get(Calendar.YEAR) + ";";
+                output += führendeNull(p.getAuszugsdatum().get(Calendar.MONTH) + 1) + ";";
+                output += p.getAuszugsdatum().get(Calendar.YEAR);
 
-                printer.println(aa + ";" + ab + ";" + ac + ";" + ad + ";" + ae + ";" + af + ";" + ag + ";" + ah + ";" + ai);
+                printer.println(output);
             }
             printer.close();
         }
