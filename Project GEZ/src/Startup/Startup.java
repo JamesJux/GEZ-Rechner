@@ -5,6 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.Guthaben.GuthabenWerkzeug;
@@ -64,6 +65,7 @@ public class Startup
     {
         frame = new JFrame();
         frame.setResizable(false);
+        UIManager.put("swing.boldMetal", Boolean.FALSE);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         _profilWerkzeug = new ProfilWerkzeug();
         _guthabenWerkzeug = new GuthabenWerkzeug(_profilWerkzeug);
