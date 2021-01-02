@@ -1,20 +1,25 @@
 package Werkzeuge.ProfilManager;
 
 import java.awt.BorderLayout;
-import java.awt.Choice;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 
 import Materialien.Profil;
 import Werkzeuge.Startseite.Startseite;
@@ -27,56 +32,42 @@ import Werkzeuge.Startseite.Startseite;
  */
 public class ProfilWerkzeugUI extends JInternalFrame
 {
-    private static final long serialVersionUID = 6460170498571023983L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6640475293587633567L;
     private static final String TITEL = "Bewohner - Editor";
     private static JFrame _frame;
     private JButton _infoButton;
     JTextField _textFieldVorname;
     JTextField _textFieldNachname;
     JTextField _textFieldZimmer;
-    Choice _choiceMonat;
-    Choice _choiceJahr;
+    JSpinner _spinnerEinzug;
     JTextField _textFieldTelefon;
     JTextField _textFieldEmail;
-    Choice _choiceJahrAus;
-    Choice _choiceMonatAus;
+    JCheckBox _AuszugCheckbox;
+    JSpinner _spinnerAuszug;
     JButton _speichernButton;
     JButton _abbrechenButton;
     JButton _bewohnerLöschenButton;
 
     public ProfilWerkzeugUI()
     {
-        intitialisieren();
+        intitialisieren(null, null);
     }
 
     public ProfilWerkzeugUI(Profil profil)
     {
-        intitialisieren();
+        Date Einzug = Date.from(profil.getEinzugsdatum().toZonedDateTime().toInstant());
+        Date Auszug = Date.from(profil.getAuszugsdatum().toZonedDateTime().toInstant());
+        intitialisieren(Einzug, Auszug);
         _textFieldVorname.setText(profil.getVorname());
         _textFieldNachname.setText(profil.getNachname());
         _textFieldTelefon.setText(profil.getHandynummer());
         _textFieldEmail.setText(profil.getEmail());
-        _choiceMonat.select("" + profil.getEinzugsdatum().toInstant().toString().substring(5, 7));
-        _choiceMonatAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(5, 7));
-        _choiceJahrAus.select("" + profil.getAuszugsdatum().toInstant().toString().substring(0, 4));
-        try
-        {
-            String temp = profil.getEinzugsdatum().toInstant().toString().substring(0, 4);
-            _choiceJahr.remove(temp);
-            _choiceJahr.add(temp);
-            _choiceJahr.select(temp);
-            temp = profil.getAuszugsdatum().toInstant().toString().substring(0, 4);
-            _choiceJahrAus.remove(temp);
-            _choiceJahrAus.add(temp);
-            _choiceJahrAus.select(temp);
-        }
-        catch (IllegalArgumentException e)
-        {
-
-        }
     }
 
-    public void intitialisieren()
+    public void intitialisieren(Date einzug, Date auszug)
     {
         _frame = new JFrame(TITEL);
         _frame.setLocation(600, 400);
@@ -101,6 +92,7 @@ public class ProfilWerkzeugUI extends JInternalFrame
         _frame.getContentPane().add(HauptPanel, BorderLayout.CENTER);
 
         HauptPanel.setLayout(new GridLayout(0, 1));
+        Calendar calendar = Calendar.getInstance();
 
         JPanel NamePanel = new JPanel();
         HauptPanel.add(NamePanel);
@@ -117,13 +109,22 @@ public class ProfilWerkzeugUI extends JInternalFrame
         JPanel EinzugdatumPanel = new JPanel();
         HauptPanel.add(EinzugdatumPanel);
         EinzugdatumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        JLabel EinzugsLabel = new JLabel("  Einzugsmonat :");
+        JLabel EinzugsLabel = new JLabel("  Einzugsdatum :");
         EinzugdatumPanel.add(EinzugsLabel);
-        _choiceMonat = new Choice();
 
-        EinzugdatumPanel.add(_choiceMonat);
-        _choiceJahr = new Choice();
-        EinzugdatumPanel.add(_choiceJahr);
+        if (einzug == null)
+        {
+            einzug = calendar.getTime();
+        }
+        _spinnerEinzug = new JSpinner(new SpinnerDateModel(einzug, null, null, Calendar.YEAR));
+        EinzugsLabel.setLabelFor(_spinnerEinzug);
+        EinzugdatumPanel.add(_spinnerEinzug);
+
+        _spinnerEinzug.setEditor(new JSpinner.DateEditor(_spinnerEinzug, "MM/yyyy"));
+        JFormattedTextField ftf1 = null;
+        ftf1 = getTextField(_spinnerEinzug);
+        ftf1.setColumns(7);
+        ftf1.setHorizontalAlignment(JTextField.RIGHT);
 
         JPanel TelefonPanel = new JPanel();
         HauptPanel.add(TelefonPanel);
@@ -146,15 +147,25 @@ public class ProfilWerkzeugUI extends JInternalFrame
         JPanel AuszugsdatumPanel = new JPanel();
         HauptPanel.add(AuszugsdatumPanel);
         AuszugsdatumPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        JLabel _auszugsLabel = new JLabel("  Auszugsmonat :");
+        JLabel _auszugsLabel = new JLabel("  Auszugsdatum :");
         AuszugsdatumPanel.add(_auszugsLabel);
-        _choiceMonatAus = new Choice();
-        AuszugsdatumPanel.add(_choiceMonatAus);
-        _choiceJahrAus = new Choice();
+        _AuszugCheckbox = new JCheckBox("", false);
+        AuszugsdatumPanel.add(_AuszugCheckbox);
 
-        AuszugsdatumPanel.add(_choiceJahrAus);
-        _infoButton = new JButton("Info");
-        AuszugsdatumPanel.add(_infoButton);
+        if (auszug == null)
+        {
+            auszug = calendar.getTime();
+        }
+        _spinnerAuszug = new JSpinner(new SpinnerDateModel(auszug, null, null, Calendar.YEAR));
+        _auszugsLabel.setLabelFor(_spinnerAuszug);
+        _spinnerAuszug.setEnabled(false);
+        AuszugsdatumPanel.add(_spinnerAuszug);
+
+        _spinnerAuszug.setEditor(new JSpinner.DateEditor(_spinnerAuszug, "MM/yyyy"));
+        JFormattedTextField ftf2 = null;
+        ftf2 = getTextField(_spinnerAuszug);
+        ftf2.setColumns(7);
+        ftf2.setHorizontalAlignment(JTextField.RIGHT);
 
         JPanel ButtonPanel = new JPanel();
         _frame.getContentPane().add(ButtonPanel, BorderLayout.SOUTH);
@@ -165,30 +176,27 @@ public class ProfilWerkzeugUI extends JInternalFrame
         _abbrechenButton = new JButton("Abbrechen");
         ButtonPanel.add(_abbrechenButton);
 
-        for (int i = 1; i <= 12; i++)
-        {
-            if (i < 10)
-            {
-                _choiceMonat.add("0" + i);
-                _choiceMonatAus.add("0" + i);
-            }
-            else
-            {
-                _choiceMonat.add("" + i);
-                _choiceMonatAus.add("" + i);
-            }
-
-        }
-
-        int aktJahr = Integer.valueOf(new GregorianCalendar().toInstant().toString().substring(0, 4));
-        for (int i = -2; i <= 2; i++)
-        {
-            _choiceJahr.add("" + (aktJahr + i));
-            _choiceJahrAus.add("" + (aktJahr + i));
-        }
-        _choiceJahrAus.add("2099");
-
         _frame.revalidate();
+    }
+
+    /**
+     * Return the formatted text field used by the editor, or
+     * null if the editor doesn't descend from JSpinner.DefaultEditor.
+     */
+    public JFormattedTextField getTextField(JSpinner spinner)
+    {
+        JComponent editor = spinner.getEditor();
+        if (editor instanceof JSpinner.DefaultEditor)
+        {
+            return ((JSpinner.DefaultEditor) editor).getTextField();
+        }
+        else
+        {
+            System.err.println("Unexpected editor type: "
+                    + spinner.getEditor().getClass()
+                    + " isn't a descendant of DefaultEditor");
+            return null;
+        }
     }
 
     public JTextField get_textFieldVorname()
@@ -201,6 +209,11 @@ public class ProfilWerkzeugUI extends JInternalFrame
         return _textFieldNachname;
     }
 
+    public JSpinner get_spinnerEinzug()
+    {
+        return _spinnerEinzug;
+    }
+
     public JTextField get_textFieldTelefon()
     {
         return _textFieldTelefon;
@@ -211,29 +224,19 @@ public class ProfilWerkzeugUI extends JInternalFrame
         return _textFieldEmail;
     }
 
-    public Choice get_choiceMonat()
+    public JSpinner get_spinnerAuszug()
     {
-        return _choiceMonat;
+        return _spinnerAuszug;
     }
 
-    public Choice get_choiceJahr()
+    public JCheckBox get_AuszugCheckbox()
     {
-        return _choiceJahr;
+        return _AuszugCheckbox;
     }
 
     public JTextField get_textFieldZimmer()
     {
         return _textFieldZimmer;
-    }
-
-    public Choice get_choiceJahrAus()
-    {
-        return _choiceJahrAus;
-    }
-
-    public Choice get_choiceMonatAus()
-    {
-        return _choiceMonatAus;
     }
 
     public JButton get_speichernButton()

@@ -2,6 +2,8 @@ package Werkzeuge.ProfilManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
@@ -75,8 +77,10 @@ public class ProfilWerkzeug
             ErrorOutputWerkzeug.ErrorOutput(Errors.NamenEingabeError);
         }
         int Guthaben = 0;
-        int EinMonat = Integer.parseInt(_ui.get_choiceMonat().getSelectedItem());
-        int EinJahr = Integer.parseInt(_ui.get_choiceJahr().getSelectedItem());
+        String einzug = _ui.getTextField(_ui.get_spinnerEinzug()).getText();
+        int EinMonat = Integer.parseInt(einzug.substring(0, 2));
+        int EinJahr = Integer.parseInt(einzug.substring(3, 7));
+        ;
         String Email = _ui.get_textFieldEmail().getText();
         if (Email.equals(""))
         {
@@ -87,8 +91,22 @@ public class ProfilWerkzeug
         {
             Handynummer = " ";
         }
-        int AusMonat = Integer.parseInt(_ui.get_choiceMonatAus().getSelectedItem());
-        int AusJahr = Integer.parseInt(_ui.get_choiceJahrAus().getSelectedItem());
+        int AusMonat;
+        int AusJahr;
+        if (_ui.get_AuszugCheckbox().isSelected())
+        {
+            AusMonat = 12;
+            AusJahr = 2099;
+        }
+        else
+        {
+            String auszug = _ui.getTextField(_ui.get_spinnerAuszug()).getText();
+            AusMonat = Integer.parseInt(auszug.substring(0, 2));
+            AusJahr = Integer.parseInt(auszug.substring(3, 7));
+        }
+
+        System.out.println("Einzug: " + EinMonat + "/" + EinJahr + "\nAuszug: " + AusMonat + "/" + AusJahr);
+
         erstelleProfil(vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
     }
 
@@ -280,13 +298,29 @@ public class ProfilWerkzeug
             }
         });
 
-        _ui.get_InfoButton().addActionListener(new ActionListener()
+        _ui.get_AuszugCheckbox().addItemListener(new ItemListener()
         {
-            public void actionPerformed(ActionEvent e)
+            public void itemStateChanged(ItemEvent e)
             {
-                JOptionPane.showMessageDialog(null, "Falls der Bewohner noch nicht ausgezogen ist, wählen sie bitte als Auszugsdatum 12, 2099", "Auszugs Info ", JOptionPane.PLAIN_MESSAGE);
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                    _ui.get_spinnerAuszug().setEnabled(true);
+                    _ui.getTextField(_ui.get_spinnerAuszug()).setText("01/2021");
+                }
+                else
+                {
+                    _ui.get_spinnerAuszug().setEnabled(false);
+                    _ui.getTextField(_ui.get_spinnerAuszug()).setText("12/2099");
+                }
             }
         });
+        //        _ui.get_InfoButton().addActionListener(new ActionListener()
+        //        {
+        //            public void actionPerformed(ActionEvent e)
+        //            {
+        //                JOptionPane.showMessageDialog(null, "Falls der Bewohner noch nicht ausgezogen ist, wählen sie bitte als Auszugsdatum 12, 2099", "Auszugs Info ", JOptionPane.PLAIN_MESSAGE);
+        //            }
+        //        });
 
         _ui.get_speichernButton().addActionListener(new ActionListener()
         {
