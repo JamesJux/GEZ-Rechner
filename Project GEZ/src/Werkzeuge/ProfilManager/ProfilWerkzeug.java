@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
@@ -104,9 +105,6 @@ public class ProfilWerkzeug
             AusMonat = Integer.parseInt(auszug.substring(0, 2));
             AusJahr = Integer.parseInt(auszug.substring(3, 7));
         }
-
-        System.out.println("Einzug: " + EinMonat + "/" + EinJahr + "\nAuszug: " + AusMonat + "/" + AusJahr);
-
         erstelleProfil(vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
     }
 
@@ -304,8 +302,13 @@ public class ProfilWerkzeug
             {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                 {
+                    GregorianCalendar heute = new GregorianCalendar();
+                    int hJahr = heute.get(Calendar.YEAR);
+                    int temp = heute.get(Calendar.MONTH) + 1;
+                    String hMonat = (temp < 10) ? "0" + temp : "" + temp;
+
                     _ui.get_spinnerAuszug().setEnabled(true);
-                    _ui.getTextField(_ui.get_spinnerAuszug()).setText("01/2021");
+                    _ui.getTextField(_ui.get_spinnerAuszug()).setText(hMonat + "/" + hJahr);
                 }
                 else
                 {

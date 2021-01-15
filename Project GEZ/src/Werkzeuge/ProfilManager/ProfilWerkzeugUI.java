@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -154,7 +155,7 @@ public class ProfilWerkzeugUI extends JInternalFrame
 
         if (auszug == null)
         {
-            auszug = calendar.getTime();
+            auszug = new Date(new GregorianCalendar(2099, 11, 30).toInstant().toEpochMilli());
         }
         _spinnerAuszug = new JSpinner(new SpinnerDateModel(auszug, null, null, Calendar.YEAR));
         _auszugsLabel.setLabelFor(_spinnerAuszug);
