@@ -365,31 +365,9 @@ public class DateiWerkzeug
         }
     }
 
-    @SuppressWarnings("unused")
-    private static String führendeNull(String string)
-    {
-        if (string.length() == 0)
-        {
-            return "0" + string;
-        }
-        else
-        {
-            return string;
-        }
-
-    }
-
     private static String führendeNull(int zahl)
     {
-        if (zahl < 10)
-        {
-            return "0" + zahl;
-        }
-        else
-        {
-            return "" + zahl;
-        }
-
+        return (zahl < 10) ? "0" + zahl : "" + zahl;
     }
 
     public static void loggeFehler(String text)
