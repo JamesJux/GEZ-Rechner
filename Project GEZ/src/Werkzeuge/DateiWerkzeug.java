@@ -8,7 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,10 +34,12 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
 public class DateiWerkzeug
 {
     private static final String PATH = "./Textdateien";
-    private static final File BEWOHNER_DATEI = new File(PATH + "/Bewohner.txt");
+    public static final String BEWOHNER_DATEI_NAME = "/Bewohner.txt";
+    private static final File BEWOHNER_DATEI = new File(PATH + BEWOHNER_DATEI_NAME);
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
     private static final File GUTHABEN_LOG_DATEI = new File(PATH + "/Guthaben-Log-Datei.txt");
     private static final File FEHLER_LOG_DATEI = new File(PATH + "/Fehler-Log-Datei.txt");
+    public static Boolean _DEBUGMODE = false;
     private static File OUTPUT = BEWOHNER_DATEI;
     private static boolean _einstellungenVollständig;
     static ProfilWerkzeug PW;
@@ -90,9 +94,9 @@ public class DateiWerkzeug
             //printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
-            printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
-            printer.print(vornameBezahler + ";" + nachnameBezahler + ";<E-Mail>;<Handynr.>;0;" + beitragszahler_seit_monat + ";"
-                    + beitragszahler_seit_jahr + ";12;2099");
+            printer.println(codiereString("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR"));
+            printer.print(codiereString(vornameBezahler + ";" + nachnameBezahler + ";<E-Mail>;<Handynr.>;0;" + beitragszahler_seit_monat
+                    + ";" + beitragszahler_seit_jahr + ";12;2099"));
             printer.close();
         }
         catch (IOException a)
@@ -116,10 +120,11 @@ public class DateiWerkzeug
             // liest Datei Zeile für Zeile
             while ((line = reader.readLine()) != null)
             {
-                StringTokenizer tokenizer = new StringTokenizer(line, ";");
-                String Vorname = tokenizer.nextToken();
-                if (!Vorname.equals("VORNAME")) // Überspringt die Erklärungszeile
+                line = encodiereString(line);
+                if (!line.contains("#")) // Überspringt Kommentarzeilen
                 {
+                    StringTokenizer tokenizer = new StringTokenizer(line, ";");
+                    String Vorname = tokenizer.nextToken();
                     String Nachname = tokenizer.nextToken();
                     String EMail = tokenizer.nextToken();
                     String Handynr = tokenizer.nextToken();
@@ -139,8 +144,6 @@ public class DateiWerkzeug
                         int AusMonat = Integer.valueOf(tokenizer.nextToken());
                         if (AusMonat > 12 || AusMonat < 1)
                         {
-                            System.out.println("" + Vorname + AusMonat);
-
                             ErrorOutputWerkzeug.ErrorOutput(Errors.AuszugBewohnerEinlesenError);
                         }
                         int AusJahr = Integer.valueOf(tokenizer.nextToken());
@@ -189,7 +192,15 @@ public class DateiWerkzeug
 
         try (PrintStream printer = new PrintStream(OUTPUT))
         {
-            printer.println("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR");
+            if (_DEBUGMODE)
+            {
+                printer.println(codiereString("# Bitte beachte das beim nächsten Start des GEZ-Rechners immer die \"" + BEWOHNER_DATEI_NAME
+                        + "\" einlesen wird!"));
+                printer.println(codiereString("# Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese Datei manuell in \""
+                        + BEWOHNER_DATEI_NAME + "\" umbennenen."));
+                printer.println(codiereString("# VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR"));
+            }
+
             for (Profil p : sortedProfile)
             {
                 String output = p.getVorname() + ";";
@@ -202,13 +213,51 @@ public class DateiWerkzeug
                 output += führendeNull(p.getAuszugsdatum().get(Calendar.MONTH) + 1) + ";";
                 output += p.getAuszugsdatum().get(Calendar.YEAR);
 
-                printer.println(output);
+                printer.println(codiereString(output));
             }
             printer.close();
         }
         catch (FileNotFoundException e)
         {
+            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiNichtGefundenError);
         }
+    }
+
+    /**
+     * Codiert im Normalfall die zu speichernden Strings in BASE64 um Veränderungen in den Textdateien vorzubeugen.
+     * 
+     * Wenn die Einstellung Debugmodus "True" ist, wird die zu speichernde Datei nicht codiert.
+     */
+    private static String codiereString(String string)
+    {
+        if (!_DEBUGMODE)
+        {
+            byte[] bytes;
+            try
+            {
+                bytes = string.getBytes("UTF-8");
+                string = Base64.getEncoder().encodeToString(bytes);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                ErrorOutputWerkzeug.ErrorOutput(Errors.StringCodierungsError);
+            }
+        }
+        return string;
+    }
+
+    /**
+     * Encodiert dem zu lesenden Strings aus BASE64 falls er codiert ist.
+     */
+    private static String encodiereString(String string)
+    {
+        if (!string.contains(";"))
+        {
+            byte[] bytes;
+            bytes = Base64.getDecoder().decode(string);
+            string = new String(bytes);
+        }
+        return string;
     }
 
     /**
@@ -222,6 +271,7 @@ public class DateiWerkzeug
         String Beitragszahler = "";
         String Geburtstag = "";
         String Beitragsnummer = "";
+        _DEBUGMODE = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
             String line = null;
@@ -258,7 +308,16 @@ public class DateiWerkzeug
                     String option = tokenizer.nextToken();
                     if (option.equals("true"))
                     {
-                        OUTPUT = new File(PATH + "/Output Bewohner.txt");
+                        GregorianCalendar heute = new GregorianCalendar();
+                        String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
+                        String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
+                        String hStunde = führendeNull(heute.get(Calendar.HOUR_OF_DAY));
+                        String hMinute = führendeNull(heute.get(Calendar.MINUTE));
+                        String hSekunde = führendeNull(heute.get(Calendar.SECOND));
+                        String Zeitstempel = hTag + "." + hMonat + " "
+                                + hStunde + "." + hMinute + "." + hSekunde;
+                        OUTPUT = new File(PATH + "/Debug Bewohner (" + Zeitstempel + ").txt");
+                        _DEBUGMODE = true;
                     }
                     break;
                 //                case "Sprache":

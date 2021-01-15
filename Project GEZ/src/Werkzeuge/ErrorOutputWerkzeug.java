@@ -62,6 +62,9 @@ public class ErrorOutputWerkzeug
         case BezahlerRegistrierenError:
             output = "BezahlerError: Problem beim Einlesen des Bezahlers";
             break;
+        case StringCodierungsError:
+            output = "Codierungfehler: Problem beim Codieren eines Strings";
+            break;
         default:
             output = "ErrorOutputWerkzeug Error: Fehler bei der Fehlererkennung. Fehler wurde noch nicht im System hinzugefügt.";
         }

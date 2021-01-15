@@ -100,6 +100,12 @@ public class Startseite
                 if (aktiv)
                 {
                     DateiWerkzeug.speichereInDatei();
+                    if (DateiWerkzeug._DEBUGMODE)
+                    {
+                        JOptionPane.showMessageDialog(null, "Bitte beachte das beim nächsten Start der Rechner immer die \""
+                                + DateiWerkzeug.BEWOHNER_DATEI_NAME + "\" einlesen wird!\n"
+                                + "Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese manuell umbennenen.", "Debug Modus", JOptionPane.WARNING_MESSAGE);
+                    }
                     System.exit(0);
                 }
             }

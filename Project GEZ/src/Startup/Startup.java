@@ -5,6 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import Werkzeuge.DateiWerkzeug;
@@ -39,6 +40,12 @@ public class Startup
                         public void windowClosing(WindowEvent e)
                         {
                             DateiWerkzeug.speichereInDatei();
+                            if (DateiWerkzeug._DEBUGMODE)
+                            {
+                                JOptionPane.showMessageDialog(null, "Bitte beachte das beim nächsten Start der Rechner immer die \""
+                                        + DateiWerkzeug.BEWOHNER_DATEI_NAME + "\" einlesen wird!\n"
+                                        + "Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese manuell umbennenen.", "Debug Modus", JOptionPane.WARNING_MESSAGE);
+                            }
                             System.exit(0);
                         }
                     });
