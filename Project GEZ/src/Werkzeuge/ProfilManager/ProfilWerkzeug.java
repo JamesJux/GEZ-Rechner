@@ -317,13 +317,6 @@ public class ProfilWerkzeug
                 }
             }
         });
-        //        _ui.get_InfoButton().addActionListener(new ActionListener()
-        //        {
-        //            public void actionPerformed(ActionEvent e)
-        //            {
-        //                JOptionPane.showMessageDialog(null, "Falls der Bewohner noch nicht ausgezogen ist, wählen sie bitte als Auszugsdatum 12, 2099", "Auszugs Info ", JOptionPane.PLAIN_MESSAGE);
-        //            }
-        //        });
 
         _ui.get_speichernButton().addActionListener(new ActionListener()
         {
