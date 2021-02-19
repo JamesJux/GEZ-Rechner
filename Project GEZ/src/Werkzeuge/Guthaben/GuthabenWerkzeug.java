@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import Fachwerte.Errors;
 import Fachwerte.Geldbetrag;
 import Materialien.Profil;
+import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.ErrorOutputWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
@@ -28,6 +29,7 @@ public class GuthabenWerkzeug
     GuthabenWerkzeugUI _ui;
     Profil profil;
     private int EinAusBetrag;
+    private int _beitragshöhe = (int) (DateiWerkzeug._beitragshöhe * 100);
 
     public GuthabenWerkzeug(ProfilWerkzeug profilWerkzeug)
     {
@@ -103,7 +105,7 @@ public class GuthabenWerkzeug
                     monat++;
                     if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
                     {
-                        int diesenMonat = runden(17500
+                        int diesenMonat = runden((_beitragshöhe * 10)
                                 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
                         betragCent -= diesenMonat;
                     }
@@ -124,7 +126,7 @@ public class GuthabenWerkzeug
                 else
                 {
                     RestMonate = momentan.getBetragInCent()
-                            / (runden(17500
+                            / (runden((_beitragshöhe * 10)
                                     / PW.getAnzahlZahlendeBewohner(new GregorianCalendar())));
                 }
                 profil.setVorraussichtlicheDauer(RestMonate);
