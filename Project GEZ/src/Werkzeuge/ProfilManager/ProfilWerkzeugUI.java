@@ -66,6 +66,8 @@ public class ProfilWerkzeugUI extends JInternalFrame
         _textFieldNachname.setText(profil.getNachname());
         _textFieldTelefon.setText(profil.getHandynummer());
         _textFieldEmail.setText(profil.getEmail());
+        _AuszugCheckbox.setSelected(Auszug.before(new Date()));
+        _spinnerAuszug.setEnabled(Auszug.before(new Date()));
     }
 
     public void intitialisieren(Date einzug, Date auszug)

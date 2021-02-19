@@ -94,7 +94,7 @@ public class ProfilWerkzeug
         }
         int AusMonat;
         int AusJahr;
-        if (_ui.get_AuszugCheckbox().isSelected())
+        if (!_ui.get_AuszugCheckbox().isSelected())
         {
             AusMonat = 12;
             AusJahr = 2099;
@@ -324,8 +324,12 @@ public class ProfilWerkzeug
             {
                 if (benutzerBearbeiten)
                 {
-                    loescheProfil(_ui.get_textFieldVorname().getText() + " " + _ui.get_textFieldNachname().getText());
+                    Profil profil = getProfil(_ui.get_textFieldVorname().getText() + " " + _ui.get_textFieldNachname().getText());
+                    Geldbetrag temp_Guthaben = profil.getGuthaben();
+                    profile.remove(profil);
                     neuenBenutzerSpeichern();
+                    Profil profil_neu = getProfil(_ui.get_textFieldVorname().getText() + " " + _ui.get_textFieldNachname().getText());
+                    profil_neu.setGuthaben(temp_Guthaben);
                 }
                 else
                 {
