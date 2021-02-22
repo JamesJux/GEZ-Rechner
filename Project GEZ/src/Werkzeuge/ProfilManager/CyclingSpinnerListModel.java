@@ -50,6 +50,7 @@ import javax.swing.SpinnerModel;
  */
 public class CyclingSpinnerListModel extends SpinnerListModel
 {
+    private static final long serialVersionUID = -6047821901515551926L;
     Object firstValue, lastValue;
     SpinnerModel linkedModel = null;
 

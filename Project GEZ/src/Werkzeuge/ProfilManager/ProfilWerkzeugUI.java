@@ -33,10 +33,7 @@ import Werkzeuge.Startseite.Startseite;
  */
 public class ProfilWerkzeugUI extends JInternalFrame
 {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6640475293587633567L;
+    private static final long serialVersionUID = -495225877406580110L;
     private static final String TITEL = "Bewohner - Editor";
     private static JFrame _frame;
     private JButton _infoButton;

@@ -21,7 +21,7 @@ import javax.swing.SwingConstants;
  */
 public class StartseiteUI extends JInternalFrame
 {
-    private static final long serialVersionUID = -8459893871697694920L;
+    private static final long serialVersionUID = -5341256584961533869L;
     private static final String TITEL = "Startseite - GEZ-Rechner";
     private static JFrame _frame;
     private Choice _bewohnerChoice;
