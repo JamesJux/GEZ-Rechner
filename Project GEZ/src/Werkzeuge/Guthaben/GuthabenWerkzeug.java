@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import Fachwerte.Errors;
 import Fachwerte.Geldbetrag;
 import Materialien.Profil;
-import Werkzeuge.DateiWerkzeug;
 import Werkzeuge.ErrorOutputWerkzeug;
 import Werkzeuge.ProfilManager.ProfilWerkzeug;
 
@@ -29,7 +28,7 @@ public class GuthabenWerkzeug
     GuthabenWerkzeugUI _ui;
     Profil profil;
     private int EinAusBetrag;
-    private int _beitragshöhe = (int) (DateiWerkzeug._beitragshöhe * 100);
+    private static int _beitragshöhe;
 
     public GuthabenWerkzeug(ProfilWerkzeug profilWerkzeug)
     {
@@ -84,6 +83,17 @@ public class GuthabenWerkzeug
     public static void registriereBezahlJahr(String seitJahr)
     {
         _beginnBerechnungJahr = Integer.valueOf(seitJahr);
+    }
+
+    /**
+     * Registriert den Berechnungsbetrag pro Monat im BezahlWerkzeug.
+     * 
+     * @apiNote Notwendig für die Funktionalität.
+     * @param beitragshöhe Der Beitragshöhe pro Monat.
+     **/
+    public static void registriereBeitragshöhe(Double beitragshöhe)
+    {
+        _beitragshöhe = (int) (beitragshöhe * 100);
     }
 
     /**

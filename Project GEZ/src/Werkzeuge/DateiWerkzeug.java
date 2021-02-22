@@ -40,7 +40,6 @@ public class DateiWerkzeug
     private static final File GUTHABEN_LOG_DATEI = new File(PATH + "/Guthaben-Log-Datei.txt");
     private static final File FEHLER_LOG_DATEI = new File(PATH + "/Fehler-Log-Datei.txt");
     public static Boolean _DEBUGMODE = false;
-    public static final Double _beitragshöhe = 0.0;
     private static File OUTPUT = BEWOHNER_DATEI;
     private static boolean _einstellungenVollständig;
     static ProfilWerkzeug PW;
@@ -96,7 +95,7 @@ public class DateiWerkzeug
             //printer.print("Sprache='de/en'");
             printer.close();
             printer = new PrintStream(BEWOHNER_DATEI);
-            printer.println(codiereString("VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR"));
+            printer.println(codiereString("# VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR"));
             printer.print(codiereString(vornameBezahler + ";" + nachnameBezahler + ";<E-Mail>;<Handynr.>;0;" + beitragszahler_seit_monat
                     + ";" + beitragszahler_seit_jahr + ";12;2099"));
             printer.close();
@@ -163,7 +162,6 @@ public class DateiWerkzeug
                     {
                         ErrorOutputWerkzeug.ErrorOutput(Errors.BewohnerEinlesenError);
                     }
-
                 }
             }
         }
@@ -304,7 +302,8 @@ public class DateiWerkzeug
                     break;
                 case "Beitragshöhe":
                     eingeleseneEinstellungen++;
-                    _beitragshöhe = Double.valueOf(tokenizer.nextToken());
+                    Double beitragshöhe = Double.valueOf(tokenizer.nextToken());
+                    GuthabenWerkzeug.registriereBeitragshöhe(beitragshöhe);
                     break;
                 case "Geburtstag":
                     eingeleseneEinstellungen++;
