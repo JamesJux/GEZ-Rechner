@@ -251,7 +251,7 @@ public class DateiWerkzeug
      */
     private static String encodiereString(String string)
     {
-        if (!string.contains(";"))
+        if (!string.contains(";") & !string.contains("#"))
         {
             byte[] bytes;
             bytes = Base64.getDecoder().decode(string);
