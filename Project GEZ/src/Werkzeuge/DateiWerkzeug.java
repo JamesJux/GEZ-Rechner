@@ -352,11 +352,7 @@ public class DateiWerkzeug
     {
         try (PrintWriter printer = new PrintWriter(new FileWriter(GUTHABEN_LOG_DATEI, true), true))
         {
-            GregorianCalendar heute = new GregorianCalendar();
-            String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
-            String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
-
-            printer.println(heute.get(Calendar.YEAR) + "-" + hMonat + "-" + hTag + " - " + text);
+            printer.println(getZeitstempel(0) + " - " + text);
         }
         catch (IOException e)
         {
@@ -378,18 +374,59 @@ public class DateiWerkzeug
         return (zahl < 10) ? "0" + zahl : "" + zahl;
     }
 
+    /** Gibt eine Zeitstempel als String aus.
+     * Genauigkeit: 
+     * 0 - JJJJ-MM-DD
+     * 1 - DD.MM
+     * 2 - hh:mm
+     * 3 - hh:mm:ss
+     * 4 - hh.mm
+     * 5 - hh.mm.ss
+     * 
+     * @param genauigkeit Gibt die Genauigkeit des Zeitstempels an.
+     * 
+     **/
+    private static String getZeitstempel(int genauigkeit)
+    {
+        GregorianCalendar heute = new GregorianCalendar();
+        String hJahr = "" + heute.get(Calendar.YEAR);
+        String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
+        String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
+        String hStunde = führendeNull(heute.get(Calendar.HOUR_OF_DAY));
+        String hMinute = führendeNull(heute.get(Calendar.MINUTE));
+        String hSekunde = führendeNull(heute.get(Calendar.SECOND));
+
+        String result = "";
+        switch (genauigkeit)
+        {
+        case 0:
+            result = hJahr + "-" + hMonat + "-" + hTag;
+            break;
+        case 1:
+            result = hTag + "." + hMonat;
+            break;
+        case 2:
+            result = hStunde + ":" + hMinute;
+            break;
+        case 3:
+            result = hStunde + ":" + hMinute + ":" + hSekunde;
+            break;
+        case 4:
+            result = hStunde + "." + hMinute;
+            break;
+        case 5:
+            result = hStunde + "." + hMinute + "." + hSekunde;
+            break;
+
+        }
+        return result;
+    }
+
     public static void loggeFehler(String text)
     {
         try (PrintWriter printer = new PrintWriter(new FileWriter(FEHLER_LOG_DATEI, true), true))
         {
-            GregorianCalendar heute = new GregorianCalendar();
-            String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
-            String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
-            String hStunde = führendeNull(heute.get(Calendar.HOUR_OF_DAY));
-            String hMinute = führendeNull(heute.get(Calendar.MINUTE));
-            String hSekunde = führendeNull(heute.get(Calendar.SECOND));
-            printer.println(heute.get(Calendar.YEAR) + "-" + hMonat + "-" + hTag + " "
-                    + hStunde + ":" + hMinute + ":" + hSekunde + "\n" + text);
+            printer.println(getZeitstempel(0) + " " + getZeitstempel(5) + "\n" + text);
         }
         catch (IOException e)
         {
