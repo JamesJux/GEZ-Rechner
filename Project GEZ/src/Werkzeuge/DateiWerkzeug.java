@@ -34,13 +34,16 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
 public class DateiWerkzeug
 {
     private static final String PATH = "./Textdateien";
-    public static final String BEWOHNER_DATEI_NAME = "/Bewohner.txt";
-    private static final File BEWOHNER_DATEI = new File(PATH + BEWOHNER_DATEI_NAME);
     private static final File EINSTELLUNGEN = new File(PATH + "/Einstellungen.txt");
     private static final File GUTHABEN_LOG_DATEI = new File(PATH + "/Guthaben-Log-Datei.txt");
     private static final File FEHLER_LOG_DATEI = new File(PATH + "/Fehler-Log-Datei.txt");
-    public static Boolean _DEBUGMODE = false;
-    private static File OUTPUT = BEWOHNER_DATEI;
+    public static Boolean DEBUGMODE = false;
+    private static String DATEI_ENDUNG = "data";
+    public static String BEWOHNER = "/Bewohner.";
+    public static String BEWOHNER_DATEI_NAME = BEWOHNER + DATEI_ENDUNG;
+    public static File BEWOHNER_DATEI = new File(PATH + BEWOHNER_DATEI_NAME);
+    private static File OUTPUT1;
+    private static File OUTPUT2;
     private static boolean _einstellungenVollständig;
     static ProfilWerkzeug PW;
 
@@ -110,15 +113,39 @@ public class DateiWerkzeug
      * 
      * Siehe dort für weitere Informationen.
      **/
+    public static void leseBewohnerEin()
+    {
+        File DATEI = new File(PATH + BEWOHNER + "data");
+        try
+        {
+            leseBewohnerEin(DATEI);
+        }
+        catch (IOException e)
+        {
+            DATEI = new File(PATH + BEWOHNER + "txt");
+            try
+            {
+                leseBewohnerEin(DATEI);
+            }
+            catch (IOException e1)
+            {
+                e1.printStackTrace();
+            }
+
+        }
+    }
+
+    /**
+    * Liest Bewohner aus der Bewohner.data ein, falls dies nicht vorhanden ist wird versucht aus der Bewohner.txt einzulesen.
     * 
     * Die Bewohnerinformationen müssen mit einem ";" getrennt sein.
     * 
     * Die Reihenfolge der Bewohnerinformationen:
     * Vorname; Nachname; E-Mail; Handynummer; Eingezahltes Geld; Einzug(Monat;Jahr); Auszug(Monat;Jahr)
-    */
-    public static void leseBewohnerEin()
+    **/
+    public static void leseBewohnerEin(File datei) throws IOException
     {
-        try (BufferedReader reader = new BufferedReader(new FileReader(BEWOHNER_DATEI)))
+        try (BufferedReader reader = new BufferedReader(new FileReader(datei)))
         {
             String line = null;
             // liest Datei Zeile für Zeile
@@ -168,14 +195,6 @@ public class DateiWerkzeug
                 }
             }
         }
-        catch (FileNotFoundException e)
-        {
-            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiNichtGefundenError);
-        }
-        catch (IOException e)
-        {
-            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiLesenError);
-        }
     }
 
     /**
@@ -193,14 +212,42 @@ public class DateiWerkzeug
             }
         });
 
-        try (PrintStream printer = new PrintStream(OUTPUT))
+        try (PrintStream printer = new PrintStream(OUTPUT1))
         {
-            if (_DEBUGMODE)
+            if (DEBUGMODE)
             {
-                printer.println(codiereString("# Bitte beachte das beim nächsten Start des GEZ-Rechners immer die \"" + BEWOHNER_DATEI_NAME
-                        + "\" einlesen wird!"));
-                printer.println(codiereString("# Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese Datei manuell in \""
-                        + BEWOHNER_DATEI_NAME + "\" umbennenen."));
+                printer.println(codiereString("# Bitte beachte das beim nächsten Start des GEZ-Rechners immer die \"Bewohner.data\" einlesen wird!"));
+                printer.println(codiereString("# Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese Datei manuell in \"Bewohner.data\" umbennenen, oder ebendiese löschen"));
+                printer.println(codiereString("# VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR"));
+            }
+
+            for (Profil p : sortedProfile)
+            {
+                String output = p.getVorname() + ";";
+                output += p.getNachname() + ";";
+                output += p.getEmail() + ";";
+                output += p.getHandynummer() + ";";
+                output += p.getGuthaben().getBetragInCent() + ";";
+                output += führendeNull(p.getEinzugsdatum().get(Calendar.MONTH) + 1) + ";";
+                output += p.getEinzugsdatum().get(Calendar.YEAR) + ";";
+                output += führendeNull(p.getAuszugsdatum().get(Calendar.MONTH) + 1) + ";";
+                output += p.getAuszugsdatum().get(Calendar.YEAR);
+
+                printer.println(codiereString(output));
+            }
+            printer.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorOutputWerkzeug.ErrorOutput(Errors.DateiNichtGefundenError);
+        }
+
+        try (PrintStream printer = new PrintStream(OUTPUT2))
+        {
+            if (DEBUGMODE)
+            {
+                printer.println(codiereString("# Bitte beachte das beim nächsten Start des GEZ-Rechners immer die \"Bewohner.data\" einlesen wird!"));
+                printer.println(codiereString("# Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese Datei manuell in \"Bewohner.data\" umbennenen, oder ebendiese löschen."));
                 printer.println(codiereString("# VORNAME;NACHNAME;EMAIL;HANDY_NR;GUTHABEN_IN_CENT;EINZUGS_MONAT;EINZUGS_JAHR;AUSZUGS_MONAT;AUSZUGS_JAHR"));
             }
 
@@ -233,7 +280,7 @@ public class DateiWerkzeug
      **/
     private static String codiereString(String string)
     {
-        if (!_DEBUGMODE)
+        if (!DEBUGMODE)
         {
             byte[] bytes;
             try
@@ -274,7 +321,7 @@ public class DateiWerkzeug
         String Beitragszahler = "";
         String Geburtstag = "";
         String Beitragsnummer = "";
-        _DEBUGMODE = false;
+        DEBUGMODE = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(EINSTELLUNGEN)))
         {
             String line = null;
@@ -313,19 +360,22 @@ public class DateiWerkzeug
                     Geburtstag = tokenizer.nextToken();
                     break;
                 case "Debugmodus":
+                    eingeleseneEinstellungen++;
                     String option = tokenizer.nextToken();
                     if (option.equals("true"))
                     {
-                        GregorianCalendar heute = new GregorianCalendar();
-                        String hMonat = führendeNull(heute.get(Calendar.MONTH) + 1);
-                        String hTag = führendeNull(heute.get(Calendar.DAY_OF_MONTH));
-                        String hStunde = führendeNull(heute.get(Calendar.HOUR_OF_DAY));
-                        String hMinute = führendeNull(heute.get(Calendar.MINUTE));
-                        String hSekunde = führendeNull(heute.get(Calendar.SECOND));
-                        String Zeitstempel = hTag + "." + hMonat + " "
-                                + hStunde + "." + hMinute + "." + hSekunde;
-                        OUTPUT = new File(PATH + "/Debug Bewohner (" + Zeitstempel + ").txt");
-                        _DEBUGMODE = true;
+                        DEBUGMODE = true;
+                        DATEI_ENDUNG = "txt";
+                        BEWOHNER_DATEI = new File(PATH + BEWOHNER + DATEI_ENDUNG);
+                        OUTPUT1 = BEWOHNER_DATEI;
+                        OUTPUT2 = new File(PATH + "/Debug Bewohner (" + getZeitstempel(0) + " " + getZeitstempel(5) + ")." + DATEI_ENDUNG);
+
+                    }
+                    else
+                    {
+                        BEWOHNER_DATEI = new File(PATH + BEWOHNER + DATEI_ENDUNG);
+                        OUTPUT1 = BEWOHNER_DATEI;
+                        OUTPUT2 = new File(PATH + "/Bewohner (" + getZeitstempel(0) + " " + getZeitstempel(5) + ")." + DATEI_ENDUNG);
                     }
                     break;
                 //                case "Sprache":
@@ -335,7 +385,7 @@ public class DateiWerkzeug
                 //                    ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
                 //                    break;
                 }
-                if (eingeleseneEinstellungen == 6)
+                if (eingeleseneEinstellungen == 7)
                 {
                     _einstellungenVollständig = true;
                 }
