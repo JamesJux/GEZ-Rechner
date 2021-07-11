@@ -40,7 +40,7 @@ public class Startup
                         public void windowClosing(WindowEvent e)
                         {
                             DateiWerkzeug.speichereInDatei();
-                            if (DateiWerkzeug._DEBUGMODE)
+                            if (DateiWerkzeug.DEBUGMODE)
                             {
                                 JOptionPane.showMessageDialog(null, "Bitte beachte das beim nächsten Start der Rechner immer die \""
                                         + DateiWerkzeug.BEWOHNER_DATEI_NAME + "\" einlesen wird!\n"
