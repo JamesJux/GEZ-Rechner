@@ -30,7 +30,7 @@ import Werkzeuge.ProfilManager.ProfilWerkzeug;
  *  
  * @author Dominick Labatz
  * @version 02.04.2020
- */
+ **/
 public class DateiWerkzeug
 {
     private static final String PATH = "./Textdateien";
@@ -62,10 +62,10 @@ public class DateiWerkzeug
 
     /**
      * Methode zur Erstinitialisierung.
-     * Sie erstellt die notwendigen Textdateien um beim nächsten mal erfolgreich zu starten und schreibt notwendige Informationen in die Textdateien. 
+     * Sie erstellt die notwendigen Textdateien, um beim nächsten mal erfolgreich zu starten und schreibt notwendige Informationen in die Textdateien. 
      * 
-     * Danach ist der Benutzer angewiesen die notwendigen Einstellungen zu treffen.
-     */
+     * Da nach ist der Benutzer angewiesen, die notwendigen Einstellungen zu treffen.
+     **/
     private static void erstInitialisierung()
     {
 
@@ -106,7 +106,10 @@ public class DateiWerkzeug
     }
 
     /**
-    * Liest Bewohner aus einer Textdatei ein 
+     * Liest Bewohner aus der Bewohner.data ein, falls dies nicht vorhanden ist wird versucht aus der Bewohner.txt einzulesen.
+     * 
+     * Siehe dort für weitere Informationen.
+     **/
     * 
     * Die Bewohnerinformationen müssen mit einem ";" getrennt sein.
     * 
@@ -176,8 +179,8 @@ public class DateiWerkzeug
     }
 
     /**
-     * Speichert beim Beenden des Programms alle Informationen in die Textdatei "Bewohner".
-     */
+     * Speichert beim Beenden des Programms alle Informationen in die Datei "Bewohner.data" und speichert einmal in eine Datei mit Zeitstempel
+     **/
     public static void speichereInDatei()
     {
         List<Profil> sortedProfile = new ArrayList<>(PW.getProfile());
@@ -227,7 +230,7 @@ public class DateiWerkzeug
      * Codiert im Normalfall die zu speichernden Strings in BASE64 um Veränderungen in den Textdateien vorzubeugen.
      * 
      * Wenn die Einstellung Debugmodus "True" ist, wird die zu speichernde Datei nicht codiert.
-     */
+     **/
     private static String codiereString(String string)
     {
         if (!_DEBUGMODE)
@@ -248,7 +251,7 @@ public class DateiWerkzeug
 
     /**
      * Encodiert dem zu lesenden Strings aus BASE64 falls er codiert ist.
-     */
+     **/
     private static String encodiereString(String string)
     {
         if (!string.contains(";") & !string.contains("#"))
@@ -264,7 +267,7 @@ public class DateiWerkzeug
      * Liest die vorhandenen Einstellungen ein.
      * 
      * Notwendig für die Funktionalität.
-     */
+     **/
     public static void leseEinstellungenEin()
     {
         int eingeleseneEinstellungen = 0;
