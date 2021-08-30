@@ -92,7 +92,6 @@ public class DateiWerkzeug
             printer.println("BeitragszahlerSeitJahr=" + beitragszahler_seit_jahr);
             printer.println("BeitragszahlerSeitMonat=" + beitragszahler_seit_monat);
             printer.println("Beitragsnummer=" + beitragsnummer);
-            printer.println("Beitragshöhe=17.50");
             printer.println("Geburtstag=" + geburtstag);
             printer.println("Debugmodus=false");
             //printer.print("Sprache='de/en'");
@@ -350,11 +349,6 @@ public class DateiWerkzeug
                     eingeleseneEinstellungen++;
                     Beitragsnummer = tokenizer.nextToken();
                     break;
-                case "Beitragshöhe":
-                    eingeleseneEinstellungen++;
-                    Double beitragshöhe = Double.valueOf(tokenizer.nextToken());
-                    GuthabenWerkzeug.registriereBeitragshöhe(beitragshöhe);
-                    break;
                 case "Geburtstag":
                     eingeleseneEinstellungen++;
                     Geburtstag = tokenizer.nextToken();
@@ -385,7 +379,7 @@ public class DateiWerkzeug
                 //                    ErrorOutputWerkzeug.ErrorOutput(Errors.UnfertigeMethode);
                 //                    break;
                 }
-                if (eingeleseneEinstellungen == 7)
+                if (eingeleseneEinstellungen == 6)
                 {
                     _einstellungenVollständig = true;
                 }

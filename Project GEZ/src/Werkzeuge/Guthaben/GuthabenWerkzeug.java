@@ -28,7 +28,6 @@ public class GuthabenWerkzeug
     GuthabenWerkzeugUI _ui;
     Profil profil;
     private int EinAusBetrag;
-    private static int _beitragshöhe;
 
     public GuthabenWerkzeug(ProfilWerkzeug profilWerkzeug)
     {
@@ -86,17 +85,6 @@ public class GuthabenWerkzeug
     }
 
     /**
-     * Registriert den Berechnungsbetrag pro Monat im BezahlWerkzeug.
-     * 
-     * @apiNote Notwendig für die Funktionalität.
-     * @param beitragshöhe Der Beitragshöhe pro Monat.
-     **/
-    public static void registriereBeitragshöhe(Double beitragshöhe)
-    {
-        _beitragshöhe = (int) (beitragshöhe * 100);
-    }
-
-    /**
      * Berechnet die aktuellen Guthaben aller Profile und schreibt diese "momentanen Guthaben" in die Profile.
      **/
     public void berechneGuthaben()
@@ -105,19 +93,25 @@ public class GuthabenWerkzeug
         {
             if (!profil.istBeitragszahler())
             {
+                System.out.println(profil.getName() + ": " + profil.getGuthaben().toFormattedString());
                 int betragCent = 0;
 
                 int monat = _beginnBerechnungMonat - 1;
                 int jahr = _beginnBerechnungJahr;
 
+                GregorianCalendar zeitpunkt;
+
                 for (int i = 0; i <= getAnzahlMonate(); i++)
                 {
                     monat++;
-                    if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
+                    zeitpunkt = new GregorianCalendar(jahr, monat, 15);
+                    if (PW.wohntImHaus(profil, zeitpunkt))
                     {
-                        int diesenMonat = runden((_beitragshöhe * 10)
+                        int diesenMonat = Math.round(getBetragshoehe(zeitpunkt)
                                 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
                         betragCent -= diesenMonat;
+                        System.out.println(zeitpunkt.get(GregorianCalendar.MONTH) + "." + zeitpunkt.get(GregorianCalendar.YEAR) + ": "
+                                + diesenMonat);
                     }
                     if (monat == 12)
                     {
@@ -136,7 +130,7 @@ public class GuthabenWerkzeug
                 else
                 {
                     RestMonate = momentan.getBetragInCent()
-                            / (runden((_beitragshöhe * 10)
+                            / (Math.round(getBetragshoehe(new GregorianCalendar())
                                     / PW.getAnzahlZahlendeBewohner(new GregorianCalendar())));
                 }
                 profil.setVorraussichtlicheDauer(RestMonate);
@@ -144,6 +138,34 @@ public class GuthabenWerkzeug
         }
     }
 
+    /**
+     * Gibt den aktuell gültigen Beitragsbetrag aus.
+     * 
+     * @return Gibt die Höhe des Aktuellen Beitrages in Cent aus.
+     **/
+    public static float getBetragshoehe()
+    {
+        return getBetragshoehe(new GregorianCalendar());
+    }
+
+    /**
+     * Gibt den für den Monat gültigen Betrag aus.
+     * 
+     * @param zeitpunkt Der Zeitpunkt der Abfrage.
+     * @return Gibt die Höhe des zu dem Zeitpunkt gültigem Beitrages in Cent aus.
+     **/
+    private static float getBetragshoehe(GregorianCalendar zeitpunkt)
+    {
+        GregorianCalendar stichtag = new GregorianCalendar(2021, 05, 15);
+        if (zeitpunkt.before(stichtag))
+        {
+            return 1750;
+        }
+        else
+        {
+            return 1836;
+        }
+    }
     /**
      * Berechnet die Anzahl an Monaten seit Beginn der Berechnungen (in den Einstellungen angegeben) vergangen sind.
      * 
@@ -210,24 +232,6 @@ public class GuthabenWerkzeug
                 EinAusBetrag += Integer.valueOf(eingabe);
                 PW.MomentanesGuthabenEinzahlen(profil, Integer.valueOf(EinAusBetrag));
             }
-        }
-    }
-
-    /**
-     * Rundet einen Zahl auf oder ab nach den normalen Regeln. 
-     * 
-     * @return Die angegebene Zahl mit einer gerundeten Stelle weniger.
-     **/
-    private static int runden(int zahl)
-    {
-
-        if (zahl % 10 < 5)
-        {
-            return zahl / 10;
-        }
-        else
-        {
-            return (zahl + 5) / 10;
         }
     }
 
