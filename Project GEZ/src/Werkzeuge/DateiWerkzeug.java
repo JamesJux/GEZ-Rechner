@@ -1,5 +1,7 @@
 package Werkzeuge;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -495,5 +497,15 @@ public class DateiWerkzeug
     public static boolean sindEinstellungenVollständig()
     {
         return _einstellungenVollständig;
+    }
+
+    /**
+    * Kopiert den Text in die Zwischenablage
+    * 
+    * @param text Den zu kopierenden Text.
+    */
+    public static void CopyToClipboard(String text)
+    {
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
     }
 }

@@ -11,6 +11,7 @@ import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import Fachwerte.Errors;
 import Fachwerte.Geldbetrag;
@@ -156,25 +157,47 @@ public class Startseite
             {
                 if (aktiv)
                 {
+                    String Uebersichtstext = "";
+
                     Profil Beitragszahler = PW.getBeitragszahler();
                     int ZahlendeBewohner = PW.getAnzahlZahlendeBewohner(new GregorianCalendar());
-                    String Text1 = "Infos zum Beitragsbezahlenden:\n" + Beitragszahler.getName() + " (" + Beitragszahler.getGeburtstag()
+                    Uebersichtstext += "Infos zum Beitragsbezahlenden:\n" + Beitragszahler.getName() + " (" + Beitragszahler.getGeburtstag()
                             + ")\nBeitragsnummer: " + Beitragszahler.getBeitragsnummer() + "\n\n";
 
                     DecimalFormat df = new DecimalFormat("###.##");
-                    String Text2 = "Aktuell zahlende Bewohner: " + ZahlendeBewohner + "\nAktuell pro Monat: "
-                            + df.format(17.50 / ZahlendeBewohner) + "\n\n";
+                    Uebersichtstext += "Aktuell zahlende Bewohner: " + ZahlendeBewohner + "\nAktuell pro Monat: "
+                            + df.format((GuthabenWerkzeug.getBetragshoehe() / ZahlendeBewohner) / 100) + " €\n\n";
 
-                    String TextBeiträge = "Noch offene Beträge: \n";
+                    Uebersichtstext += "Noch offene Beträge: \n";
                     for (Profil profil : PW.getProfile())
                     {
                         Geldbetrag momentanesGuthaben = profil.getMomentanesGuthaben();
-                        if (!momentanesGuthaben.istBetragNull() && momentanesGuthaben.istBetragNegativ())
+                        if ((!momentanesGuthaben.istBetragNull() && momentanesGuthaben.istBetragNegativ()) || DateiWerkzeug.DEBUGMODE)
                         {
-                            TextBeiträge += profil.getName() + ": " + momentanesGuthaben.toFormattedString() + "\n";
+                            Uebersichtstext += profil.getName() + ": " + momentanesGuthaben.toFormattedString() + "\n";
                         }
                     }
-                    JOptionPane.showMessageDialog(null, Text1 + Text2 + TextBeiträge, "Übersicht", JOptionPane.PLAIN_MESSAGE);
+
+                    JTextArea ta = new JTextArea(20, 20);
+                    ta.setText(Uebersichtstext);
+                    ta.setWrapStyleWord(true);
+                    ta.setLineWrap(true);
+                    ta.setCaretPosition(0);
+                    ta.setEditable(false);
+
+                    int tmp = JOptionPane.showOptionDialog(null, ta, "Übersicht", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[] {
+                            "Kopieren",
+                            //"Monat erhöhen", 
+                            "Schließen"
+                    }, null);
+                    if (tmp == 0)
+                    {
+                        DateiWerkzeug.CopyToClipboard(Uebersichtstext);
+                    }
+                    //                    else if (tmp == 1)
+                    //                    {
+                    //                        GW.setzeMonatHinauf();
+                    //                    }
                 }
             }
         });

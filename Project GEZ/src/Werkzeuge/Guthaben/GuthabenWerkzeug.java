@@ -166,6 +166,50 @@ public class GuthabenWerkzeug
             return 1836;
         }
     }
+
+    //    public void setzeMonatHinauf()
+    //    {
+    //        System.out.println("Vorher: " + _beginnBerechnungMonat + "." + _beginnBerechnungJahr);
+    //        for (Profil profil : PW.getProfile())
+    //        {
+    //            System.out.println(profil.getName() + " - " + profil.getGuthaben().getBetragInCent() + "- Alt");
+    //        }
+    //        System.out.println("---------------------------------------------");
+    //        int monat = _beginnBerechnungMonat - 1;
+    //        int jahr = _beginnBerechnungJahr;
+    //
+    //        int diesenMonat = -Math.round((float) getBetragshoehe(new GregorianCalendar(jahr, monat, 15))
+    //                / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
+    //        System.out.println("Diesen Monat: " + diesenMonat);
+    //        for (Profil profil : PW.getProfile())
+    //        {
+    //            if (!profil.istBeitragszahler())
+    //            {
+    //                if (PW.wohntImHaus(profil, new GregorianCalendar(jahr, monat, 15)))
+    //                {
+    //
+    //                    PW.speichereGuthaben(profil, diesenMonat);
+    //                    System.out.println(profil.getName() + "- " + diesenMonat);
+    //                }
+    //
+    //            }
+    //        }
+    //
+    //        _beginnBerechnungMonat++;
+    //        if (_beginnBerechnungMonat == 13)
+    //        {
+    //            _beginnBerechnungMonat = 0;
+    //            _beginnBerechnungJahr++;
+    //        }
+    //        System.out.println("---------------------------------------------");
+    //        System.out.println("Nachher: " + _beginnBerechnungMonat + "." + _beginnBerechnungJahr);
+    //        for (Profil profil : PW.getProfile())
+    //        {
+    //            System.out.println(profil.getName() + " - "
+    //                    + profil.getGuthaben().getBetragInCent() + "- Neu");
+    //        }
+    //    }
+
     /**
      * Berechnet die Anzahl an Monaten seit Beginn der Berechnungen (in den Einstellungen angegeben) vergangen sind.
      * 
