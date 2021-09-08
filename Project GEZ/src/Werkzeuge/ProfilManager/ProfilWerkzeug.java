@@ -27,6 +27,7 @@ public class ProfilWerkzeug
     private static HashSet<Profil> profile;
     ProfilWerkzeugUI _ui;
     private boolean benutzerBearbeiten;
+    private boolean _aenderungen = false;
 
     public ProfilWerkzeug()
     {
@@ -106,6 +107,7 @@ public class ProfilWerkzeug
             AusJahr = Integer.parseInt(auszug.substring(3, 7));
         }
         erstelleProfil(vorname, nachname, Guthaben, EinMonat, EinJahr, Email, Handynummer, AusMonat, AusJahr);
+        _aenderungen = true;
     }
 
     /**
@@ -211,6 +213,7 @@ public class ProfilWerkzeug
         if (temp != null && !temp.istBeitragszahler())
         {
             profile.remove(temp);
+            _aenderungen = true;
         }
         else
         {
@@ -268,6 +271,7 @@ public class ProfilWerkzeug
     public void speichereGuthaben(Profil profil, int betrag)
     {
         profil.setGuthaben(new Geldbetrag(profil.getGuthaben().getBetragInCent() + betrag, false));
+        _aenderungen = true;
     }
 
     /**
@@ -280,6 +284,16 @@ public class ProfilWerkzeug
     public boolean istAuszahlenMoeglich(Profil profil, int betrag)
     {
         return profil.istAuszahlenMoeglich(betrag);
+    }
+
+    /**
+     * Prüft ob Änderungen an einem Profil vorgenommen wurden.
+     * 
+     * @return true wenn Änderungen gemacht wurden.
+     **/
+    public boolean sindAenderungenVorhanden()
+    {
+        return _aenderungen;
     }
 
     /**

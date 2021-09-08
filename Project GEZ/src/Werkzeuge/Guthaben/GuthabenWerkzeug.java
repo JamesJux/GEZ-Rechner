@@ -93,7 +93,6 @@ public class GuthabenWerkzeug
         {
             if (!profil.istBeitragszahler())
             {
-                System.out.println(profil.getName() + ": " + profil.getGuthaben().toFormattedString());
                 int betragCent = 0;
 
                 int monat = _beginnBerechnungMonat - 1;
@@ -110,8 +109,6 @@ public class GuthabenWerkzeug
                         int diesenMonat = Math.round(getBetragshoehe(zeitpunkt)
                                 / PW.getAnzahlZahlendeBewohner(new GregorianCalendar(jahr, monat, 15)));
                         betragCent -= diesenMonat;
-                        System.out.println(zeitpunkt.get(GregorianCalendar.MONTH) + "." + zeitpunkt.get(GregorianCalendar.YEAR) + ": "
-                                + diesenMonat);
                     }
                     if (monat == 12)
                     {

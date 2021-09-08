@@ -100,11 +100,14 @@ public class Startseite
             {
                 if (aktiv)
                 {
-                    DateiWerkzeug.speichereInDatei();
-                    if (DateiWerkzeug.DEBUGMODE)
+                    if (PW.sindAenderungenVorhanden())
                     {
-                        JOptionPane.showMessageDialog(null, "Bitte beachte das beim nächsten Start der Rechner immer die \"Bewohner.data\" einlesen wird!\n"
-                                + "Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese manuell umbennenen.", "Debug Modus", JOptionPane.WARNING_MESSAGE);
+                        DateiWerkzeug.speichereInDatei();
+                        if (DateiWerkzeug.DEBUGMODE)
+                        {
+                            JOptionPane.showMessageDialog(null, "Bitte beachte das beim nächsten Start der Rechner immer die \"Bewohner.data\" einlesen wird!\n"
+                                    + "Um Änderungen die du im Debugmodus vorgenommen hast dauerhaft zu behalten, musst du diese manuell umbennenen.", "Debug Modus", JOptionPane.WARNING_MESSAGE);
+                        }
                     }
                     System.exit(0);
                 }
